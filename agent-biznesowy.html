@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent AI – Analityk Procesów Biznesowych</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1e40af; --primary-dark: #1e3a8a; --accent: #2563eb;
+      --success: #16a34a; --error: #dc2626; --warning: #d97706;
+      --text: #111827; --text-secondary: #6b7280; --bg: #f1f5f9;
+      --surface: #ffffff; --border: #e2e8f0;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ── HEADER ── */
+    .app-header { background: var(--primary); color: #fff; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); flex-shrink: 0; }
+    .app-header .logo { width: 34px; height: 34px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .app-header h1 { font-size: 17px; font-weight: 600; }
+    .app-header .hdr-right { margin-left: auto; font-size: 13px; opacity: .75; }
+
+    /* ── TABS (setup screen) ── */
+    .tab-bar { display: flex; background: var(--primary-dark); border-bottom: 2px solid rgba(255,255,255,.1); flex-shrink: 0; }
+    .tab-btn { padding: 0 28px; height: 46px; border: none; background: transparent; color: rgba(255,255,255,.65); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all .15s; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab-btn:hover { color: #fff; background: rgba(255,255,255,.07); }
+    .tab-btn.active { color: #fff; border-bottom-color: #60a5fa; }
+    .tab-panel { display: none; flex: 1; overflow-y: auto; }
+    .tab-panel.active { display: block; }
+
+    /* ── SHARED FORM ── */
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; transition: border-color .2s; background: var(--surface); }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-note { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
+
+    /* ── INTERVIEW TAB ── */
+    .interview-wrap { max-width: 500px; margin: 60px auto; padding: 0 20px; width: 100%; }
+    .interview-card { background: var(--surface); border-radius: 16px; padding: 36px; box-shadow: 0 4px 24px rgba(0,0,0,.08); text-align: center; }
+    .interview-card .ic-icon { font-size: 48px; margin-bottom: 16px; }
+    .interview-card h2 { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .interview-card .ic-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; line-height: 1.55; }
+    .interview-card .form-group { text-align: left; }
+    .btn-start { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background .2s; letter-spacing: .01em; }
+    .btn-start:hover { background: var(--primary); }
+    .no-api-warning { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #92400e; margin-bottom: 20px; display: none; }
+    .no-api-warning a { color: #92400e; font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+    /* ── SETTINGS TAB ── */
+    .settings-wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 48px; width: 100%; }
+    .settings-section { background: var(--surface); border-radius: 14px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; }
+    .settings-section h3 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .settings-section .s-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5; }
+    .prompt-label { font-size: 13px; font-weight: 600; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+    .prompt-label .ph-badge { font-size: 11px; background: #dbeafe; color: #1d4ed8; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+    .prompt-textarea { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; line-height: 1.55; resize: vertical; transition: border-color .2s; min-height: 140px; }
+    .prompt-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .settings-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-save { padding: 10px 22px; background: var(--success); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .btn-save:hover { background: #15803d; }
+    .btn-reset { padding: 10px 20px; background: var(--surface); color: var(--text-secondary); border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+    .save-toast { font-size: 13px; color: var(--success); display: none; align-items: center; gap: 5px; }
+
+    /* ── INTERVIEW SCREEN ── */
+    .interview-body { flex: 1; display: flex; flex-direction: column; max-width: 820px; margin: 0 auto; width: 100%; padding: 0 16px; }
+    .progress-wrap { padding: 10px 0 6px; flex-shrink: 0; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; }
+    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .6s ease; width: 0; }
+    .chat-window { flex: 1; overflow-y: auto; padding: 14px 0; display: flex; flex-direction: column; gap: 14px; }
+    .msg { display: flex; gap: 10px; max-width: 82%; }
+    .msg.agent { align-self: flex-start; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .msg.agent .msg-avatar { background: var(--primary); }
+    .msg.user .msg-avatar { background: #e2e8f0; }
+    .msg-bubble { padding: 11px 15px; border-radius: 16px; font-size: 14px; line-height: 1.6; }
+    .msg.agent .msg-bubble { background: var(--primary); color: #fff; border-top-left-radius: 4px; }
+    .msg.user .msg-bubble { background: var(--surface); border: 1.5px solid var(--border); color: var(--text); border-top-right-radius: 4px; }
+    .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+    .tdot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.6); animation: tb 1.1s infinite; }
+    .tdot:nth-child(2){animation-delay:.18s}.tdot:nth-child(3){animation-delay:.36s}
+    @keyframes tb { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+    .input-area { padding: 12px 0 20px; display: flex; gap: 9px; flex-shrink: 0; }
+    .rec-indicator { height: 18px; font-size: 12px; color: var(--error); text-align: center; flex-shrink: 0; }
+    .mic-btn { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: all .2s; }
+    .mic-btn:hover { border-color: var(--accent); background: #eff6ff; }
+    .mic-btn.recording { border-color: var(--error); background: #fef2f2; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.35)} 50%{box-shadow:0 0 0 8px rgba(220,38,38,0)} }
+    .chat-input { flex: 1; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; resize: none; font-family: inherit; line-height: 1.5; max-height: 110px; transition: border-color .2s; }
+    .chat-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .send-btn { width: 46px; height: 46px; border-radius: 50%; background: var(--accent); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 17px; transition: background .2s; flex-shrink: 0; }
+    .send-btn:hover { background: var(--primary); }
+    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
+
+    /* ── PROCESSING ── */
+    .proc-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
+    .spinner { width: 60px; height: 60px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 22px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .proc-title { font-size: 18px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+    .proc-detail { font-size: 14px; color: var(--text-secondary); }
+    .proc-steps { margin-top: 28px; display: flex; flex-direction: column; gap: 9px; text-align: left; min-width: 300px; }
+    .pstep { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--text-secondary); }
+    .pstep.done { color: var(--success); }
+    .pstep.active { color: var(--accent); font-weight: 500; }
+    .pstep-icon { width: 18px; text-align: center; }
+
+    /* ── RESULTS ── */
+    .results-body { flex: 1; max-width: 1060px; margin: 0 auto; width: 100%; padding: 24px 16px; display: flex; flex-direction: column; gap: 20px; }
+    .res-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; }
+    .res-title { font-size: 22px; font-weight: 700; color: var(--primary); }
+    .res-sub { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+    .dl-buttons { display: flex; gap: 9px; flex-wrap: wrap; }
+    .btn-dl { padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; display: flex; align-items: center; gap: 6px; transition: all .2s; }
+    .btn-dl.docx { background: #1d4ed8; color: #fff; }
+    .btn-dl.docx:hover { background: #1e3a8a; }
+    .btn-dl.svg { background: #059669; color: #fff; }
+    .btn-dl.svg:hover { background: #047857; }
+    .btn-dl.xml { background: #7c3aed; color: #fff; }
+    .btn-dl.xml:hover { background: #6d28d9; }
+    .btn-dl.txt { background: #0f766e; color: #fff; }
+    .btn-dl.txt:hover { background: #0d5c56; }
+    .btn-dl:disabled { opacity: .5; cursor: not-allowed; }
+    .res-card { background: var(--surface); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    .res-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .bpmn-viewer { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; overflow: auto; min-height: 180px; padding: 8px; }
+    .sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .sum-item label { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 3px; }
+    .sum-item p { font-size: 14px; }
+    .steps-list { display: flex; flex-direction: column; gap: 7px; }
+    .step-row { display: flex; align-items: flex-start; gap: 9px; padding: 9px 11px; background: var(--bg); border-radius: 8px; font-size: 13px; }
+    .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .step-num.gw { background: var(--warning); border-radius: 4px; transform: rotate(45deg); }
+    .step-num.gw span { display: inline-block; transform: rotate(-45deg); }
+    .step-info strong { display: block; font-weight: 600; }
+    .step-info small { color: var(--text-secondary); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 20px; right: 20px; background: #fef2f2; border: 1px solid #fca5a5; color: var(--error); padding: 11px 15px; border-radius: 8px; font-size: 13px; max-width: 360px; box-shadow: 0 4px 12px rgba(0,0,0,.1); z-index: 999; display: none; }
+
+    /* ── TEST MODE ── */
+    .test-mode-wrap { max-width: 500px; margin: 16px auto 40px; padding: 0 20px; width: 100%; }
+    .test-toggle { width: 100%; padding: 10px 16px; background: transparent; border: 1.5px dashed #94a3b8; border-radius: 10px; color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .test-toggle:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+    .test-mode-panel { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    .test-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5; }
+    .test-upload-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .btn-upload-file { padding: 7px 14px; background: #f1f5f9; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-upload-file:hover { border-color: var(--accent); color: var(--accent); }
+    .test-or { font-size: 12px; color: var(--text-secondary); }
+    .btn-analyze { background: #7c3aed; margin-top: 12px; }
+    .btn-analyze:hover { background: #6d28d9; }
+
+    @media(max-width:600px){ .form-row{grid-template-columns:1fr} .res-header{flex-direction:column} .tab-btn{padding:0 16px;font-size:13px} }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════ SETUP ═══════════════════════════ -->
+<div class="screen active" id="screen-setup">
+  <div class="app-header">
+    <div class="logo">🤖</div>
+    <h1>Agent AI – Analityk Procesów Biznesowych</h1>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tbtn-wywiad" onclick="switchTab('wywiad')">📝 Wywiad</button>
+    <button class="tab-btn" id="tbtn-ustawienia" onclick="switchTab('ustawienia')">⚙️ Ustawienia</button>
+  </div>
+
+  <!-- ── TAB: WYWIAD (widok pracownika) ── -->
+  <div class="tab-panel active" id="tab-wywiad">
+    <div class="interview-wrap">
+      <div class="interview-card">
+        <div class="ic-icon">🤖</div>
+        <h2>Wywiad procesowy</h2>
+        <p class="ic-desc">Przeprowadzę z Tobą anonimowy wywiad (20 pytań), na podstawie którego wygeneruję kartę procesu biznesowego i schemat BPMN. Nie zbieramy żadnych danych osobowych.</p>
+
+        <div class="no-api-warning" id="noApiWarn">
+          ⚠️ Brak skonfigurowanego klucza API. Przejdź do zakładki <a onclick="switchTab('ustawienia')">Ustawienia</a> i uzupełnij dane.
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stanowisko *</label>
+            <input type="text" id="empRole" placeholder="Specjalista ds. zakupów" />
+          </div>
+          <div class="form-group">
+            <label>Dział / Departament</label>
+            <input type="text" id="empDept" placeholder="Dział Zakupów" />
+          </div>
+        </div>
+
+        <button class="btn-start" onclick="onStartInterview()">Rozpocznij wywiad →</button>
+      </div>
+
+      <!-- TRYB TESTOWY -->
+      <div class="test-mode-wrap">
+        <button class="test-toggle" onclick="toggleTestMode()" id="testToggleBtn">
+          🧪 Tryb testowy — wgraj gotową transkrypcję
+        </button>
+        <div class="test-mode-panel" id="testModePanel" style="display:none">
+          <p class="test-desc">Pomiń wywiad i przejdź od razu do generowania dokumentów na podstawie gotowego tekstu. Przydatne przy testach i ponownej analizie.</p>
+          <div class="test-upload-row">
+            <label class="btn-upload-file" for="transcriptFile">📂 Wgraj plik TXT</label>
+            <input type="file" id="transcriptFile" accept=".txt,.md" style="display:none" onchange="loadTranscriptFile(event)">
+            <span class="test-or">lub wklej poniżej</span>
+          </div>
+          <textarea id="transcriptPaste" class="prompt-textarea" rows="8"
+            placeholder="Wklej tutaj transkrypcję wywiadu (dowolny format — plik TXT wygenerowany przez tę aplikację lub inny tekst opisujący proces)…"></textarea>
+          <button class="btn-start btn-analyze" onclick="onAnalyzeTranscript()">⚡ Analizuj i generuj dokumenty →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: USTAWIENIA (widok administratora) ── -->
+  <div class="tab-panel" id="tab-ustawienia">
+    <div class="settings-wrap">
+
+      <!-- API -->
+      <div class="settings-section">
+        <h3>🔑 Połączenie z API OpenAI</h3>
+        <p class="s-desc">Klucz API jest przechowywany wyłącznie w pamięci przeglądarki (localStorage). Nie jest nigdzie przesyłany poza wywołaniami do OpenAI.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Klucz API OpenAI *</label>
+            <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off" />
+            <div class="form-note">Generuj na: platform.openai.com → API Keys</div>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <input type="text" id="modelId" value="gpt-4o" placeholder="gpt-4o" />
+            <div class="form-note">Polecane: gpt-4o (jakość) lub gpt-4o-mini (szybkość/koszt)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROMPT 1: WYWIAD -->
+      <div class="settings-section">
+        <h3>💬 Prompt wywiadu</h3>
+        <p class="s-desc">System prompt agenta prowadzącego wywiad. Możesz edytować zasady i styl rozmowy. Zmienne wypełniane automatycznie: <code>{Q20}</code> — lista 20 pytań, <code>{ROLE}</code> — stanowisko rozmówcy, <code>{DEPT}</code> — dział.</p>
+        <div class="prompt-label">Instrukcja systemowa <span class="ph-badge">{Q20} {ROLE} {DEPT}</span></div>
+        <textarea class="prompt-textarea" id="promptInterview" rows="12"></textarea>
+      </div>
+
+      <!-- PROMPT 2: KARTA PROCESU -->
+      <div class="settings-section">
+        <h3>📄 Prompt analizy — Karta procesu</h3>
+        <p class="s-desc">System prompt do generowania JSON karty procesu. Schemat JSON jest dołączany automatycznie. Zmienne: <code>{TRANSCRIPT}</code> — transkrypt wywiadu, <code>{ROLE}</code>, <code>{DEPT}</code>, <code>{DATE}</code>.</p>
+        <div class="prompt-label">Instrukcja systemowa (schema JSON dołączana automatycznie) <span class="ph-badge">{TRANSCRIPT} {ROLE} {DEPT} {DATE}</span></div>
+        <textarea class="prompt-textarea" id="promptCard" rows="6"></textarea>
+      </div>
+
+      <!-- PROMPT 3: BPMN -->
+      <div class="settings-section">
+        <h3>📊 Prompt analizy — Schemat BPMN</h3>
+        <p class="s-desc">System prompt do generowania struktury BPMN. Schemat JSON jest dołączany automatycznie. Zmienne: <code>{PROCESS_NAME}</code>, <code>{STEPS}</code>.</p>
+        <div class="prompt-label">Instrukcja systemowa (schema JSON dołączana automatycznie) <span class="ph-badge">{PROCESS_NAME} {STEPS}</span></div>
+        <textarea class="prompt-textarea" id="promptBpmn" rows="5"></textarea>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="settings-actions">
+        <button class="btn-save" onclick="saveSettings()">💾 Zapisz ustawienia</button>
+        <button class="btn-reset" onclick="resetPrompts()">↺ Przywróć domyślne prompty</button>
+        <span class="save-toast" id="saveToast">✅ Zapisano</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INTERVIEW ═══════════════════════════ -->
+<div class="screen" id="screen-interview">
+  <div class="app-header">
+    <div class="logo">🤖</div>
+    <h1>Wywiad — Analiza procesu</h1>
+    <span class="hdr-right" id="iHdrRight">Trwa wywiad</span>
+  </div>
+  <div class="interview-body">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="pLabel">Pytanie 1 / 20</span>
+        <span id="pPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+    </div>
+    <div class="chat-window" id="chatWin"></div>
+    <div class="rec-indicator" id="recInd"></div>
+    <div style="text-align:right;padding:0 0 6px;flex-shrink:0">
+      <button id="finishBtn" onclick="onFinishInterview()" style="display:none;padding:7px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">
+        ✅ Zakończ wywiad i generuj dokumenty
+      </button>
+    </div>
+    <div class="input-area">
+      <button class="mic-btn" id="micBtn" onclick="toggleRec()" title="Włącz/wyłącz mikrofon">🎤</button>
+      <textarea class="chat-input" id="chatIn" placeholder="Napisz odpowiedź lub naciśnij 🎤…" rows="1"
+        onkeydown="onKey(event)" oninput="autoH(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="onSend()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PROCESSING ═══════════════════════════ -->
+<div class="screen" id="screen-processing">
+  <div class="app-header">
+    <div class="logo">⚙️</div>
+    <h1>Generowanie dokumentów</h1>
+  </div>
+  <div class="proc-center">
+    <div class="spinner"></div>
+    <div class="proc-title" id="procTitle">Analizuję wywiad…</div>
+    <div class="proc-detail" id="procDetail">Proszę czekać</div>
+    <div class="proc-steps">
+      <div class="pstep" id="ps1"><span class="pstep-icon">⏳</span> Analiza transkryptu — metadane karty</div>
+      <div class="pstep" id="ps2"><span class="pstep-icon">⏳</span> Generowanie kroków procesu</div>
+      <div class="pstep" id="ps3"><span class="pstep-icon">⏳</span> Budowanie struktury BPMN</div>
+      <div class="pstep" id="ps4"><span class="pstep-icon">⏳</span> Tworzenie dokumentu Word</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ RESULTS ═══════════════════════════ -->
+<div class="screen" id="screen-results">
+  <div class="app-header">
+    <div class="logo">✅</div>
+    <h1>Dokumentacja procesu gotowa</h1>
+    <span class="hdr-right" id="rHdrRight"></span>
+  </div>
+  <div class="results-body">
+    <div class="res-header">
+      <div>
+        <div class="res-title" id="rTitle">Karta procesu</div>
+        <div class="res-sub" id="rSub"></div>
+      </div>
+      <div class="dl-buttons">
+        <button class="btn-dl docx" onclick="dlDocx()">📄 Karta procesu (DOCX)</button>
+        <button class="btn-dl svg" onclick="dlSvg()">🖼 Diagram BPMN (SVG)</button>
+        <button class="btn-dl xml" onclick="dlXml()">📋 Schemat BPMN (XML)</button>
+        <button class="btn-dl txt" onclick="dlTranscript()">💬 Transkrypcja (TXT)</button>
+      </div>
+    </div>
+    <div class="res-card">
+      <h3>📊 Schemat BPMN procesu</h3>
+      <div class="bpmn-viewer" id="bpmnView"></div>
+    </div>
+    <div class="res-card">
+      <h3>📋 Podsumowanie procesu</h3>
+      <div class="sum-grid" id="sumGrid"></div>
+    </div>
+    <div class="res-card">
+      <h3>🔢 Kroki procesu</h3>
+      <div class="steps-list" id="stepsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARIES -->
+<!-- docx library removed — using zero-dependency HTML-as-DOC generation -->
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DEFAULT PROMPTS
+// ════════════════════════════════════════════════════════════════
+const Q20 = `OBSZAR 1 — CEL I KONTEKST:
+01. Jaki jest główny cel tego procesu i jaką wartość dostarcza? (konkretny i mierzalny)
+02. Co wyzwala ten proces i po czym wiadomo, że się zakończył? (trigger + warunek zakończenia)
+03. Czy proces jest krytyczny dla działalności — co by się stało gdyby przestał działać? (skutki finansowe, regulacyjne, wizerunkowe)
+
+OBSZAR 2 — WEJŚCIA I WYJŚCIA:
+04. Co jest wejściem do procesu, w jakim formacie i skąd pochodzi? (dane, dokumenty, materiały; format; źródło; kiedy wejście jest niedopuszczalne)
+05. Co jest wynikiem procesu, do kogo trafia i jak wygląda sukces? (każde wyjście: odbiorca, format, kryterium sukcesu)
+
+OBSZAR 3 — PRZEBIEG PROCESU:
+06. Opisz proces krok po kroku — od zdarzenia startowego do zakończenia. (chronologiczna narracja; nie pomijaj "oczywistych" kroków)
+07. Gdzie w procesie zapadają kluczowe decyzje i na podstawie jakich kryteriów? (kto decyduje, jakie kryteria, ile czasu)
+08. Czy są ścieżki alternatywne — kiedy proces idzie inaczej niż standardowo? (przypadki brzegowe, wyjątki od reguły)
+09. Jakie zasady biznesowe rządzą poszczególnymi krokami (limity, progi, terminy)? (business rules; często istnieją tylko w głowach)
+
+OBSZAR 4 — LUDZIE I ODPOWIEDZIALNOŚCI:
+10. Kto wykonuje poszczególne kroki — jakie role są zaangażowane? (role, nie nazwiska; uwzględnij systemy automatyczne)
+11. Kto jest właścicielem procesu i kto jest rozliczany z jego wyników? (Process Owner + KPI z jakich jest rozliczany)
+12. Czy są aktywności realizowane przez zewnętrzne podmioty lub inne zespoły? (zależności zewnętrzne + SLA)
+
+OBSZAR 5 — SYSTEMY I ZASOBY:
+13. Jakie systemy IT i narzędzia są używane i do czego służą? (od ERP po Excel; rola w procesie; co się stanie gdy niedostępne)
+14. Ile osób (FTE) jest zaangażowanych i jakich kompetencji wymagasz? (FTE może być ułamkiem; kompetencje + szkolenia)
+
+OBSZAR 6 — POMIAR I JAKOŚĆ:
+15. Po czym poznasz, że proces działa dobrze lub źle — jakie mierzysz wskaźniki? (KPI: cel, alarm, właściciel)
+16. Jaki jest akceptowalny czas realizacji i czy istnieją zobowiązania SLA? (zewnętrzne i wewnętrzne SLA; co przy przekroczeniu)
+
+OBSZAR 7 — RYZYKA I WYJĄTKI:
+17. Co może pójść nie tak — jakie błędy i wyjątki się zdarzają i jak często? (konkretne przykłady z ostatnich 3-6 miesięcy + częstotliwość)
+18. Kiedy sprawa wymaga eskalacji i do kogo? (warunki eskalacji L1/L2; czas reakcji; zastępstwo)
+
+OBSZAR 8 — ZGODNOŚĆ I POWIĄZANIA:
+19. Jakie przepisy, regulacje lub normy mają zastosowanie do tego procesu? (prawo, regulacje branżowe, ISO, polityki wewnętrzne)
+20. Jakie procesy poprzedzają ten proces i jakie uruchamia po sobie? (kontekst end-to-end)`;
+
+const DEFAULT_PROMPT_INTERVIEW =
+`Jesteś doświadczonym analitykiem biznesowym prowadzącym wywiad w celu zebrania informacji do karty procesu biznesowego.
+
+OBOWIĄZKOWE PYTANIA (20 pytań, 8 obszarów):
+{Q20}
+
+ZASADY PROWADZENIA WYWIADU:
+- Odpowiadaj WYŁĄCZNIE po polsku, profesjonalnie ale naturalnie
+- Zadawaj JEDNO pytanie na raz — nigdy kilku naraz
+- Prowadź rozmowę, nie ankietę: odnoś się do tego co powiedział rozmówca
+- Po niejasnej odpowiedzi zadaj jedno pytanie uzupełniające zanim przejdziesz dalej
+- Jeśli odpowiedź pokryła kilka pytań — zaznacz to i pomiń już omówione
+- Nie pytaj ponownie o rzeczy już wyjaśnione
+- Kiedy wszystkie 20 obszarów zostało pokryte — zakończ wywiad
+
+WAŻNE: Zawsze zwracaj odpowiedź jako JSON (bez markdown, bez backticks):
+{
+  "action": "followup" | "next_question" | "complete",
+  "qCovered": [lista numerów 1-20 pokrytych dotąd pytań],
+  "message": "treść wiadomości do rozmówcy"
+}
+
+Dane rozmówcy (anonimowe): Stanowisko: {ROLE}, Dział: {DEPT}`;
+
+const DEFAULT_PROMPT_CARD =
+`Jesteś analitykiem biznesowym. Na podstawie transkryptu wywiadu wygeneruj KOMPLETNĄ kartę procesu biznesowego w JSON.
+
+Karta procesu musi zawierać WSZYSTKIE 8 sekcji zgodnych z szablonem organizacji. KLUCZOWY WYMÓG: każda sekcja musi być wypełniona WIELOMA pozycjami — nie generuj 1 przykładu, generuj wszystko co wynika z wywiadu.
+
+SEKCJA 1 — METADANE: ID, nazwa PL/EN, wersja, hierarchia, właścicielstwo (Process Owner/Expert/Manager — role, bez nazwisk), minimum 5 tagów.
+
+SEKCJA 2 — CEL I ZAKRES: główny cel (mierzalny), minimum 3 cele dodatkowe, trigger i warunek zakończenia.
+
+SEKCJA 3 — SIPOC: minimum 3–5 pozycji w każdej tablicy (Suppliers, Inputs, Activities, Outputs, Customers). Wymień WSZYSTKIE strony zaangażowane w proces.
+
+SEKCJA 4 — RACI: OSOBNY wiersz dla każdej kluczowej aktywności procesu — minimum 6–10 wierszy pokrywających wszystkie etapy. Używaj konkretnych nazw ról (nie „string").
+
+SEKCJA 5 — PRZEBIEG: wszystkie punkty decyzyjne (minimum 2–3), wszystkie ścieżki alternatywne, wszystkie wyjątki (minimum 3–5), eskalacje L1 i L2.
+
+SEKCJA 6 — ZASOBY: WSZYSTKIE systemy IT wymienione w wywiadzie (minimum 3–5). WSZYSTKIE role ludzkie zaangażowane w proces (minimum 4–6 ról).
+
+SEKCJA 7 — KPI: minimum 4–6 różnych KPI (czas, jakość, koszt, marża itp.). Wypełnij operationalMetrics danymi z wywiadu — nie zostawiaj "—". SLA zewnętrzne i wewnętrzne.
+
+SEKCJA 8 — RYZYKA: minimum 5–8 konkretnych ryzyk z wywiadu, każde z unikalnym ID. Wszystkie regulacje i normy wynikające z kontekstu procesu.
+
+Dane rozmówcy: Stanowisko: {ROLE}, Dział: {DEPT}, Data: {DATE}.
+Transkrypt wywiadu: {TRANSCRIPT}
+Odpowiedz TYLKO poprawnym JSON — zero dodatkowego tekstu ani markdown.`;
+
+const DEFAULT_PROMPT_BPMN =
+`Jesteś ekspertem BPMN 2.0. Na podstawie kroków procesu wygeneruj strukturę diagramu.
+Odpowiedz TYLKO poprawnym JSON — zero dodatkowego tekstu ani markdown.
+Zasady: pierwszy element startEvent, ostatni endEvent, bramki decyzyjne jako gateway, każde id unikalne, każdy element połączony przepływem.`;
+
+// ════════════════════════════════════════════════════════════════
+// SETTINGS — localStorage
+// ════════════════════════════════════════════════════════════════
+const LS = 'agentAI_v1_';
+
+function loadSettings() {
+  const get = k => localStorage.getItem(LS + k);
+  const apiKey = get('apiKey') || '';
+  const model  = get('model')  || 'gpt-4o';
+  document.getElementById('apiKey').value  = apiKey;
+  document.getElementById('modelId').value = model;
+  document.getElementById('promptInterview').value = get('promptInterview') || DEFAULT_PROMPT_INTERVIEW;
+  document.getElementById('promptCard').value      = get('promptCard')      || DEFAULT_PROMPT_CARD;
+  document.getElementById('promptBpmn').value      = get('promptBpmn')      || DEFAULT_PROMPT_BPMN;
+  // show warning if no API key
+  document.getElementById('noApiWarn').style.display = apiKey ? 'none' : 'block';
+}
+
+function saveSettings() {
+  const set = (k, v) => localStorage.setItem(LS + k, v);
+  set('apiKey',          document.getElementById('apiKey').value.trim());
+  set('model',           document.getElementById('modelId').value.trim() || 'gpt-4o');
+  set('promptInterview', document.getElementById('promptInterview').value);
+  set('promptCard',      document.getElementById('promptCard').value);
+  set('promptBpmn',      document.getElementById('promptBpmn').value);
+  document.getElementById('noApiWarn').style.display =
+    document.getElementById('apiKey').value.trim() ? 'none' : 'block';
+  const t = document.getElementById('saveToast');
+  t.style.display = 'flex';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+function resetPrompts() {
+  if (!confirm('Przywrócić domyślne treści promptów? (klucz API i model pozostaną bez zmian)')) return;
+  document.getElementById('promptInterview').value = DEFAULT_PROMPT_INTERVIEW;
+  document.getElementById('promptCard').value      = DEFAULT_PROMPT_CARD;
+  document.getElementById('promptBpmn').value      = DEFAULT_PROMPT_BPMN;
+  saveSettings();
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('tbtn-' + name).classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════════
+// APP STATE
+// ════════════════════════════════════════════════════════════════
+const A = {
+  apiKey: '', model: 'gpt-4o',
+  employee: { role:'', dept:'' },
+  msgs: [],
+  transcript: [],
+  qCovered: [],
+  waitingForAnswer: false,
+  processData: null,
+  bpmnData: null, bpmnXml: null, bpmnSvg: null,
+  docxBlob: null,
+};
+
+// ════════════════════════════════════════════════════════════════
+// PROMPT HELPERS
+// ════════════════════════════════════════════════════════════════
+function getPrompt(id) {
+  return document.getElementById(id).value || localStorage.getItem(LS + id) || '';
+}
+
+function buildInterviewSystem() {
+  return getPrompt('promptInterview')
+    .replace('{Q20}', Q20)
+    .replace('{ROLE}', A.employee.role)
+    .replace('{DEPT}', A.employee.dept);
+}
+
+// ════════════════════════════════════════════════════════════════
+// OPENAI API
+// ════════════════════════════════════════════════════════════════
+async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
+  const messages = [{ role: 'system', content: system }, ...msgs];
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + A.apiKey },
+    body: JSON.stringify({ model: A.model, max_tokens: maxTokens, messages })
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    // 429 Rate limit — retry up to 3 times with exponential backoff
+    if (r.status === 429 && _attempt <= 3) {
+      const wait = _attempt * 15; // 15s, 30s, 45s
+      showToast(`⏳ Limit API (429) — ponawianie za ${wait}s… (próba ${_attempt}/3)`);
+      await sleep(wait * 1000);
+      return callClaude(msgs, system, maxTokens, _attempt + 1);
+    }
+    const msg = r.status === 429
+      ? 'Przekroczono limit API OpenAI (429). Poczekaj minutę i spróbuj ponownie.'
+      : (e.error?.message || `Błąd HTTP ${r.status}`);
+    throw new Error(msg);
+  }
+  return (await r.json()).choices[0].message.content;
+}
+
+// ════════════════════════════════════════════════════════════════
+// INTERVIEW FLOW
+// ════════════════════════════════════════════════════════════════
+// ── TEST MODE ──
+function toggleTestMode() {
+  const panel = document.getElementById('testModePanel');
+  const btn = document.getElementById('testToggleBtn');
+  const open = panel.style.display === 'none';
+  panel.style.display = open ? 'block' : 'none';
+  btn.style.borderStyle = open ? 'solid' : 'dashed';
+  btn.style.color = open ? 'var(--accent)' : '';
+}
+
+function loadTranscriptFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('transcriptPaste').value = e.target.result; };
+  reader.readAsText(file, 'utf-8');
+}
+
+async function onAnalyzeTranscript() {
+  const apiKey = localStorage.getItem(LS + 'apiKey') || '';
+  const role   = document.getElementById('empRole').value.trim();
+  const text   = document.getElementById('transcriptPaste').value.trim();
+  if (!apiKey) { showToast('Brak klucza API — uzupełnij w zakładce Ustawienia'); switchTab('ustawienia'); return; }
+  if (!role)   { showToast('Wprowadź stanowisko (potrzebne do metadanych karty)'); return; }
+  if (!text)   { showToast('Wklej lub wgraj transkrypcję'); return; }
+
+  A.apiKey = apiKey;
+  A.model  = localStorage.getItem(LS + 'model') || 'gpt-4o';
+  A.employee = {
+    role,
+    dept: document.getElementById('empDept').value.trim() || 'Nieznany dział',
+  };
+  A.msgs = []; A.transcript = []; A.qCovered = [];
+
+  // Parsuj transkrypcję jeśli to nasz format (z markerami [🤖 ANALITYK] / [👤 PRACOWNIK])
+  // lub wstaw jako jedną wiadomość użytkownika
+  const structuredRx = /\[🤖 ANALITYK\]([\s\S]*?)(?=\[👤 PRACOWNIK\]|\[🤖 ANALITYK\]|─{10,}|$)/g;
+  const userRx       = /\[👤 PRACOWNIK\]([\s\S]*?)(?=\[🤖 ANALITYK\]|\[👤 PRACOWNIK\]|─{10,}|$)/g;
+  let hasStructure = text.includes('[🤖 ANALITYK]') || text.includes('[👤 PRACOWNIK]');
+
+  if (hasStructure) {
+    // Przetwarzamy jako przeplatane wypowiedzi
+    const lines = text.split('\n');
+    let currentRole = null, currentBuf = [];
+    const flush = () => {
+      const content = currentBuf.join('\n').trim();
+      if (content && currentRole) A.msgs.push({ role: currentRole, content });
+      currentBuf = [];
+    };
+    lines.forEach(line => {
+      if (line.includes('[🤖 ANALITYK]')) { flush(); currentRole = 'assistant'; }
+      else if (line.includes('[👤 PRACOWNIK]')) { flush(); currentRole = 'user'; }
+      else if (/^─{10,}/.test(line)) { flush(); currentRole = null; }
+      else if (currentRole) currentBuf.push(line);
+    });
+    flush();
+  } else {
+    // Dowolny tekst — traktuj jako odpowiedzi pracownika pokrywające wszystkie pytania
+    A.msgs = [{ role: 'user', content: `Poniżej kompletna transkrypcja/opis procesu biznesowego:\n\n${text}` }];
+  }
+
+  // Ustaw qCovered jako wszystkie 20 pytań (bo transkrypcja jest kompletna)
+  A.qCovered = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+
+  showScreen('processing');
+  try {
+    setProc('Analizuję transkrypcję…', 'Może to potrwać 30–60 sekund');
+    await generateProcessCard();
+    setProc('Buduję strukturę BPMN…', '');
+    await generateBpmnStructure();
+    A.bpmnXml = buildBpmnXml(A.bpmnData);
+    A.bpmnSvg = buildBpmnSvg(A.bpmnData);
+    setProc('Generuję dokument Word…', '');
+    await generateDocx();
+    showResults();
+  } catch(err) {
+    showToast('Błąd: ' + err.message);
+    console.error(err);
+    showScreen('setup');
+  }
+}
+
+async function onStartInterview() {
+  const apiKey = localStorage.getItem(LS + 'apiKey') || '';
+  const role   = document.getElementById('empRole').value.trim();
+  if (!apiKey) { showToast('Brak klucza API — uzupełnij w zakładce Ustawienia'); switchTab('ustawienia'); return; }
+  if (!role)   { showToast('Wprowadź stanowisko'); return; }
+
+  A.apiKey = apiKey;
+  A.model  = localStorage.getItem(LS + 'model') || 'gpt-4o';
+  A.employee = {
+    role,
+    dept: document.getElementById('empDept').value.trim() || 'Nieznany dział',
+  };
+  // Reset state
+  A.msgs = []; A.transcript = []; A.qCovered = []; A.waitingForAnswer = false;
+
+  showScreen('interview');
+  document.getElementById('iHdrRight').textContent = A.employee.role + ' · ' + A.employee.dept;
+  document.getElementById('chatWin').innerHTML = '';
+
+  const greeting = `Dzień dobry! 👋 Jestem Twoim wirtualnym analitykiem biznesowym.\n\nPrzeprowadzę z Tobą anonimowy wywiad (20 pytań), na podstawie którego wygeneruję kompletną kartę procesu biznesowego i schemat BPMN. Nie zbieramy żadnych danych osobowych.\n\nMożesz odpowiadać głosowo (przycisk 🎤) lub pisemnie. Im więcej szczegółów podasz, tym dokładniejsza będzie dokumentacja.\n\nZacznijmy!`;
+  addMsg('agent', greeting);
+  A.msgs.push({ role: 'assistant', content: greeting });
+
+  setTimeout(() => askNextQuestion('Proszę zadaj pierwsze pytanie z obszaru CEL I KONTEKST.'), 1000);
+}
+
+async function askNextQuestion(userSaid) {
+  disableInput();
+  const tid = showTyping();
+  try {
+    const msgsForAI = userSaid
+      ? [...A.msgs, { role: 'user', content: userSaid }]
+      : A.msgs;
+
+    const raw = await callClaude(msgsForAI, buildInterviewSystem(), 700);
+    removeTyping(tid);
+
+    let parsed;
+    try {
+      // Strip markdown code fences if present
+      const cleaned = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+      const m = cleaned.match(/\{[\s\S]*\}/);
+      parsed = JSON.parse(m?.[0] || cleaned);
+    } catch {
+      // JSON parsing failed — show raw text, but still check if we should auto-complete
+      parsed = { action: 'next_question', qCovered: A.qCovered, message: raw };
+    }
+
+    if (parsed.qCovered?.length) A.qCovered = parsed.qCovered;
+    updateProgress();
+    updateFinishBtn();
+    addMsg('agent', parsed.message);
+    A.msgs.push({ role: 'assistant', content: parsed.message });
+
+    // Complete if action says so, OR if all 20 questions are covered
+    if (parsed.action === 'complete' || A.qCovered.length >= 20) {
+      setTimeout(() => beginAnalysis(), 1200);
+    } else {
+      enableInput();
+      A.waitingForAnswer = true;
+    }
+  } catch (e) {
+    removeTyping(tid);
+    showToast('Błąd API: ' + e.message);
+    enableInput();
+    A.waitingForAnswer = true;
+  }
+}
+
+async function onSend() {
+  if (!A.waitingForAnswer) return;
+  const inp = document.getElementById('chatIn');
+  const answer = inp.value.trim();
+  if (!answer) return;
+  if (isRec) stopRec();
+  inp.value = ''; autoH(inp);
+  addMsg('user', answer);
+  A.msgs.push({ role: 'user', content: answer });
+  A.transcript.push({ answer });
+  A.waitingForAnswer = false;
+  disableInput();
+  await askNextQuestion(null);
+}
+
+// ════════════════════════════════════════════════════════════════
+// ANALYSIS
+// ════════════════════════════════════════════════════════════════
+function getTranscript() {
+  return A.msgs
+    .filter(m => m.role !== 'system')
+    .map(m => `[${m.role === 'assistant' ? 'ANALITYK' : 'PRACOWNIK'}]: ${m.content}`)
+    .join('\n\n');
+}
+
+async function generateProcessCard() {
+  updatePStep('ps1','active');
+  const transcript = getTranscript();
+  const today = new Date().toISOString().split('T')[0];
+
+  const cardSystem = getPrompt('promptCard')
+    .replace('{TRANSCRIPT}', transcript)
+    .replace('{ROLE}', A.employee.role)
+    .replace('{DEPT}', A.employee.dept)
+    .replace('{DATE}', today);
+
+  // ── Wywołanie 1: metadane (bez steps — żeby nie wycinać ich przez limit tokenów) ──
+  const metaPrompt = `Transkrypt wywiadu:
+---
+${transcript}
+---
+Stanowisko: ${A.employee.role} | Dział: ${A.employee.dept} | Data: ${today}
+
+Wygeneruj KOMPLETNY JSON karty procesu BEZ pola "steps" (kroki wygeneruję osobno).
+
+WYMAGANIA DOTYCZĄCE KOMPLETNOŚCI — każda sekcja musi być w pełni wypełniona:
+
+► SIPOC — wymienić WSZYSTKICH dostawców, wejścia, wyjścia i odbiorców zaangażowanych w proces (minimum 3–5 pozycji w każdej tablicy).
+
+► RACI — osobny wiersz dla KAŻDEJ kluczowej aktywności/decyzji w procesie (minimum 6–10 wierszy). Musi pokrywać wszystkie etapy: planowanie, ocenę jakości, negocjacje, zatwierdzenie, realizację, kontrolę. Dla każdej aktywności wypisać konkretne role (np. Kupiec, Dyrektor Zakupów, Dział Jakości), nie wpisywać „string".
+
+► systems — WSZYSTKIE systemy IT wymienione lub sugerowane przez wywiad (minimum 3–5 systemów z rolą każdego).
+
+► humanResources — WSZYSTKIE role zaangażowane w proces (minimum 4–6 ról: nie tylko rola rozmówcy, ale też pozostałe wymienione w wywiadzie).
+
+► kpis — minimum 4–6 różnych wskaźników KPI (terminowość, jakość, marża, koszt, etc.).
+
+► operationalMetrics — wypełnić na podstawie danych z wywiadu (cycle time procesu, throughput itp.), nie zostawiać „—".
+
+► risks — minimum 5–8 konkretnych ryzyk zidentyfikowanych z wywiadu, każde z osobnym ID (RISK-001, RISK-002...).
+
+► exceptions — minimum 3–5 wyjątków/błędów opisanych w wywiadzie.
+
+► escalationPaths — minimum L1 i L2, z konkretnymi warunkami.
+
+► decisionPoints — wszystkie kluczowe bramki decyzyjne z kryteriami (minimum 2–3).
+
+► alternativePaths — wszystkie ścieżki alternatywne opisane w wywiadzie.
+
+► compliance — wszystkie regulacje, normy i przepisy wspomniane lub wynikające z kontekstu procesu.
+
+► additionalGoals — minimum 3–5 celów dodatkowych.
+
+► tags — minimum 5 tagów klasyfikacyjnych.
+
+Odpowiedz TYLKO poprawnym JSON (bez markdown):
+
+{
+  "processId":"PROC-001","processNamePL":"string","processNameEN":"string",
+  "version":"1.0","status":"Draft","hierarchyLevel":"3",
+  "parentProcessId":"","parentProcessName":"","processGroup":"Operational",
+  "isCritical":"Tak","rto":"string",
+  "processOwner":{"name":"—","role":"string","email":""},
+  "processExpert":{"name":"—","role":"string","email":""},
+  "processManager":{"name":"—","role":"string","email":""},
+  "tags":["tag1","tag2","tag3","tag4","tag5"],
+  "mainGoal":"string",
+  "additionalGoals":["cel1","cel2","cel3"],
+  "scopeStart":"string","scopeEnd":"string",
+  "suppliers":[
+    {"name":"string","type":"Wewnętrzny","provides":"string","requirements":"string","contact":""},
+    {"name":"string","type":"Zewnętrzny","provides":"string","requirements":"string","contact":""}
+  ],
+  "inputs":[
+    {"name":"string","type":"string","format":"string","source":"string","qualityCriteria":"string"},
+    {"name":"string","type":"string","format":"string","source":"string","qualityCriteria":"string"}
+  ],
+  "activities":["aktywność1","aktywność2","aktywność3","aktywność4","aktywność5"],
+  "outputs":[
+    {"name":"string","type":"string","format":"string","recipient":"string","successCriteria":"string"},
+    {"name":"string","type":"string","format":"string","recipient":"string","successCriteria":"string"}
+  ],
+  "customers":[
+    {"name":"string","type":"Wewnętrzny","expectations":"string","deliveryMethod":"string","frequency":"string"},
+    {"name":"string","type":"Zewnętrzny","expectations":"string","deliveryMethod":"string","frequency":"string"}
+  ],
+  "raci":[
+    {"activity":"Aktywność 1","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"},
+    {"activity":"Aktywność 2","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"},
+    {"activity":"Aktywność 3","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"},
+    {"activity":"Aktywność 4","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"},
+    {"activity":"Aktywność 5","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"},
+    {"activity":"Aktywność 6","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"}
+  ],
+  "decisionPoints":[
+    {"id":"DECISION-001","name":"string","decisionMaker":"string","sla":"string","docLocation":"string","criteria":["JEŚLI … → Tak","JEŚLI … → Nie"]},
+    {"id":"DECISION-002","name":"string","decisionMaker":"string","sla":"string","docLocation":"string","criteria":["JEŚLI … → Tak","JEŚLI … → Nie"]}
+  ],
+  "alternativePaths":[
+    {"name":"string","condition":"string","steps":["krok1","krok2"]},
+    {"name":"string","condition":"string","steps":["krok1","krok2"]}
+  ],
+  "exceptions":[
+    {"name":"string","probability":"Wysokie","handling":"string","responsible":"string","escalation":"string"},
+    {"name":"string","probability":"Średnie","handling":"string","responsible":"string","escalation":"string"},
+    {"name":"string","probability":"Niskie","handling":"string","responsible":"string","escalation":"string"}
+  ],
+  "escalationPaths":[
+    {"level":"L1","condition":"string","to":"string","sla":"string","backup":"string"},
+    {"level":"L2","condition":"string","to":"string","sla":"string","backup":"string"}
+  ],
+  "systems":[
+    {"name":"System1","function":"string","users":"string","criticality":"Krytyczny","availabilitySLA":"string"},
+    {"name":"System2","function":"string","users":"string","criticality":"Wysoki","availabilitySLA":"string"},
+    {"name":"System3","function":"string","users":"string","criticality":"Średni","availabilitySLA":"string"}
+  ],
+  "humanResources":[
+    {"role":"Rola1","fte":"string","competencies":"string","trainings":"string"},
+    {"role":"Rola2","fte":"string","competencies":"string","trainings":"string"},
+    {"role":"Rola3","fte":"string","competencies":"string","trainings":"string"},
+    {"role":"Rola4","fte":"string","competencies":"string","trainings":"string"}
+  ],
+  "kpis":[
+    {"name":"KPI1","target":"string","measurement":"string","frequency":"string","owner":"string","threshold":"string"},
+    {"name":"KPI2","target":"string","measurement":"string","frequency":"string","owner":"string","threshold":"string"},
+    {"name":"KPI3","target":"string","measurement":"string","frequency":"string","owner":"string","threshold":"string"},
+    {"name":"KPI4","target":"string","measurement":"string","frequency":"string","owner":"string","threshold":"string"}
+  ],
+  "operationalMetrics":{"throughput":"string","cycleTime":"string","waitTime":"string","errorRate":"string","reworkRate":"string"},
+  "sla":[
+    {"type":"Zewnętrzne","description":"string","value":"string","breach":"string"},
+    {"type":"Wewnętrzne","description":"string","value":"string","breach":"string"}
+  ],
+  "compliance":[
+    {"regulation":"string","scope":"string","requirements":"string","controls":"string","auditFrequency":"string"},
+    {"regulation":"string","scope":"string","requirements":"string","controls":"string","auditFrequency":"string"}
+  ],
+  "relatedProcessesBefore":["proces1","proces2"],
+  "relatedProcessesAfter":["proces1","proces2"],
+  "risks":[
+    {"id":"RISK-001","description":"string","probability":"Wysokie","impact":"Wysoki","priority":"WYSOKI","mitigation":"string","control":"string","owner":"string"},
+    {"id":"RISK-002","description":"string","probability":"Średnie","impact":"Wysoki","priority":"WYSOKI","mitigation":"string","control":"string","owner":"string"},
+    {"id":"RISK-003","description":"string","probability":"Średnie","impact":"Średni","priority":"ŚREDNI","mitigation":"string","control":"string","owner":"string"},
+    {"id":"RISK-004","description":"string","probability":"Niskie","impact":"Wysoki","priority":"ŚREDNI","mitigation":"string","control":"string","owner":"string"},
+    {"id":"RISK-005","description":"string","probability":"Niskie","impact":"Niski","priority":"NISKI","mitigation":"string","control":"string","owner":"string"}
+  ]
+}`;
+
+  const raw1 = await callClaude([{role:'user', content: metaPrompt}], cardSystem, 8000);
+  const m1 = raw1.replace(/```json\s*/gi,'').replace(/```\s*/g,'').match(/\{[\s\S]*\}/);
+  A.processData = JSON.parse(m1?.[0] || raw1);
+
+  // ── Wywołanie 2: szczegółowe kroki procesu (osobny call = pełny budżet tokenów) ──
+  updatePStep('ps1','done'); updatePStep('ps2','active');
+  setProc('Generuję szczegółowe kroki procesu…','');
+
+  const stepsPrompt = `Transkrypt wywiadu:
+---
+${transcript}
+---
+Proces: "${A.processData.processNamePL}"
+Stanowisko: ${A.employee.role} | Dział: ${A.employee.dept}
+
+Wygeneruj KOMPLETNĄ listę kroków procesu — uwzględnij KAŻDY krok opisany w wywiadzie (zazwyczaj 8–20 kroków).
+Każdy krok powinien być oddzielną czynnością. Bramki decyzyjne jako isGateway:true.
+Odpowiedz TYLKO jako tablica JSON (bez obiektu opakowującego):
+
+[
+  {
+    "id":"STEP-001",
+    "name":"string",
+    "type":"Zadanie użytkownika",
+    "performer":"string",
+    "duration":"string",
+    "description":"string",
+    "inputs":["string"],
+    "outputs":["string"],
+    "systems":["string"],
+    "businessRules":["string"],
+    "exceptions":["string"],
+    "isGateway":false,
+    "gatewayConditions":[]
+  }
+]`;
+
+  const raw2 = await callClaude([{role:'user', content: stepsPrompt}], 'Jesteś analitykiem BPMN. Odpowiedz TYLKO poprawną tablicą JSON — zero dodatkowego tekstu ani markdown.', 4096);
+  const cleaned2 = raw2.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  const m2 = cleaned2.match(/\[[\s\S]*\]/);
+  try {
+    A.processData.steps = JSON.parse(m2?.[0] || cleaned2);
+  } catch {
+    // Fallback: jeśli parsowanie tablicy się nie uda, spróbuj wyciągnąć z obiektu
+    const mObj = cleaned2.match(/"steps"\s*:\s*(\[[\s\S]*?\])/);
+    A.processData.steps = mObj ? JSON.parse(mObj[1]) : [];
+  }
+
+  updatePStep('ps2','done'); updatePStep('ps3','active');
+}
+
+function buildBpmnFromProcessData() {
+  // Buduje strukturę BPMN bezpośrednio z processData — niezawodnie, wszystkie kroki
+  const d = A.processData;
+  const elements = [];
+  const flows = [];
+  let c = 1;
+
+  elements.push({id:'se1', type:'startEvent', name: d.scopeStart || 'Start', performer:'', description:''});
+
+  let mainChain = ['se1']; // lista id tworzących główny łańcuch
+  const joinNodes = {}; // gateway_id → id węzła dołączenia (po rozgałęzieniu)
+
+  (d.steps || []).forEach(step => {
+    const id = `n${c++}`;
+    const type = step.isGateway ? 'gateway' : 'task';
+    elements.push({id, type, name: step.name, performer: step.performer || '', description: step.description || ''});
+    const prevId = mainChain[mainChain.length - 1];
+    flows.push({from: prevId, to: id, label: ''});
+    mainChain.push(id);
+
+    // Jeśli brama decyzyjna z warunkami — dodaj gałęzie alternatywne
+    if (step.isGateway && step.gatewayConditions?.length >= 2) {
+      const altBranches = step.gatewayConditions.slice(1); // pierwsza gałąź to main chain
+      const joinId = `join${c++}`;
+      elements.push({id: joinId, type:'gateway', name:'', performer:'', description:''});
+      joinNodes[id] = joinId;
+
+      altBranches.forEach((cond, bi) => {
+        const altId = `alt${c++}`;
+        elements.push({id: altId, type:'task', name: String(cond).slice(0,40), performer: step.performer || '', description:''});
+        flows.push({from: id, to: altId, label: bi === 0 ? 'Nie' : String(bi+1)});
+        flows.push({from: altId, to: joinId, label:''});
+      });
+      // Pierwsza gałąź (Tak) przechodzi przez główny łańcuch i dołącza do joinId
+      flows.push({from: id, to: joinId, label: 'Tak'});
+      // Usuń ostatni flow (from prevId to id) bo jest już prawidłowy
+      // Zaktualizuj mainChain żeby ostatnim był joinId
+      mainChain.push(joinId);
+    }
+  });
+
+  // Dodaj bramę dla każdego jawnego decisionPoint nieobecnego w steps
+  (d.decisionPoints || []).forEach(dp => {
+    const alreadyIn = elements.some(e => e.name === dp.name);
+    if (!alreadyIn && dp.criteria?.length >= 2) {
+      const gwId = `dp${c++}`;
+      elements.push({id: gwId, type:'gateway', name: dp.name, performer: dp.decisionMaker || '', description:''});
+      const prevId = mainChain[mainChain.length - 1];
+      flows.push({from: prevId, to: gwId, label:''});
+      mainChain.push(gwId);
+
+      const joinId = `dpj${c++}`;
+      elements.push({id: joinId, type:'gateway', name:'', performer:'', description:''});
+
+      dp.criteria.slice(0, 3).forEach((crit, i) => {
+        const label = String(crit).split('→')[0].replace('JEŚLI','').trim().slice(0,20);
+        if (i === 0) {
+          // Pierwsza opcja wraca do main chain i dołącza do join
+          flows.push({from: gwId, to: joinId, label: label || 'Tak'});
+        } else {
+          const brId = `br${c++}`;
+          elements.push({id: brId, type:'task', name: String(crit).split('→')[1]?.trim().slice(0,35) || ('Opcja '+(i+1)), performer: dp.decisionMaker || '', description:''});
+          flows.push({from: gwId, to: brId, label: label || 'Nie'});
+          flows.push({from: brId, to: joinId, label:''});
+        }
+      });
+      mainChain.push(joinId);
+    }
+  });
+
+  elements.push({id:'ee1', type:'endEvent', name: d.scopeEnd || 'Koniec', performer:'', description:''});
+  flows.push({from: mainChain[mainChain.length-1], to:'ee1', label:''});
+
+  return { processName: d.processNamePL || 'Proces', elements, flows };
+}
+
+async function generateBpmnStructure() {
+  // Buduj bezpośrednio z danych processData — szybko i kompletnie
+  A.bpmnData = buildBpmnFromProcessData();
+  updatePStep('ps2','done'); updatePStep('ps3','active');
+}
+
+// ════════════════════════════════════════════════════════════════
+// BPMN SVG RENDERER — snake/multi-row layout
+// ════════════════════════════════════════════════════════════════
+function buildBpmnSvg(bdata) {
+  const els = bdata.elements || [], flows = bdata.flows || [];
+  if (!els.length) return '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100"><text x="20" y="50" font-size="14" fill="#6b7280">Brak elementów BPMN</text></svg>';
+
+  // ── layout constants ──
+  const COLS = 5;          // elementy na wiersz
+  const HGAP = 170;        // odstęp poziomy między środkami
+  const VGAP = 150;        // odstęp pionowy między rzędami
+  const PAD_X = 80, PAD_Y = 60;
+  const TW=130, TH=56, GS=42, SR=20;
+
+  // ── topological sort → kolejność ──
+  const inDeg={}, adj={};
+  els.forEach(e=>{ inDeg[e.id]=0; adj[e.id]=[]; });
+  flows.forEach(f=>{ inDeg[f.to]=(inDeg[f.to]||0)+1; (adj[f.from]=adj[f.from]||[]).push(f.to); });
+  const q=[...els.filter(e=>inDeg[e.id]===0).map(e=>e.id)], ord=[];
+  while(q.length){ const id=q.shift(); ord.push(id); (adj[id]||[]).forEach(n=>{ if(--inDeg[n]===0) q.push(n); }); }
+  els.forEach(e=>{ if(!ord.includes(e.id)) ord.push(e.id); });
+
+  // ── snake positions ──
+  // row 0: L→R, row 1: R→L, row 2: L→R ...
+  const pos={};
+  ord.forEach((id, i) => {
+    const row = Math.floor(i / COLS);
+    const col = i % COLS;
+    const ltr = row % 2 === 0;
+    pos[id] = {
+      x: PAD_X + (ltr ? col : (COLS - 1 - col)) * HGAP,
+      y: PAD_Y + row * VGAP
+    };
+  });
+
+  const rows = Math.ceil(ord.length / COLS);
+  const svgW = PAD_X * 2 + (Math.min(els.length, COLS) - 1) * HGAP + TW;
+  const svgH = PAD_Y * 2 + (rows - 1) * VGAP + TH + 30;
+
+  const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const short = (s, n=18) => s && s.length > n ? s.slice(0, n-1)+'…' : (s||'');
+  const wrap = (s, n=15) => {
+    const ws = (s||'').split(' '); const ls = []; let cur = '';
+    ws.forEach(w => { if ((cur+' '+w).trim().length <= n) cur=(cur+' '+w).trim(); else { if(cur) ls.push(cur); cur=w; } });
+    if (cur) ls.push(cur); return ls.slice(0, 3);
+  };
+
+  // ── edge exit/entry points ──
+  function edgePoint(id, isFrom, targetId) {
+    const p = pos[id]; const el = els.find(e=>e.id===id); if (!p||!el) return p||{x:0,y:0};
+    const tp = pos[targetId];
+    const dx = tp ? tp.x - p.x : 0;
+    const dy = tp ? tp.y - p.y : 0;
+    const hw = el.type==='task' ? TW/2 : el.type==='gateway' ? GS/2 : SR;
+    const hh = el.type==='task' ? TH/2 : el.type==='gateway' ? GS/2 : SR;
+    // pick exit side based on target direction
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      return { x: p.x + (dx>=0?1:-1)*hw, y: p.y };
+    } else {
+      return { x: p.x, y: p.y + (dy>=0?1:-1)*hh };
+    }
+  }
+
+  let out = [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="font-family:system-ui,sans-serif;display:block;max-width:100%">`,
+    `<defs><marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker></defs>`,
+    `<rect width="${svgW}" height="${svgH}" fill="#f8fafc" rx="12"/>`
+  ];
+
+  // ── draw flows ──
+  flows.forEach(f => {
+    const fp = pos[f.from], tp = pos[f.to]; if (!fp||!tp) return;
+    const p1 = edgePoint(f.from, true, f.to);
+    const p2 = edgePoint(f.to, false, f.from);
+    const dx = p2.x - p1.x, dy = p2.y - p1.y;
+    let pathD;
+    if (Math.abs(dy) < 10) {
+      // Same row — straight line
+      pathD = `M${p1.x},${p1.y} L${p2.x},${p2.y}`;
+    } else if (Math.abs(dx) < 10) {
+      // Same column — straight vertical
+      pathD = `M${p1.x},${p1.y} L${p2.x},${p2.y}`;
+    } else {
+      // Cross-row: route around row-end turn with bezier
+      const midY = (p1.y + p2.y) / 2;
+      pathD = `M${p1.x},${p1.y} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y}`;
+    }
+    out.push(`<path d="${pathD}" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>`);
+    if (f.label) {
+      const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2 - 9;
+      const lw = f.label.length * 6 + 10;
+      out.push(`<rect x="${mx-lw/2}" y="${my-9}" width="${lw}" height="14" rx="3" fill="#fff" opacity=".85"/>
+        <text x="${mx}" y="${my}" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic">${esc(f.label)}</text>`);
+    }
+  });
+
+  // ── draw elements ──
+  els.forEach(el => {
+    const p = pos[el.id]; if (!p) return;
+    const {x, y} = p;
+    if (el.type === 'startEvent') {
+      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>
+        <text x="${x}" y="${y+SR+14}" text-anchor="middle" font-size="10" fill="#374151" font-weight="600">${esc(short(el.name||'Start',16))}</text>`);
+    } else if (el.type === 'endEvent') {
+      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/>
+        <circle cx="${x}" cy="${y}" r="${SR-5}" fill="#ef4444"/>
+        <text x="${x}" y="${y+SR+14}" text-anchor="middle" font-size="10" fill="#374151" font-weight="600">${esc(short(el.name||'Koniec',16))}</text>`);
+    } else if (el.type === 'gateway') {
+      const h = GS/2;
+      // Strip generic prefix if present
+      const gwLabel = (el.name||'').replace(/^Bramka decyzyjna[:\s]*/i,'').trim();
+      const isJoin = !gwLabel; // unnamed = join/merge gateway
+      const fillColor = isJoin ? '#f1f5f9' : '#fef3c7';
+      const strokeColor = isJoin ? '#94a3b8' : '#d97706';
+      const gSize = isJoin ? h * 0.7 : h; // join gateways are smaller
+      out.push(`<polygon points="${x},${y-gSize} ${x+gSize},${y} ${x},${y+gSize} ${x-gSize},${y}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${isJoin?1.5:2}"/>`);
+      if (gwLabel) {
+        out.push(`<text x="${x}" y="${y+gSize+14}" text-anchor="middle" font-size="9" fill="#92400e">${esc(short(gwLabel, 20))}</text>`);
+      }
+    } else {
+      // task
+      const tx = x - TW/2, ty = y - TH/2;
+      out.push(`<rect x="${tx}" y="${ty}" width="${TW}" height="${TH}" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>`);
+      const ls = wrap(el.name||'');
+      const baseY = y - ((ls.length-1)*12)/2;
+      ls.forEach((l,i) => out.push(`<text x="${x}" y="${baseY+i*12}" text-anchor="middle" dominant-baseline="middle" font-size="10.5" fill="#1e40af" font-weight="600">${esc(l)}</text>`));
+      if (el.performer) out.push(`<text x="${x}" y="${ty+TH+13}" text-anchor="middle" font-size="9.5" fill="#64748b">${esc(short(el.performer, 24))}</text>`);
+    }
+  });
+
+  // ── legend ──
+  const ly = svgH - 22;
+  out.push(`<circle cx="14" cy="${ly}" r="7" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+    <text x="25" y="${ly+4}" font-size="9" fill="#6b7280">Start</text>
+    <circle cx="70" cy="${ly}" r="7" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+    <text x="81" y="${ly+4}" font-size="9" fill="#6b7280">Koniec</text>
+    <rect x="125" y="${ly-7}" width="14" height="14" rx="2" fill="#dbeafe" stroke="#3b82f6"/>
+    <text x="143" y="${ly+4}" font-size="9" fill="#6b7280">Zadanie</text>
+    <polygon points="198,${ly-7} 207,${ly} 198,${ly+7} 189,${ly}" fill="#fef3c7" stroke="#d97706"/>
+    <text x="212" y="${ly+4}" font-size="9" fill="#6b7280">Brama decyzyjna</text>`);
+
+  out.push('</svg>');
+  return out.join('\n');
+}
+
+function buildBpmnXml(bdata) {
+  const els=bdata.elements||[],flows=bdata.flows||[];
+  const GAP=180,PAD=60,CY=150,TW=100,TH=80;
+  const pos={}; els.forEach((e,i)=>{ pos[e.id]={x:PAD+i*GAP,y:CY}; });
+  const ex=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const procEls=els.map(e=>{ const inc=flows.filter(f=>f.to===e.id).map(f=>`<incoming>SF_${f.from}_${f.to}</incoming>`).join(''); const out=flows.filter(f=>f.from===e.id).map(f=>`<outgoing>SF_${f.from}_${f.to}</outgoing>`).join(''); if(e.type==='startEvent') return `<startEvent id="${e.id}" name="${ex(e.name)}">${out}</startEvent>`; if(e.type==='endEvent') return `<endEvent id="${e.id}" name="${ex(e.name)}">${inc}</endEvent>`; if(e.type==='gateway') return `<exclusiveGateway id="${e.id}" name="${ex(e.name)}">${inc}${out}</exclusiveGateway>`; return `<task id="${e.id}" name="${ex(e.name)}">${inc}${out}</task>`; }).join('\n    ');
+  const sfs=flows.map(f=>`<sequenceFlow id="SF_${f.from}_${f.to}" sourceRef="${f.from}" targetRef="${f.to}"${f.label?` name="${ex(f.label)}"`:''}/>`).join('\n    ');
+  const shapes=els.map(e=>{ const p=pos[e.id]; if(e.type==='startEvent'||e.type==='endEvent') return `<bpmndi:BPMNShape id="${e.id}_di" bpmnElement="${e.id}"><dc:Bounds x="${p.x}" y="${p.y-18}" width="36" height="36"/></bpmndi:BPMNShape>`; if(e.type==='gateway') return `<bpmndi:BPMNShape id="${e.id}_di" bpmnElement="${e.id}"><dc:Bounds x="${p.x-25}" y="${p.y-25}" width="50" height="50"/></bpmndi:BPMNShape>`; return `<bpmndi:BPMNShape id="${e.id}_di" bpmnElement="${e.id}"><dc:Bounds x="${p.x-TW/2}" y="${p.y-TH/2}" width="${TW}" height="${TH}"/></bpmndi:BPMNShape>`; }).join('\n      ');
+  const edges=flows.map(f=>{ const fp=pos[f.from],tp=pos[f.to]; if(!fp||!tp) return ''; return `<bpmndi:BPMNEdge id="SF_${f.from}_${f.to}_di" bpmnElement="SF_${f.from}_${f.to}"><di:waypoint x="${fp.x+50}" y="${fp.y}"/><di:waypoint x="${tp.x-50}" y="${tp.y}"/></bpmndi:BPMNEdge>`; }).join('\n      ');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+  <process id="Process_1" name="${ex(bdata.processName||'')}" isExecutable="false">
+    ${procEls}
+    ${sfs}
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      ${shapes}
+      ${edges}
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// DOCX GENERATOR — zero-dependency HTML-as-DOC
+// Word otwiera pliki HTML z Office XML namespace bez żadnych bibliotek
+// ════════════════════════════════════════════════════════════════
+async function generateDocx() {
+  updatePStep('ps3','done'); updatePStep('ps4','active');
+  const d = A.processData;
+  const today = new Date().toLocaleDateString('pl-PL');
+  const x = s => String(s??'—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  // ── helpers ──
+  const HDR_BG = '#2C4770'; const HDR_FG = '#ffffff';
+  const hRow = (...cols) => `<tr>${cols.map(c=>`<th style="background:${HDR_BG};color:${HDR_FG};padding:5px 8px;font-size:10pt;border:1px solid #1a2f50">${x(c)}</th>`).join('')}</tr>`;
+  const dRow = (...cols) => `<tr>${cols.map((c,i)=>`<td style="padding:5px 8px;font-size:10pt;border:1px solid #cbd5e1;${i===0?'font-weight:600;background:#f8fafc':''}">${x(c)}</td>`).join('')}</tr>`;
+  const tbl = (head, rows) => `<table style="width:100%;border-collapse:collapse;margin:8px 0 16px">${hRow(...head)}${rows.map(r=>dRow(...r)).join('')}</table>`;
+  const t2 = rows => tbl(['Pole','Wartość'], rows);
+  const h1 = t => `<h1 style="font-size:16pt;color:#1e3a8a;border-bottom:2px solid #2C4770;padding-bottom:4px;margin:28px 0 10px">${x(t)}</h1>`;
+  const h2 = t => `<h2 style="font-size:13pt;color:#2C4770;margin:20px 0 8px">${x(t)}</h2>`;
+  const h3 = t => `<h3 style="font-size:11pt;color:#374151;margin:14px 0 6px">${x(t)}</h3>`;
+  const p  = t => `<p style="font-size:10pt;margin:4px 0">${x(t)}</p>`;
+  const b  = t => `<p style="font-size:10pt;font-weight:600;margin:8px 0 3px">${x(t)}</p>`;
+  const ul = arr => arr?.length ? `<ul style="margin:2px 0 8px 20px">${arr.map(i=>`<li style="font-size:10pt;margin:2px 0">${x(i)}</li>`).join('')}</ul>` : '';
+  const ol = arr => arr?.length ? `<ol style="margin:2px 0 8px 20px">${arr.map(i=>`<li style="font-size:10pt;margin:2px 0">${x(i)}</li>`).join('')}</ol>` : '';
+  const arr = (a,fn) => (a?.length ? a : []).map(fn).join('');
+
+  // ── STEPS ──
+  const stepsHtml = arr(d.steps, step => `
+    ${h3('Krok: ' + step.name)}
+    ${t2([['ID Kroku',step.id||''],['Typ',step.type||''],['Wykonawca',step.performer||''],['Czas trwania',step.duration||'']])}
+    ${b('Opis:')}${p(step.description)}
+    ${step.inputs?.length  ? b('Wejścia:')  + ul(step.inputs)  : ''}
+    ${step.outputs?.length ? b('Wyjścia:')  + ul(step.outputs) : ''}
+    ${step.systems?.length ? b('Systemy IT:')+ ul(step.systems): ''}
+    ${step.businessRules?.length ? b('Zasady biznesowe:') + ul(step.businessRules) : ''}
+    ${step.exceptions?.length    ? b('Wyjątki i eskalacje:')  + ul(step.exceptions)    : ''}
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:10px 0">`);
+
+  // ── DECISION POINTS ──
+  const decisionsHtml = d.decisionPoints?.length ? `
+    ${h2('Punkty decyzyjne')}
+    ${arr(d.decisionPoints, dp => `
+      ${h3('Punkt decyzyjny: ' + dp.name)}
+      ${t2([['ID',dp.id],['Osoba decyzyjna',dp.decisionMaker],['Czas na decyzję',dp.sla],['Dokumentacja',dp.docLocation]])}
+      ${b('Kryteria decyzji:')}${ul(dp.criteria)}`)}` : '';
+
+  // ── ESCALATION ──
+  const escalationHtml = d.escalationPaths?.length ? `
+    ${h2('Ścieżki eskalacji')}
+    ${tbl(['Poziom','Warunek','Do kogo','SLA','Zastępstwo'],
+      d.escalationPaths.map(e=>[e.level,e.condition,e.to,e.sla,e.backup]))}` : '';
+
+  // ── SLA ──
+  const slaHtml = d.sla?.length ? `
+    ${h2('6.3 SLA')}
+    ${tbl(['Typ','Opis','Wartość','Skutek naruszenia'],
+      d.sla.map(s=>[s.type,s.description,s.value,s.breach]))}` : '';
+
+  // ── RELATED PROCESSES ──
+  const relatedHtml = (d.relatedProcessesBefore?.length || d.relatedProcessesAfter?.length) ? `
+    ${h2('7.2 Powiązane procesy')}
+    ${b('Poprzedzające:')}${ul(d.relatedProcessesBefore)}
+    ${b('Uruchamiane po:')}${ul(d.relatedProcessesAfter)}` : '';
+
+  const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
+    xmlns:w='urn:schemas-microsoft-com:office:word'
+    xmlns='http://www.w3.org/TR/REC-html40'>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      @page { margin: 2.5cm; size: A4; }
+      body { font-family: Calibri, Arial, sans-serif; font-size: 10pt; color: #111827; line-height: 1.5; }
+      table { page-break-inside: avoid; }
+      h1,h2,h3 { page-break-after: avoid; }
+    </style>
+  </head>
+  <body>
+    <p style="text-align:center;font-size:20pt;font-weight:700;color:#1e3a8a;margin:0 0 6px">${x(d.processNamePL||'Karta procesu')}</p>
+    <p style="text-align:center;font-size:10pt;color:#6b7280;margin:0 0 30px">${x(A.employee.role)} · ${x(A.employee.dept)} · ${today}</p>
+
+    ${h1('METADANE PROCESU')}
+    ${h2('Identyfikacja')}
+    ${t2([['ID Procesu',d.processId||'PROC-001'],['Nazwa procesu (PL)',d.processNamePL||''],['Nazwa procesu (EN)',d.processNameEN||''],['Wersja',d.version||'1.0'],['Status',d.status||'Draft']])}
+    ${h2('Hierarchia i klasyfikacja')}
+    ${t2([['Poziom w hierarchii',d.hierarchyLevel||'3'],['ID procesu nadrzędnego',d.parentProcessId||'—'],['Nazwa procesu nadrzędnego',d.parentProcessName||'—'],['Grupa procesów',d.processGroup||'Operational'],['Proces krytyczny',d.isCritical||'Tak']])}
+    ${h2('Zarządzanie wersją')}
+    ${t2([['Data utworzenia',today],['Ostatnia modyfikacja',today],['Utworzony przez',A.employee.role+' / '+A.employee.dept],['Status zatwierdzenia','Draft'],['Zatwierdzony przez','—']])}
+    ${h2('Właścicielstwo i odpowiedzialność')}
+    ${tbl(['Rola','Osoba','Stanowisko','Email'],[
+      ['Process Owner','—',d.processOwner?.role||A.employee.role,'—'],
+      ['Process Expert','—',d.processExpert?.role||'—','—'],
+      ['Process Manager','—',d.processManager?.role||'—','—'],
+    ])}
+    ${h2('Tagi')}${p((d.tags||[]).join(' | '))}
+
+    ${h1('1. CEL I ZAKRES PROCESU')}
+    ${h2('1.1 Cel procesu')}
+    ${b('Główny cel:')}${p(d.mainGoal)}
+    ${b('Dodatkowe cele:')}${ul(d.additionalGoals)}
+    ${h2('1.2 Zakres procesu')}
+    ${ul(['Rozpoczęcie: '+(d.scopeStart||'—'),'Zakończenie: '+(d.scopeEnd||'—')])}
+
+    ${h1('2. ANALIZA SIPOC')}
+    ${h2('2.1 Suppliers (Dostawcy)')}
+    ${tbl(['Dostawca','Typ','Co dostarcza','Wymagania','Kontakt'],
+      (d.suppliers||[]).map(s=>[s.name,s.type,s.provides,s.requirements,s.contact||'—']))}
+    ${h2('2.2 Inputs (Wejścia)')}
+    ${tbl(['Wejście','Typ','Format','Źródło','Kryteria jakości'],
+      (d.inputs||[]).map(i=>[i.name,i.type,i.format,i.source,i.qualityCriteria]))}
+    ${h2('2.3 Process — kluczowe aktywności')}
+    ${ol(d.activities)}
+    ${h2('2.4 Outputs (Wyjścia)')}
+    ${tbl(['Wyjście','Typ','Format','Odbiorca','Kryteria sukcesu'],
+      (d.outputs||[]).map(o=>[o.name,o.type,o.format,o.recipient,o.successCriteria]))}
+    ${h2('2.5 Customers (Odbiorcy)')}
+    ${tbl(['Odbiorca','Typ','Oczekiwania','Sposób dostawy','Częstotliwość'],
+      (d.customers||[]).map(c=>[c.name,c.type,c.expectations,c.deliveryMethod,c.frequency]))}
+
+    ${h1('3. ODPOWIEDZIALNOŚCI (RACI)')}
+    ${tbl(['Aktywność/Decyzja','R — Odpowiedzialny','A — Rozliczany','C — Konsultowany','I — Informowany'],
+      (d.raci||[]).map(r=>[r.activity,r.responsible,r.accountable,r.consulted,r.informed]))}
+    ${b('Legenda:')}${ul(['R (Responsible): Osoba wykonująca pracę','A (Accountable): Rozliczana z wyniku — tylko jedna!','C (Consulted): Konsultowane dwukierunkowo','I (Informed): Informowane jednokierunkowo'])}
+
+    ${h1('4. PRZEBIEG PROCESU')}
+    ${h2('4.1 Diagram procesu')}
+    ${p('Schemat BPMN dostępny jako oddzielny plik SVG/XML dołączony do dokumentacji.')}
+    ${h2('4.2 Szczegółowy opis kroków')}
+    ${stepsHtml}
+    ${decisionsHtml}
+    ${h2('4.3 Ścieżki alternatywne')}
+    ${d.alternativePaths?.length
+      ? arr(d.alternativePaths, ap => `${h3('Ścieżka: '+ap.name)}${p('Warunek wejścia: '+ap.condition)}${ol(ap.steps)}`)
+      : p('Brak zidentyfikowanych ścieżek alternatywnych.')}
+    ${h2('4.4 Obsługa wyjątków')}
+    ${tbl(['Wyjątek','Prawdopodobieństwo','Procedura obsługi','Odpowiedzialny','Eskalacja'],
+      (d.exceptions||[]).map(e=>[e.name,e.probability,e.handling,e.responsible,e.escalation]))}
+    ${escalationHtml}
+
+    ${h1('5. ZASOBY I NARZĘDZIA')}
+    ${h2('5.1 Systemy IT')}
+    ${tbl(['System','Funkcja','Użytkownicy','Krytyczność','Dostępność wymagana'],
+      (d.systems||[]).map(s=>[s.name,s.function,s.users,s.criticality,s.availabilitySLA]))}
+    ${h2('5.2 Zasoby ludzkie')}
+    ${tbl(['Rola','FTE','Kompetencje wymagane','Szkolenia'],
+      (d.humanResources||[]).map(hr=>[hr.role,hr.fte,hr.competencies,hr.trainings]))}
+
+    ${h1('6. WSKAŹNIKI I POMIAR WYDAJNOŚCI (KPI)')}
+    ${h2('6.1 Kluczowe wskaźniki')}
+    ${tbl(['KPI','Cel','Metoda pomiaru','Częstotliwość','Właściciel','Poziom akceptowalny'],
+      (d.kpis||[]).map(k=>[k.name,k.target,k.measurement,k.frequency,k.owner,k.threshold]))}
+    ${h2('6.2 Miary operacyjne')}
+    ${ul(['Throughput: '+(d.operationalMetrics?.throughput||'—'),
+         'Cycle Time: '+(d.operationalMetrics?.cycleTime||'—'),
+         'Wait Time: ' +(d.operationalMetrics?.waitTime||'—'),
+         'Error Rate: '+(d.operationalMetrics?.errorRate||'—'),
+         'Rework Rate: '+(d.operationalMetrics?.reworkRate||'—')])}
+    ${slaHtml}
+
+    ${h1('7. ZGODNOŚĆ I REGULACJE')}
+    ${h2('7.1 Wymagania prawne i regulacyjne')}
+    ${tbl(['Regulacja','Zakres','Wymagania','Kontrole','Częstotliwość audytu'],
+      (d.compliance||[]).map(c=>[c.regulation,c.scope,c.requirements,c.controls,c.auditFrequency]))}
+    ${relatedHtml}
+
+    ${h1('8. RYZYKA')}
+    ${h2('8.1 Analiza ryzyk')}
+    ${tbl(['ID','Opis ryzyka','Prawdopodobieństwo','Wpływ','Priorytet','Mitigacja','Kontrola','Właściciel'],
+      (d.risks||[]).map(r=>[r.id,r.description,r.probability,r.impact,r.priority,r.mitigation,r.control,r.owner]))}
+    ${b('Legenda priorytetów:')}
+    ${ul(['KRYTYCZNY: Natychmiastowa akcja','WYSOKI: Akcja w ciągu tygodnia','ŚREDNI: Monitorowanie, akcja w razie potrzeby','NISKI: Akceptowalne'])}
+
+    <p style="margin-top:40px;font-size:8pt;color:#9ca3af;border-top:1px solid #e2e8f0;padding-top:8px">
+      Wygenerowano przez: Agent AI – Analityk Procesów Biznesowych · ${today}
+    </p>
+  </body>
+  </html>`;
+
+  A.docxBlob = new Blob(['﻿' + html], { type: 'application/msword;charset=utf-8' });
+  updatePStep('ps4','done');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ORCHESTRATION
+// ════════════════════════════════════════════════════════════════
+async function beginAnalysis() {
+  A.waitingForAnswer = false; disableInput();
+  addMsg('agent','Dziękuję! Zebrałem wszystkie niezbędne informacje. Teraz wygeneruję kartę procesu i schemat BPMN — to zajmie chwilę… ⚙️');
+  await sleep(1500);
+  showScreen('processing');
+  try {
+    setProc('Analizuję wywiad i generuję kartę procesu…','Może to potrwać 30–60 sekund');
+    await generateProcessCard();
+    setProc('Buduję strukturę BPMN…','');
+    await generateBpmnStructure();
+    A.bpmnXml = buildBpmnXml(A.bpmnData);
+    A.bpmnSvg = buildBpmnSvg(A.bpmnData);
+    setProc('Generuję dokument Word…','');
+    await generateDocx();
+    showResults();
+  } catch(err) {
+    showToast('Błąd: ' + err.message);
+    console.error(err);
+    showScreen('interview'); enableInput(); A.waitingForAnswer = true;
+  }
+}
+
+function showResults() {
+  const d = A.processData;
+  document.getElementById('rTitle').textContent = d.processNamePL||'Karta procesu';
+  document.getElementById('rSub').textContent = `${A.employee.role} · ${A.employee.dept} · ${new Date().toLocaleDateString('pl-PL')}`;
+  document.getElementById('rHdrRight').textContent = d.processNamePL||'';
+  document.getElementById('bpmnView').innerHTML = A.bpmnSvg;
+  document.getElementById('sumGrid').innerHTML = [
+    ['Cel procesu',d.mainGoal],['Właściciel',d.processOwner?.role||A.employee.role],
+    ['Wyzwalacz',d.scopeStart],['Wynik końcowy',d.scopeEnd],
+    ['Liczba kroków',(d.steps||[]).length],['Systemy IT',(d.systems||[]).map(s=>s.name).join(', ')||'—'],
+    ['Krytyczność',d.isCritical||'—'],['Grupa procesów',d.processGroup||'—'],
+  ].map(([l,v])=>`<div class="sum-item"><label>${l}</label><p>${v||'—'}</p></div>`).join('');
+  document.getElementById('stepsList').innerHTML=(d.steps||[]).map((s,i)=>`
+    <div class="step-row">
+      <div class="step-num ${s.isGateway?'gw':''}">${s.isGateway?`<span>${i+1}</span>`:i+1}</div>
+      <div class="step-info"><strong>${s.name}</strong><small>${s.performer||''} ${s.duration?'· '+s.duration:''}</small></div>
+    </div>`).join('');
+  showScreen('results');
+}
+
+// ════════════════════════════════════════════════════════════════
+// DOWNLOADS
+// ════════════════════════════════════════════════════════════════
+function dlDocx(){ if(!A.docxBlob) return; const u=URL.createObjectURL(A.docxBlob); Object.assign(document.createElement('a'),{href:u,download:`Karta_procesu_${safeName()}.doc`}).click(); URL.revokeObjectURL(u); }
+function dlSvg(){ if(!A.bpmnSvg) return; dlBlob(new Blob([A.bpmnSvg],{type:'image/svg+xml'}),`BPMN_${safeName()}.svg`); }
+function dlXml(){ if(!A.bpmnXml) return; dlBlob(new Blob([A.bpmnXml],{type:'application/xml'}),`BPMN_${safeName()}.bpmn`); }
+function dlTranscript(){
+  const d = A.processData;
+  const date = new Date().toLocaleString('pl-PL');
+  const lines = [
+    '═══════════════════════════════════════════════════',
+    '  TRANSKRYPCJA WYWIADU PROCESOWEGO',
+    '═══════════════════════════════════════════════════',
+    `  Proces:     ${d?.processNamePL || '—'}`,
+    `  Stanowisko: ${A.employee.role || '—'}`,
+    `  Dział:      ${A.employee.dept || '—'}`,
+    `  Data:       ${date}`,
+    '═══════════════════════════════════════════════════',
+    '',
+  ];
+  A.msgs
+    .filter(m => m.role === 'assistant' || m.role === 'user')
+    .forEach(m => {
+      const role = m.role === 'assistant' ? '🤖 ANALITYK' : '👤 PRACOWNIK';
+      lines.push(`[${role}]`);
+      lines.push(m.content);
+      lines.push('');
+      lines.push('───────────────────────────────────────────────────');
+      lines.push('');
+    });
+  lines.push(`Wygenerowano przez: Agent AI – Analityk Procesów Biznesowych`);
+  dlBlob(new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'}), `Transkrypcja_${safeName()}.txt`);
+}
+function dlBlob(blob,name){ const u=URL.createObjectURL(blob); Object.assign(document.createElement('a'),{href:u,download:name}).click(); URL.revokeObjectURL(u); }
+function safeName(){ return (A.processData?.processNamePL||'proces').replace(/[\s/\\:*?"<>|]/g,'_'); }
+
+// ════════════════════════════════════════════════════════════════
+// VOICE INPUT
+// ════════════════════════════════════════════════════════════════
+let recog=null, isRec=false;
+function toggleRec(){ isRec?stopRec():startRec(); }
+function startRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ showToast('Twoja przeglądarka nie obsługuje rozpoznawania mowy. Użyj Chrome.'); return; }
+  recog=new SR(); recog.lang='pl-PL'; recog.continuous=true; recog.interimResults=true;
+  const ta=document.getElementById('chatIn'), existing=ta.value;
+  recog.onstart=()=>{ isRec=true; document.getElementById('micBtn').classList.add('recording'); document.getElementById('micBtn').textContent='🔴'; document.getElementById('recInd').textContent='🎙 Nagrywanie… (naciśnij ponownie aby zatrzymać)'; };
+  recog.onresult=e=>{ let fin='',int=''; for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) fin+=e.results[i][0].transcript; else int+=e.results[i][0].transcript; } ta.value=existing+fin+int; autoH(ta); };
+  recog.onerror=e=>{ stopRec(); if(e.error!=='aborted') showToast('Błąd mikrofonu: '+e.error); };
+  recog.onend=()=>{ isRec=false; document.getElementById('micBtn').classList.remove('recording'); document.getElementById('micBtn').textContent='🎤'; document.getElementById('recInd').textContent=''; };
+  recog.start();
+}
+function stopRec(){ recog?.stop(); recog=null; isRec=false; }
+
+// ════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ════════════════════════════════════════════════════════════════
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen-'+id).classList.add('active'); }
+let tctr=0;
+function showTyping(){ const id='t'+tctr++; const cw=document.getElementById('chatWin'); const d=document.createElement('div'); d.className='msg agent'; d.id=id; d.innerHTML=`<div class="msg-avatar">🤖</div><div class="msg-bubble"><div class="typing"><span class="tdot"></span><span class="tdot"></span><span class="tdot"></span></div></div>`; cw.appendChild(d); cw.scrollTop=cw.scrollHeight; return id; }
+function removeTyping(id){ document.getElementById(id)?.remove(); }
+function addMsg(role,text){ const cw=document.getElementById('chatWin'); const d=document.createElement('div'); d.className='msg '+role; if(role==='agent') d.innerHTML=`<div class="msg-avatar">🤖</div><div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`; else d.innerHTML=`<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div><div class="msg-avatar">👤</div>`; cw.appendChild(d); cw.scrollTop=cw.scrollHeight; }
+function updateProgress(){ const pct=Math.min(Math.round(A.qCovered.length/20*100),100); document.getElementById('pFill').style.width=pct+'%'; document.getElementById('pPct').textContent=pct+'%'; document.getElementById('pLabel').textContent=`Pytania: ${A.qCovered.length} / 20`; }
+function updateFinishBtn(){ const btn=document.getElementById('finishBtn'); if(btn) btn.style.display=A.qCovered.length>=15?'inline-block':'none'; }
+function onFinishInterview(){ if(!confirm('Zakończyć wywiad i wygenerować dokumenty? Jeśli chcesz dodać coś jeszcze, naciśnij Anuluj.')) return; beginAnalysis(); }
+function updatePStep(id,state){ const el=document.getElementById(id); if(!el) return; el.className='pstep '+state; el.querySelector('.pstep-icon').textContent={done:'✅',active:'⏳',pending:'⏳'}[state]||'⏳'; }
+function setProc(t,d){ document.getElementById('procTitle').textContent=t; document.getElementById('procDetail').textContent=d; }
+function disableInput(){ document.getElementById('chatIn').disabled=true; document.getElementById('sendBtn').disabled=true; }
+function enableInput(){ document.getElementById('chatIn').disabled=false; document.getElementById('sendBtn').disabled=false; document.getElementById('chatIn').focus(); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',5000); }
+function autoH(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,110)+'px'; }
+function onKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); onSend(); } }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', loadSettings);
+</script>
+</body>
+</html>
