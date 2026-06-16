@@ -82,6 +82,11 @@
     .msg-bubble { padding: 11px 15px; border-radius: 16px; font-size: 14px; line-height: 1.6; }
     .msg.agent .msg-bubble { background: var(--primary); color: #fff; border-top-left-radius: 4px; }
     .msg.user .msg-bubble { background: var(--surface); border: 1.5px solid var(--border); color: var(--text); border-top-right-radius: 4px; }
+    .hint-block { margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .hint-row { display: flex; gap: 8px; align-items: flex-start; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 10px; font-size: 13px; line-height: 1.5; }
+    .hint-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .hint-tip { border-left: 3px solid rgba(255,255,255,0.5); }
+    .hint-ex { border-left: 3px solid rgba(255,255,255,0.3); }
     .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
     .tdot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.6); animation: tb 1.1s infinite; }
     .tdot:nth-child(2){animation-delay:.18s}.tdot:nth-child(3){animation-delay:.36s}
@@ -157,6 +162,139 @@
     .btn-analyze:hover { background: #6d28d9; }
 
     @media(max-width:600px){ .form-row{grid-template-columns:1fr} .res-header{flex-direction:column} .tab-btn{padding:0 16px;font-size:13px} }
+
+    /* ── AUDIT ── */
+    .audit-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:16px; }
+    .audit-table th { background:rgba(255,255,255,.12); color:#fff; padding:8px 10px; text-align:left; font-weight:600; border-bottom:2px solid rgba(255,255,255,.2); }
+    .audit-table td { padding:7px 10px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; color:rgba(255,255,255,.9); }
+    .audit-table tr:hover td { background:rgba(255,255,255,.05); }
+    .priority-Critical { background:#7f1d1d; color:#fca5a5; font-weight:700; border-radius:4px; padding:2px 7px; display:inline-block; }
+    .priority-High { background:#78350f; color:#fcd34d; font-weight:600; border-radius:4px; padding:2px 7px; display:inline-block; }
+    .priority-Medium { background:#1e3a5f; color:#93c5fd; border-radius:4px; padding:2px 7px; display:inline-block; }
+    .priority-Low { background:rgba(255,255,255,.1); color:rgba(255,255,255,.7); border-radius:4px; padding:2px 7px; display:inline-block; }
+    .audit-section { margin-bottom:20px; }
+    .audit-section h4 { color:#93c5fd; font-size:14px; margin:0 0 10px; font-weight:600; }
+    .audit-checklist { list-style:none; padding:0; margin:0 0 16px; display:flex; flex-direction:column; gap:5px; }
+    .audit-checklist li { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:rgba(255,255,255,.85); padding:5px 8px; border-radius:6px; background:rgba(255,255,255,.05); }
+    .audit-checklist li span:first-child { flex-shrink:0; }
+    .audit-readiness { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+    .audit-score-ring { position:relative; width:90px; height:90px; flex-shrink:0; }
+    .audit-score-ring svg { transform:rotate(-90deg); }
+    .audit-score-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#fff; }
+    .audit-score-info h4 { margin:0 0 4px; font-size:15px; color:#fff; }
+    .audit-score-info p { margin:0; font-size:13px; color:rgba(255,255,255,.7); line-height:1.5; }
+    .audit-no-issues { padding:12px 16px; background:rgba(34,197,94,.15); border-left:3px solid #22c55e; border-radius:6px; color:#86efac; font-size:13px; }
+
+    /* ── BPMN REVIEW ── */
+    .review-tool-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .review-tool-tab { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid rgba(255,255,255,.25); color:rgba(255,255,255,.7); background:transparent; cursor:default; }
+    .review-tool-tab.ok { border-color:#22c55e; color:#86efac; background:rgba(34,197,94,.1); }
+    .review-tool-tab.warn { border-color:#f59e0b; color:#fcd34d; background:rgba(245,158,11,.1); }
+    .review-tool-tab.err { border-color:#ef4444; color:#fca5a5; background:rgba(239,68,68,.1); }
+    .review-finding { border-radius:8px; margin-bottom:12px; overflow:hidden; border:1px solid rgba(255,255,255,.1); }
+    .review-finding-head { display:flex; align-items:center; gap:10px; padding:9px 14px; background:rgba(255,255,255,.08); cursor:pointer; }
+    .review-finding-head:hover { background:rgba(255,255,255,.12); }
+    .review-finding-badge { font-size:11px; font-weight:700; border-radius:4px; padding:2px 8px; flex-shrink:0; }
+    .badge-gateway { background:#312e81; color:#a5b4fc; }
+    .badge-event { background:#064e3b; color:#6ee7b7; }
+    .badge-loop { background:#7c2d12; color:#fdba74; }
+    .badge-subprocess { background:#1e3a5f; color:#93c5fd; }
+    .badge-message { background:#4a1d96; color:#c4b5fd; }
+    .badge-escalation { background:#78350f; color:#fcd34d; }
+    .badge-boundary { background:#134e4a; color:#5eead4; }
+    .review-finding-title { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .review-finding-sev { font-size:11px; font-weight:700; border-radius:4px; padding:2px 8px; }
+    .sev-Critical { background:#7f1d1d; color:#fca5a5; }
+    .sev-High { background:#78350f; color:#fcd34d; }
+    .sev-Medium { background:#1e3a5f; color:#93c5fd; }
+    .sev-Low { background:rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
+    .review-finding-body { display:none; padding:14px; border-top:1px solid rgba(255,255,255,.08); }
+    .review-finding-body.open { display:block; }
+    .review-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .review-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:10px 12px; }
+    .review-cell h5 { margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:rgba(255,255,255,.45); font-weight:600; }
+    .review-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.85); line-height:1.5; }
+    .review-cell.rec { grid-column:1/-1; background:rgba(99,102,241,.12); border-left:3px solid #6366f1; }
+    .review-cell.just { grid-column:1/-1; background:rgba(255,255,255,.03); }
+    .tool-compat { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+    .tool-chip { font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.65); }
+    .tool-chip.ok { background:rgba(34,197,94,.15); color:#86efac; }
+    .tool-chip.warn { background:rgba(245,158,11,.15); color:#fcd34d; }
+    .tool-chip.err { background:rgba(239,68,68,.15); color:#fca5a5; }
+    .review-score-bar { height:10px; border-radius:5px; background:rgba(255,255,255,.1); overflow:hidden; margin:8px 0; }
+    .review-score-fill { height:100%; border-radius:5px; transition:width .6s ease; }
+    .review-legend { display:flex; gap:16px; font-size:12px; color:rgba(255,255,255,.5); flex-wrap:wrap; margin-top:6px; }
+    .review-legend span { display:flex; align-items:center; gap:5px; }
+    .review-legend-dot { width:8px; height:8px; border-radius:50%; }
+
+    /* ── PROCESS MAP ── */
+    .pmap-flow { width:100%; overflow-x:auto; margin-bottom:20px; }
+    .pmap-flow table { border-collapse:collapse; font-size:12px; min-width:700px; width:100%; }
+    .pmap-flow th { background:rgba(255,255,255,.12); color:#fff; padding:8px 12px; text-align:left; font-weight:600; border-bottom:2px solid rgba(255,255,255,.2); white-space:nowrap; }
+    .pmap-flow td { padding:7px 12px; border-bottom:1px solid rgba(255,255,255,.07); vertical-align:middle; color:rgba(255,255,255,.88); }
+    .pmap-flow tr:hover td { background:rgba(255,255,255,.04); }
+    .pmap-node { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:500; white-space:nowrap; }
+    .pmap-start  { background:rgba(34,197,94,.2);  color:#86efac;  border:1px solid rgba(34,197,94,.4); }
+    .pmap-end    { background:rgba(239,68,68,.2);   color:#fca5a5;  border:1px solid rgba(239,68,68,.4); }
+    .pmap-task   { background:rgba(96,165,250,.15); color:#93c5fd;  border:1px solid rgba(96,165,250,.3); }
+    .pmap-gw     { background:rgba(251,191,36,.15); color:#fcd34d;  border:1px solid rgba(251,191,36,.3); }
+    .pmap-arrow  { color:rgba(255,255,255,.35); font-size:14px; padding:0 2px; }
+    .pmap-tag    { display:inline-block; font-size:10px; padding:1px 6px; border-radius:3px; margin:1px 2px; }
+    .pmap-tag-exc { background:rgba(239,68,68,.2); color:#fca5a5; }
+    .pmap-tag-alt { background:rgba(139,92,246,.2); color:#c4b5fd; }
+    .pmap-tag-esc { background:rgba(245,158,11,.2); color:#fcd34d; }
+    .pmap-tag-ok  { background:rgba(34,197,94,.15); color:#86efac; }
+    .pmap-empty  { color:rgba(255,255,255,.3); font-size:11px; }
+    .pmap-step-detail { border-radius:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,.09); overflow:hidden; }
+    .pmap-step-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:rgba(255,255,255,.06); cursor:pointer; }
+    .pmap-step-head:hover { background:rgba(255,255,255,.1); }
+    .pmap-step-id { font-size:11px; color:rgba(255,255,255,.4); font-family:monospace; flex-shrink:0; }
+    .pmap-step-name { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .pmap-step-body { display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,.07); }
+    .pmap-step-body.open { display:block; }
+    .pmap-step-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .pmap-step-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:9px 11px; }
+    .pmap-step-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.38); font-weight:600; }
+    .pmap-step-cell ul { margin:0; padding:0 0 0 14px; font-size:12px; color:rgba(255,255,255,.8); line-height:1.6; }
+    .pmap-step-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.8); line-height:1.5; }
+    .pmap-inconsistency { border-radius:7px; margin-bottom:8px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start; border-left:3px solid; }
+    .pmap-inc-Critical { background:rgba(127,29,29,.3); border-color:#ef4444; }
+    .pmap-inc-High     { background:rgba(120,53,15,.3); border-color:#f59e0b; }
+    .pmap-inc-Medium   { background:rgba(30,58,95,.3);  border-color:#60a5fa; }
+    .pmap-inc-Low      { background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.2); }
+    .pmap-inc-body h5  { margin:0 0 3px; font-size:13px; font-weight:600; color:#fff; }
+    .pmap-inc-body p   { margin:0; font-size:12px; color:rgba(255,255,255,.7); line-height:1.5; }
+    .pmap-section-title { color:#93c5fd; font-size:14px; font-weight:600; margin:20px 0 10px; }
+    .pmap-check-row { display:flex; align-items:flex-start; gap:8px; padding:7px 10px; border-radius:6px; margin-bottom:5px; background:rgba(255,255,255,.04); font-size:12px; }
+    .pmap-check-ok   { color:#86efac; }
+    .pmap-check-warn { color:#fcd34d; }
+    .pmap-check-err  { color:#fca5a5; }
+
+    /* ── CONSISTENCY FIX ── */
+    .cfix-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+    .cfix-stat { background:rgba(255,255,255,.06); border-radius:8px; padding:12px 14px; text-align:center; }
+    .cfix-stat-num { font-size:28px; font-weight:700; }
+    .cfix-stat-label { font-size:11px; color:rgba(255,255,255,.5); margin-top:2px; }
+    .cfix-change { border-radius:7px; margin-bottom:8px; overflow:hidden; border:1px solid rgba(255,255,255,.09); }
+    .cfix-change-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:rgba(255,255,255,.06); cursor:pointer; }
+    .cfix-change-head:hover { background:rgba(255,255,255,.1); }
+    .cfix-type-badge { font-size:10px; font-weight:700; border-radius:3px; padding:2px 7px; flex-shrink:0; }
+    .cfix-Renumber   { background:#1e3a5f; color:#93c5fd; }
+    .cfix-Reorder    { background:#312e81; color:#a5b4fc; }
+    .cfix-Link       { background:#064e3b; color:#6ee7b7; }
+    .cfix-Assign     { background:#4a1d96; color:#c4b5fd; }
+    .cfix-Fix        { background:#78350f; color:#fcd34d; }
+    .cfix-Remove     { background:#7f1d1d; color:#fca5a5; }
+    .cfix-change-title { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .cfix-change-body { display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,.07); }
+    .cfix-change-body.open { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .cfix-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:9px 11px; }
+    .cfix-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.38); font-weight:600; }
+    .cfix-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.85); line-height:1.5; }
+    .cfix-cell.full { grid-column:1/-1; }
+    .cfix-diff-old { text-decoration:line-through; color:#fca5a5; }
+    .cfix-diff-new { color:#86efac; }
+    .cfix-section-title { color:#93c5fd; font-size:14px; font-weight:600; margin:18px 0 8px; }
   </style>
 </head>
 <body>
@@ -287,18 +425,18 @@
     <span class="hdr-right" id="iHdrRight">Trwa wywiad</span>
   </div>
   <div class="interview-body">
-    <div class="progress-wrap">
-      <div class="progress-meta">
-        <span id="pLabel">Pytanie 1 / 20</span>
-        <span id="pPct">0%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
-    </div>
     <div class="chat-window" id="chatWin"></div>
     <div class="rec-indicator" id="recInd"></div>
-    <div style="text-align:right;padding:0 0 6px;flex-shrink:0">
-      <button id="finishBtn" onclick="onFinishInterview()" style="display:none;padding:7px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">
-        ✅ Zakończ wywiad i generuj dokumenty
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0 4px;flex-shrink:0;gap:10px">
+      <div class="progress-wrap" style="flex:1;margin:0">
+        <div class="progress-meta">
+          <span id="pLabel">Pytania: 0 / 20</span>
+          <span id="pPct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+      </div>
+      <button id="finishBtn" onclick="onFinishInterview()" style="display:none;padding:7px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0">
+        ✅ Zakończ wywiad
       </button>
     </div>
     <div class="input-area">
@@ -321,10 +459,16 @@
     <div class="proc-title" id="procTitle">Analizuję wywiad…</div>
     <div class="proc-detail" id="procDetail">Proszę czekać</div>
     <div class="proc-steps">
+      <div class="pstep" id="ps0"><span class="pstep-icon">⏳</span> Planowanie struktury procesu (lista aktywności i decyzji)</div>
       <div class="pstep" id="ps1"><span class="pstep-icon">⏳</span> Analiza transkryptu — metadane karty</div>
       <div class="pstep" id="ps2"><span class="pstep-icon">⏳</span> Generowanie kroków procesu</div>
       <div class="pstep" id="ps3"><span class="pstep-icon">⏳</span> Budowanie struktury BPMN</div>
       <div class="pstep" id="ps4"><span class="pstep-icon">⏳</span> Tworzenie dokumentu Word</div>
+      <div class="pstep" id="ps5"><span class="pstep-icon">⏳</span> Audyt spójności procesu</div>
+      <div class="pstep" id="ps6"><span class="pstep-icon">⏳</span> Analiza architektury BPMN 2.0</div>
+      <div class="pstep" id="ps7"><span class="pstep-icon">⏳</span> Mapowanie powiązań procesu</div>
+      <div class="pstep" id="ps8"><span class="pstep-icon">⏳</span> Naprawa niespójności dokumentu</div>
+      <div class="pstep" id="ps9"><span class="pstep-icon">⏳</span> Audyt rozdzielenia STEP/DECISION i kompletności</div>
     </div>
   </div>
 </div>
@@ -361,6 +505,26 @@
       <h3>🔢 Kroki procesu</h3>
       <div class="steps-list" id="stepsList"></div>
     </div>
+    <div class="res-card" id="auditCard" style="display:none">
+      <h3>🔍 Audyt spójności procesu</h3>
+      <div id="auditContent"></div>
+    </div>
+    <div class="res-card" id="bpmnReviewCard" style="display:none">
+      <h3>🏗 Analiza architektury BPMN 2.0 — Senior BPM Architect</h3>
+      <div id="bpmnReviewContent"></div>
+    </div>
+    <div class="res-card" id="processMapCard" style="display:none">
+      <h3>🗺 Mapa powiązań procesu</h3>
+      <div id="processMapContent"></div>
+    </div>
+    <div class="res-card" id="consistencyFixCard" style="display:none">
+      <h3>🔧 Naprawione niespójności dokumentu</h3>
+      <div id="consistencyFixContent"></div>
+    </div>
+    <div class="res-card" id="stepDecisionAuditCard" style="display:none">
+      <h3>⚖ Audyt rozdzielenia STEP/DECISION i kompletności kroków</h3>
+      <div id="stepDecisionAuditContent"></div>
+    </div>
   </div>
 </div>
 
@@ -372,40 +536,126 @@
 // DEFAULT PROMPTS
 // ════════════════════════════════════════════════════════════════
 const Q20 = `OBSZAR 1 — CEL I KONTEKST:
-01. Jaki jest główny cel tego procesu i jaką wartość dostarcza? (konkretny i mierzalny)
-02. Co wyzwala ten proces i po czym wiadomo, że się zakończył? (trigger + warunek zakończenia)
-03. Czy proces jest krytyczny dla działalności — co by się stało gdyby przestał działać? (skutki finansowe, regulacyjne, wizerunkowe)
+
+01. Jaki jest główny cel tego procesu i jaką wartość dostarcza?
+OPIS: To fundamentalne pytanie definiuje sens istnienia procesu. Odpowiedź powinna być konkretna i mierzalna — nie "obsługujemy klientów", lecz "zapewniamy rozpatrzenie reklamacji w ciągu 5 dni roboczych". Pozwala zrozumieć, czy proces jest strategiczny, operacyjny czy wspierający, oraz komu bezpośrednio służy.
+PRZYKŁAD: „Proces obsługi reklamacji dostarcza klientom detalicznym potwierdzenie przyjęcia i rozpatrzenia zgłoszenia w ciągu 5 dni roboczych, minimalizując ryzyko utraty klienta i spełniając wymogi ustawy o prawach konsumenta."
+
+02. Co wyzwala ten proces i po czym wiadomo, że się zakończył?
+OPIS: Zdarzenie inicjujące (trigger) i warunek zakończenia to granice procesu — bez nich nie wiadomo, gdzie zaczyna się, a gdzie kończy odpowiedzialność. Trigger może być zdarzeniem, dokumentem, upływem czasu lub decyzją. Warunek zakończenia musi być obiektywnie weryfikowalny.
+PRZYKŁAD: „Trigger: wpłynięcie zgłoszenia reklamacyjnego przez formularz online, e-mail lub infolinię. Zakończenie: wysłanie do klienta pisemnej decyzji z wynikiem rozpatrzenia reklamacji oraz zamknięcie zgłoszenia w systemie CRM."
+
+03. Czy proces jest krytyczny dla działalności — co by się stało gdyby przestał działać?
+OPIS: Pytanie o krytyczność pozwala ustalić priorytety dla ciągłości działania, SLA systemów IT i planów awaryjnych. Odpowiedź wpływa na poziom zabezpieczeń, redundancję i czas dopuszczalnej niedostępności (RTO/RPO). Warto zapytać o konkretne skutki: finansowe, regulacyjne, wizerunkowe.
+PRZYKŁAD: „Zatrzymanie procesu na 24h oznacza naruszenie ustawowego terminu odpowiedzi na reklamację (14 dni), ryzyko kary od UOKiK do 10% rocznych przychodów oraz natychmiastowe eskalacje medialne. Proces klasyfikujemy jako krytyczny — RTO: 4h."
 
 OBSZAR 2 — WEJŚCIA I WYJŚCIA:
-04. Co jest wejściem do procesu, w jakim formacie i skąd pochodzi? (dane, dokumenty, materiały; format; źródło; kiedy wejście jest niedopuszczalne)
-05. Co jest wynikiem procesu, do kogo trafia i jak wygląda sukces? (każde wyjście: odbiorca, format, kryterium sukcesu)
+
+04. Co jest wejściem do procesu, w jakim formacie i skąd pochodzi?
+OPIS: Wejścia to wszystko, co jest potrzebne, żeby proces mógł się rozpocząć i przebiegać poprawnie: dane, dokumenty, decyzje, materiały fizyczne. Dla każdego wejścia ważny jest format (PDF, Excel, API, papier), źródło (system, osoba, zewnętrzny dostawca) oraz wymagania jakościowe — kiedy wejście jest niedopuszczalne.
+PRZYKŁAD: „Wejścia: (1) Formularz reklamacyjny — PDF lub dane z formularza www (system CRM); (2) Dowód zakupu — skan JPG/PDF od klienta; (3) Historia transakcji klienta — automatyczny pull z systemu ERP w formacie JSON. Wejście niedopuszczalne: brak danych kontaktowych klienta lub daty zakupu."
+
+05. Co jest wynikiem procesu, do kogo trafia i jak wygląda sukces?
+OPIS: Wyjścia definiują, co proces produkuje i dla kogo. Każde wyjście powinno mieć jasno określonego odbiorcę, format dostarczenia oraz kryterium sukcesu — po czym odbiorca poznaje, że wyjście jest kompletne i poprawne. To punkt wyjścia do definiowania KPI procesu.
+PRZYKŁAD: „Wyjścia: (1) Decyzja reklamacyjna — pismo PDF wysyłane e-mailem do klienta w ciągu 5 dni roboczych; sukces = decyzja zawiera podstawę prawną i sposób realizacji. (2) Zamknięte zgłoszenie w CRM z historią działań. (3) Miesięczny raport reklamacji dla działu jakości."
 
 OBSZAR 3 — PRZEBIEG PROCESU:
-06. Opisz proces krok po kroku — od zdarzenia startowego do zakończenia. (chronologiczna narracja; nie pomijaj "oczywistych" kroków)
-07. Gdzie w procesie zapadają kluczowe decyzje i na podstawie jakich kryteriów? (kto decyduje, jakie kryteria, ile czasu)
-08. Czy są ścieżki alternatywne — kiedy proces idzie inaczej niż standardowo? (przypadki brzegowe, wyjątki od reguły)
-09. Jakie zasady biznesowe rządzą poszczególnymi krokami (limity, progi, terminy)? (business rules; często istnieją tylko w głowach)
+
+06. Opisz proces krok po kroku — od zdarzenia startowego do zakończenia.
+OPIS: To najważniejsze pytanie wywiadu — odpowiedź stanowi podstawę diagramu BPMN i szczegółowego opisu procesu. Poproś o narrację bez przerywania, a następnie weryfikuj sekwencję i kompletność. Zwróć uwagę na kroki, które rozmówca pomija jako "oczywiste" — często tam kryją się największe problemy.
+PRZYKŁAD: „1. Rejestracja zgłoszenia w CRM (Konsultant, 5 min). 2. Weryfikacja kompletności danych (Konsultant, 10 min). 3. Przekazanie do specjalisty reklamacji (automatyczne, CRM). 4. Analiza zasadności reklamacji (Specjalista, 1-2 dni). 5. Decyzja i przygotowanie pisma (Specjalista, 30 min). 6. Akceptacja decyzji (Kierownik, jeśli kwota > 500 zł). 7. Wysyłka do klienta i zamknięcie zgłoszenia."
+
+07. Gdzie w procesie zapadają kluczowe decyzje i na podstawie jakich kryteriów?
+OPIS: Punkty decyzyjne to miejsca, gdzie proces może pójść różnymi ścieżkami. Dla każdej decyzji ważne jest: kto decyduje, jakie kryteria stosuje, jakie dane są potrzebne i ile czasu to zajmuje. Niezdefiniowane kryteria decyzji to najczęstsze źródło niespójności i błędów w procesie.
+PRZYKŁAD: „Decyzja 1: Zasadność reklamacji (Specjalista) — kryteria: zgodność z regulaminem, termin zakupu < 24 miesiące, udokumentowana wada. Czas: max 2 dni robocze. Decyzja 2: Akceptacja kwoty zwrotu (Kierownik) — kryterium: kwota > 500 zł lub precedens. Czas: max 4h od przekazania."
+
+08. Czy są ścieżki alternatywne — kiedy proces idzie inaczej niż standardowo?
+OPIS: Ścieżki alternatywne i wyjątkowe często odkrywają ukrytą złożoność procesu. Standardowy przebieg to zazwyczaj tylko 60-70% rzeczywistości. Zapytaj o przypadki brzegowe, wyjątki od reguły i sytuacje, gdy normalny tok postępowania nie ma zastosowania.
+PRZYKŁAD: „Ścieżka alternatywna 1: Reklamacja VIP (klient premium) — pomija standardową kolejkę, trafia bezpośrednio do starszego specjalisty, decyzja w 24h. Ścieżka alternatywna 2: Reklamacja zbiorowa (>10 zgłoszeń tego samego produktu) — eskalacja do działu jakości i wstrzymanie sprzedaży produktu."
+
+09. Jakie zasady biznesowe rządzą poszczególnymi krokami (limity, progi, terminy)?
+OPIS: Zasady biznesowe (business rules) to warunki i ograniczenia, które determinują przebieg procesu — często wynikają z przepisów prawa, umów, polityk wewnętrznych lub decyzji zarządu. Są kluczowe dla automatyzacji i muszą być udokumentowane precyzyjnie. Wiele z nich istnieje tylko w głowach wykonawców.
+PRZYKŁAD: „BR-01: Reklamacja musi być rozpatrzona w ciągu 14 dni kalendarzowych (ustawa o prawach konsumenta). BR-02: Zwrot gotówki możliwy tylko przy reklamacji złożonej w ciągu 30 dni od zakupu. BR-03: Decyzja odmowna wymaga podpisu kierownika działu. BR-04: Klient musi otrzymać potwierdzenie przyjęcia w ciągu 24h od zgłoszenia."
 
 OBSZAR 4 — LUDZIE I ODPOWIEDZIALNOŚCI:
-10. Kto wykonuje poszczególne kroki — jakie role są zaangażowane? (role, nie nazwiska; uwzględnij systemy automatyczne)
-11. Kto jest właścicielem procesu i kto jest rozliczany z jego wyników? (Process Owner + KPI z jakich jest rozliczany)
-12. Czy są aktywności realizowane przez zewnętrzne podmioty lub inne zespoły? (zależności zewnętrzne + SLA)
+
+10. Kto wykonuje poszczególne kroki — jakie role są zaangażowane?
+OPIS: Pytanie o role (nie nazwiska!) pozwala zbudować macierz RACI i swimlane diagram. Ważne jest rozróżnienie między tym, kto fizycznie wykonuje krok, a kto za niego odpowiada. Uwzględnij również systemy automatyczne, które wykonują czynności bez udziału człowieka.
+PRZYKŁAD: „Role w procesie: Konsultant BOK (rejestracja, weryfikacja, komunikacja z klientem), Specjalista ds. reklamacji (analiza, decyzja, pismo), Kierownik BOK (akceptacja decyzji > 500 zł, eskalacje), System CRM (automatyczne przydzielanie zgłoszeń, powiadomienia), Dział Jakości (odbiorca raportów miesięcznych)."
+
+11. Kto jest właścicielem procesu i kto jest rozliczany z jego wyników?
+OPIS: Process Owner to osoba odpowiedzialna za efektywność procesu jako całości — nie za wykonanie pojedynczych kroków, lecz za wyniki, KPI i ciągłe doskonalenie. Powinna mieć uprawnienia do wprowadzania zmian. Brak zdefiniowanego właściciela to sygnał, że proces "należy do wszystkich", czyli do nikogo.
+PRZYKŁAD: „Właściciel procesu: Kierownik Działu Obsługi Klienta (odpowiada za poziom NPS i wskaźnik rozpatrzonych reklamacji). Rozliczany kwartalnie przez Dyrektora Sprzedaży z: % reklamacji rozpatrzonych w terminie, kosztów obsługi reklamacji, wskaźnika ponownych reklamacji tego samego klienta."
+
+12. Czy są aktywności realizowane przez zewnętrzne podmioty lub inne zespoły?
+OPIS: Zależności zewnętrzne to potencjalne punkty ryzyka — inne zespoły lub podmioty mogą mieć inne priorytety, SLA i standardy jakości. Ważne jest, aby zidentyfikować wszystkie interfejsy z otoczeniem procesu i określić, kto jest odpowiedzialny za koordynację i jakość na tych stykach.
+PRZYKŁAD: „Zewnętrzne zależności: (1) Dział Logistyki — odbiór i weryfikacja zwróconego towaru (SLA: 2 dni robocze); (2) Zewnętrzne laboratorium rzeczoznawcze — ekspertyza techniczna przy reklamacjach > 2000 zł (SLA: 7 dni, umowa ramowa nr LOG-2023-44); (3) Operator płatności — realizacja zwrotu środków (SLA: 3 dni robocze)."
 
 OBSZAR 5 — SYSTEMY I ZASOBY:
-13. Jakie systemy IT i narzędzia są używane i do czego służą? (od ERP po Excel; rola w procesie; co się stanie gdy niedostępne)
-14. Ile osób (FTE) jest zaangażowanych i jakich kompetencji wymagasz? (FTE może być ułamkiem; kompetencje + szkolenia)
+
+13. Jakie systemy IT i narzędzia są używane i do czego służą?
+OPIS: Inwentaryzacja systemów IT ujawnia zależności techniczne procesu i potencjalne wąskie gardła. Uwzględnij wszystko — od systemów klasy ERP po Excel i e-mail. Dla każdego systemu określ jego rolę w procesie, kto z niego korzysta i co się stanie, gdy będzie niedostępny.
+PRZYKŁAD: „Systemy: (1) Salesforce CRM — rejestracja i zarządzanie zgłoszeniami (wszyscy użytkownicy, krytyczny); (2) SAP ERP — weryfikacja historii zakupów i realizacja zwrotów finansowych (Specjalista, krytyczny); (3) Outlook — komunikacja z klientem i zewnętrznymi dostawcami (wszyscy); (4) SharePoint — archiwizacja dokumentacji reklamacyjnej (Specjalista)."
+
+14. Ile osób (FTE) jest zaangażowanych i jakich kompetencji wymagasz?
+OPIS: Dane o zasobach ludzkich są kluczowe do analizy wydajności i pojemności procesu (capacity planning). FTE (Full Time Equivalent) może być ułamkiem — np. kierownik poświęca 0,2 FTE na ten proces. Kompetencje pozwalają ocenić ryzyko związane z rotacją i potrzeby szkoleniowe.
+PRZYKŁAD: „Zasoby: 3 FTE Konsultantów BOK (po 0,4 FTE na ten proces), 1 FTE Specjalista ds. reklamacji (dedykowany), 0,2 FTE Kierownik BOK (akceptacje i eskalacje). Wymagane kompetencje: znajomość prawa konsumenckiego, obsługa CRM i SAP, certyfikat wewnętrzny 'Obsługa reklamacji' (szkolenie 2-dniowe)."
 
 OBSZAR 6 — POMIAR I JAKOŚĆ:
-15. Po czym poznasz, że proces działa dobrze lub źle — jakie mierzysz wskaźniki? (KPI: cel, alarm, właściciel)
-16. Jaki jest akceptowalny czas realizacji i czy istnieją zobowiązania SLA? (zewnętrzne i wewnętrzne SLA; co przy przekroczeniu)
+
+15. Po czym poznasz, że proces działa dobrze lub źle — jakie mierzysz wskaźniki?
+OPIS: KPI procesu powinny mierzyć zarówno efektywność (czy robimy właściwe rzeczy) jak i wydajność (czy robimy je właściwie). Dobre pytanie uzupełniające: "Kiedy ostatni raz Twój szef zapytał o ten proces i czego chciał się dowiedzieć?" — odpowiedź zazwyczaj wskazuje najważniejsze wskaźniki.
+PRZYKŁAD: „KPI: (1) % reklamacji rozpatrzonych w terminie ustawowym — cel: 100%, alarm: <98%; (2) Średni czas rozpatrzenia (Cycle Time) — cel: 3 dni robocze, alarm: >5 dni; (3) Wskaźnik powtórnych reklamacji — cel: <5%, alarm: >10%; (4) Koszt obsługi jednej reklamacji — cel: <45 zł; (5) NPS po obsłudze reklamacji — cel: >40."
+
+16. Jaki jest akceptowalny czas realizacji i czy istnieją zobowiązania SLA?
+OPIS: SLA (Service Level Agreement) może być zewnętrzne (umowa z klientem, wymóg regulacyjny) lub wewnętrzne (zobowiązanie między działami). Ważne jest rozróżnienie między czasem zegara a czasem roboczym oraz określenie, co się dzieje po przekroczeniu SLA — eskalacja, kara umowna, automatyczne powiadomienie.
+PRZYKŁAD: „SLA zewnętrzne: 14 dni kalendarzowych na decyzję (wymóg ustawowy) — przekroczenie = automatyczna akceptacja reklamacji. SLA wewnętrzne: Dział Logistyki zwraca ocenę towaru w 2 dniach roboczych. Czas docelowy (wewnętrzny cel): 3 dni robocze od rejestracji do decyzji."
 
 OBSZAR 7 — RYZYKA I WYJĄTKI:
-17. Co może pójść nie tak — jakie błędy i wyjątki się zdarzają i jak często? (konkretne przykłady z ostatnich 3-6 miesięcy + częstotliwość)
-18. Kiedy sprawa wymaga eskalacji i do kogo? (warunki eskalacji L1/L2; czas reakcji; zastępstwo)
+
+17. Co może pójść nie tak — jakie błędy i wyjątki się zdarzają i jak często?
+OPIS: Pytanie o wyjątki i błędy ujawnia prawdziwą złożoność procesu, której nie widać w "happy path". Poproś o konkretne przykłady z ostatnich 3-6 miesięcy. Informacja o częstotliwości pozwoli ocenić prawdopodobieństwo w macierzy ryzyk i ustalić priorytety działań naprawczych.
+PRZYKŁAD: „Najczęstsze problemy: (1) Niekompletne zgłoszenie od klienta — brak dowodu zakupu (~30% zgłoszeń), wymaga ponownego kontaktu, wydłuża proces o 1-2 dni; (2) Niedostępność SAP podczas okna serwisowego (piątek 22:00-02:00) blokuje weryfikację zakupów; (3) Opóźnienia z laboratorium zewnętrznym (~15% ekspertyz) — przekraczają SLA."
+
+18. Kiedy sprawa wymaga eskalacji i do kogo?
+OPIS: Ścieżka eskalacji musi być zdefiniowana z wyprzedzeniem — w sytuacji kryzysowej nie ma czasu na ustalanie kto decyduje. Określ precyzyjnie warunki eskalacji (co, kiedy, przy jakich wartościach progowych), czas na reakcję oraz co się dzieje, gdy osoba eskalująca jest niedostępna.
+PRZYKŁAD: „Eskalacja L1 → Kierownik BOK: kwota zwrotu > 500 zł, reklamacja powtórna tego samego klienta lub przekroczenie 10 dni bez decyzji. Czas reakcji: 4h. Eskalacja L2 → Dyrektor Sprzedaży: reklamacja medialna, kwota > 5000 zł lub zagrożenie postępowaniem sądowym. Czas reakcji: 2h. Zastępstwo: każdy poziom ma wyznaczonego zastępcę."
 
 OBSZAR 8 — ZGODNOŚĆ I POWIĄZANIA:
-19. Jakie przepisy, regulacje lub normy mają zastosowanie do tego procesu? (prawo, regulacje branżowe, ISO, polityki wewnętrzne)
-20. Jakie procesy poprzedzają ten proces i jakie uruchamia po sobie? (kontekst end-to-end)`;
+
+19. Jakie przepisy, regulacje lub normy mają zastosowanie do tego procesu?
+OPIS: Wymagania compliance często determinują kształt całego procesu — terminy, obowiązkowe kroki, dokumentację i archiwizację. Uwzględnij przepisy prawa, regulacje branżowe, normy ISO, wewnętrzne polityki oraz wymogi audytowe. Brak zgodności może oznaczać kary finansowe, ryzyko reputacyjne lub utratę licencji.
+PRZYKŁAD: „Regulacje: (1) Ustawa o prawach konsumenta — 14 dni na decyzję, obowiązek uzasadnienia odmowy; (2) RODO — dane klienta przechowywane max. 5 lat, zgoda na kontakt marketingowy oddzielna; (3) Polityka wewnętrzna REK-2022 — obowiązkowa dokumentacja fotograficzna wadliwego towaru; (4) Audyt zewnętrzny ISO 9001 — wymagana pełna ścieżka audytu w CRM."
+
+20. Jakie procesy poprzedzają ten proces i jakie uruchamia po sobie?
+OPIS: Żaden proces nie istnieje w izolacji — zrozumienie powiązań pozwala zobaczyć szerszy kontekst i zidentyfikować zależności, które mogą wpłynąć na czas realizacji lub jakość. Procesy poprzedzające dostarczają wejść; procesy następcze konsumują wyjścia. To kluczowe dla analizy end-to-end i inicjatyw transformacyjnych.
+PRZYKŁAD: „Poprzedza: Proces sprzedaży (generuje transakcje, do których odnosi się reklamacja) oraz Proces obsługi zwrotów (fizyczny odbiór towaru). Uruchamia: Proces zwrotu płatności (po pozytywnej decyzji), Proces zarządzania jakością produktu (raport o wadach seryjnych), Proces raportowania regulacyjnego (miesięczne zestawienie dla UOKiK)."`;
+
+
+// Hints injected programmatically after each AI question (index 1-20)
+const Q20_HINTS = [
+  null, // 0 — unused
+  { opis: "Zależy mi na konkretnej i mierzalnej odpowiedzi — nie ogólnej. Chcę wiedzieć, czy proces jest strategiczny, operacyjny czy wspierający i komu bezpośrednio służy.", przyklad: "Proces obsługi reklamacji dostarcza klientom potwierdzenie przyjęcia i rozpatrzenia zgłoszenia w ciągu 5 dni roboczych, minimalizując ryzyko utraty klienta." },
+  { opis: "Trigger to zdarzenie uruchamiające proces, warunek zakończenia to obiektywnie weryfikowalny fakt kończący odpowiedzialność. Bez tych granic nie wiadomo, gdzie zaczyna się i kończy praca.", przyklad: "Trigger: wpłynięcie zgłoszenia reklamacyjnego przez formularz, e-mail lub infolinię. Zakończenie: wysłanie pisemnej decyzji do klienta i zamknięcie zgłoszenia w systemie CRM." },
+  { opis: "Krytyczność procesu determinuje priorytety dla planów awaryjnych, SLA i redundancji. Warto opisać konkretne skutki zatrzymania: finansowe, regulacyjne, wizerunkowe.", przyklad: "Zatrzymanie procesu na 24h oznacza naruszenie ustawowego terminu 14 dni, ryzyko kary od UOKiK do 10% przychodów i natychmiastowe eskalacje medialne. Klasyfikacja: krytyczny, RTO: 4h." },
+  { opis: "Wejścia to wszystko potrzebne do startu i przebiegu: dane, dokumenty, decyzje, materiały. Ważny jest format, źródło i wymagania jakościowe — kiedy wejście jest niedopuszczalne.", przyklad: "Wejścia: (1) Formularz reklamacyjny — PDF/dane z formularza www (CRM); (2) Dowód zakupu — skan JPG/PDF od klienta; (3) Historia transakcji — automatyczny pull z ERP w formacie JSON. Niedopuszczalne: brak danych kontaktowych lub daty zakupu." },
+  { opis: "Każde wyjście ma konkretnego odbiorcę, format dostarczenia i kryterium sukcesu — po czym odbiorca poznaje, że jest kompletne i poprawne. To punkt wyjścia do definiowania KPI.", przyklad: "Wyjścia: (1) Decyzja reklamacyjna — pismo PDF do klienta w 5 dni roboczych; sukces = zawiera podstawę prawną i sposób realizacji. (2) Zamknięte zgłoszenie w CRM. (3) Miesięczny raport dla działu jakości." },
+  { opis: "To najważniejsze pytanie wywiadu — odpowiedź stanowi podstawę diagramu BPMN. Proszę o chronologiczną narrację, nie pomijając 'oczywistych' kroków — tam najczęściej kryją się problemy.", przyklad: "1. Rejestracja zgłoszenia w CRM (5 min). 2. Weryfikacja kompletności danych (10 min). 3. Przekazanie do specjalisty (automatyczne). 4. Analiza zasadności (1-2 dni). 5. Decyzja i pismo (30 min). 6. Akceptacja Kierownika (jeśli kwota >500 zł). 7. Wysyłka do klienta i zamknięcie." },
+  { opis: "Punkty decyzyjne to miejsca, gdzie proces rozgałęzia się. Dla każdej decyzji ważne jest: kto decyduje, jakie kryteria stosuje, jakie dane są potrzebne i ile czasu to zajmuje.", przyklad: "Decyzja 1: Zasadność reklamacji (Specjalista) — kryteria: zgodność z regulaminem, termin <24 miesiące, udokumentowana wada, czas: max 2 dni. Decyzja 2: Akceptacja kwoty (Kierownik) — kryterium: >500 zł lub precedens, czas: max 4h." },
+  { opis: "Standardowy przebieg to zazwyczaj tylko 60-70% rzeczywistości. Interesują mnie przypadki brzegowe i wyjątki od reguły — kiedy normalny tok nie ma zastosowania.", przyklad: "Ścieżka 1: Reklamacja VIP (klient premium) — pomija kolejkę, trafia do starszego specjalisty, decyzja w 24h. Ścieżka 2: Reklamacja zbiorowa (>10 zgłoszeń tego samego produktu) — eskalacja do działu jakości i wstrzymanie sprzedaży." },
+  { opis: "Zasady biznesowe to warunki i ograniczenia determinujące przebieg procesu — wynikają z przepisów, umów lub polityk wewnętrznych. Wiele z nich istnieje tylko w głowach wykonawców.", przyklad: "BR-01: Reklamacja musi być rozpatrzona w 14 dni kalendarzowych (ustawa). BR-02: Zwrot gotówki możliwy tylko przy zgłoszeniu w ciągu 30 dni od zakupu. BR-03: Decyzja odmowna wymaga podpisu kierownika. BR-04: Klient musi otrzymać potwierdzenie przyjęcia w 24h." },
+  { opis: "Pytam o role, nie nazwiska — to pozwala zbudować macierz RACI. Ważne jest kto fizycznie wykonuje krok vs kto za niego odpowiada. Uwzględnij też systemy automatyczne.", przyklad: "Konsultant BOK (rejestracja, weryfikacja, komunikacja), Specjalista ds. reklamacji (analiza, decyzja, pismo), Kierownik BOK (akceptacje >500 zł, eskalacje), System CRM (automatyczne przydzielanie zgłoszeń), Dział Jakości (odbiorca raportów)." },
+  { opis: "Process Owner odpowiada za efektywność procesu jako całości — za wyniki, KPI i ciągłe doskonalenie, nie za wykonanie pojedynczych kroków. Powinien mieć uprawnienia do zmian.", przyklad: "Właściciel: Kierownik Działu Obsługi Klienta. Rozliczany kwartalnie z: % reklamacji rozpatrzonych w terminie, kosztów obsługi reklamacji, wskaźnika ponownych reklamacji." },
+  { opis: "Zależności zewnętrzne to potencjalne punkty ryzyka — inne zespoły lub podmioty mogą mieć inne priorytety i SLA. Ważne jest zidentyfikowanie wszystkich interfejsów z otoczeniem procesu.", przyklad: "Dział Logistyki — odbiór zwróconego towaru (SLA: 2 dni); Laboratorium zewnętrzne — ekspertyza przy reklamacjach >2000 zł (SLA: 7 dni); Operator płatności — realizacja zwrotu środków (SLA: 3 dni)." },
+  { opis: "Inwentaryzacja systemów IT ujawnia zależności techniczne i potencjalne wąskie gardła. Uwzględnij wszystko — od ERP po Excel. Dla każdego systemu: rola, użytkownicy, co gdy niedostępny.", przyklad: "Salesforce CRM — rejestracja zgłoszeń (wszyscy, krytyczny); SAP ERP — weryfikacja zakupów i zwroty finansowe (Specjalista, krytyczny); Outlook — komunikacja z klientem; SharePoint — archiwizacja dokumentacji." },
+  { opis: "FTE (Full Time Equivalent) może być ułamkiem — np. kierownik poświęca 0,2 FTE na ten proces. Kompetencje pozwalają ocenić ryzyko rotacji i potrzeby szkoleniowe.", przyklad: "3 FTE Konsultantów BOK (po 0,4 FTE), 1 FTE Specjalista ds. reklamacji (dedykowany), 0,2 FTE Kierownik BOK. Kompetencje: prawo konsumenckie, obsługa CRM i SAP, certyfikat 'Obsługa reklamacji' (2-dniowe szkolenie)." },
+  { opis: "KPI powinny mierzyć efektywność (czy robimy właściwe rzeczy) i wydajność (czy robimy je właściwie). Użyteczne pytanie uzupełniające: kiedy ostatni raz szef pytał o ten proces i co chciał wiedzieć?", przyklad: "% reklamacji rozpatrzonych w terminie — cel: 100%, alarm: <98%; Średni czas rozpatrzenia — cel: 3 dni, alarm: >5 dni; Wskaźnik powtórnych reklamacji — cel: <5%, alarm: >10%; Koszt obsługi — cel: <45 zł." },
+  { opis: "SLA może być zewnętrzne (umowa z klientem, wymóg regulacyjny) lub wewnętrzne (między działami). Ważne: czas zegara vs czas roboczy oraz co się dzieje po przekroczeniu SLA.", przyklad: "SLA zewnętrzne: 14 dni kalendarzowych na decyzję (wymóg ustawowy) — przekroczenie = automatyczna akceptacja reklamacji. SLA wewnętrzne: Logistyka zwraca ocenę towaru w 2 dniach roboczych. Cel wewnętrzny: 3 dni robocze od rejestracji." },
+  { opis: "Pytanie o wyjątki i błędy ujawnia prawdziwą złożoność procesu niewidoczną w 'happy path'. Proszę o konkretne przykłady z ostatnich 3-6 miesięcy i informację o częstotliwości.", przyklad: "Niekompletne zgłoszenie — brak dowodu zakupu (~30% zgłoszeń), wydłuża o 1-2 dni; Niedostępność SAP podczas okna serwisowego (piątek 22:00-02:00) blokuje weryfikację; Opóźnienia laboratorium zewnętrznego (~15% ekspertyz) — przekraczają SLA." },
+  { opis: "Ścieżka eskalacji musi być zdefiniowana z wyprzedzeniem. Potrzebuję: konkretnych warunków (co, kiedy, przy jakich progach), czasu na reakcję i zastępstwa gdy osoba eskalująca jest niedostępna.", przyklad: "L1 → Kierownik BOK: kwota >500 zł, reklamacja powtórna lub >10 dni bez decyzji, czas reakcji 4h. L2 → Dyrektor Sprzedaży: reklamacja medialna, kwota >5000 zł lub zagrożenie sądowe, czas reakcji 2h. Każdy poziom ma zastępcę." },
+  { opis: "Wymagania compliance często determinują kształt całego procesu — terminy, obowiązkowe kroki i archiwizację. Uwzględnij przepisy prawa, normy ISO, wewnętrzne polityki i wymogi audytowe.", przyklad: "Ustawa o prawach konsumenta — 14 dni na decyzję, obowiązek uzasadnienia odmowy; RODO — dane klienta max. 5 lat; Polityka wewnętrzna REK-2022 — dokumentacja fotograficzna wadliwego towaru; ISO 9001 — pełna ścieżka audytu w CRM." },
+  { opis: "Żaden proces nie istnieje w izolacji — powiązania pokazują szerszy kontekst end-to-end. Procesy poprzedzające dostarczają wejść; procesy następcze konsumują wyjścia.", przyklad: "Poprzedza: Proces sprzedaży (generuje transakcje) oraz Obsługa zwrotów (fizyczny odbiór towaru). Uruchamia: Zwrot płatności (po pozytywnej decyzji), Zarządzanie jakością produktu (raporty wad seryjnych), Raportowanie regulacyjne (zestawienia dla UOKiK)." }
+];
 
 const DEFAULT_PROMPT_INTERVIEW =
 `Jesteś doświadczonym analitykiem biznesowym prowadzącym wywiad w celu zebrania informacji do karty procesu biznesowego.
@@ -422,12 +672,21 @@ ZASADY PROWADZENIA WYWIADU:
 - Nie pytaj ponownie o rzeczy już wyjaśnione
 - Kiedy wszystkie 20 obszarów zostało pokryte — zakończ wywiad
 
-WAŻNE: Zawsze zwracaj odpowiedź jako JSON (bez markdown, bez backticks):
+WAŻNE: Zawsze zwracaj odpowiedź jako JSON (bez markdown, bez backticks).
+
+Dla action="next_question" pole "message" ZAWSZE musi zawierać trzy sekcje oddzielone pustą linią:
+1. Treść pytania
+2. 💡 Podpowiedź: [1-2 zdania z OPIS danego pytania — dlaczego je zadaję i czego szukam]
+3. 📌 Przykład: [skrócona wersja PRZYKŁAD dla tego pytania]
+
+Przykład poprawnego JSON dla pierwszego pytania:
 {
-  "action": "followup" | "next_question" | "complete",
-  "qCovered": [lista numerów 1-20 pokrytych dotąd pytań],
-  "message": "treść wiadomości do rozmówcy"
+  "action": "next_question",
+  "qCovered": [1],
+  "message": "Jaki jest główny cel tego procesu i jaką wartość dostarcza?\n\n💡 Podpowiedź: Zależy mi na konkretnej i mierzalnej odpowiedzi — nie ogólnej, ale takiej jak np. 'zapewniamy rozpatrzenie reklamacji w 5 dni roboczych'. Chcę wiedzieć, czy proces jest strategiczny, operacyjny czy wspierający i komu bezpośrednio służy.\n\n📌 Przykład: „Proces obsługi reklamacji dostarcza klientom detalicznym potwierdzenie przyjęcia i rozpatrzenia zgłoszenia w ciągu 5 dni roboczych, minimalizując ryzyko utraty klienta i spełniając wymogi ustawy o prawach konsumenta.""
 }
+
+ZAKAZ: Nigdy nie zwracaj "message" bez sekcji 💡 Podpowiedź i 📌 Przykład — dotyczy każdego pytania (action: next_question lub followup). Tylko action: complete może nie zawierać tych sekcji.
 
 Dane rozmówcy (anonimowe): Stanowisko: {ROLE}, Dział: {DEPT}`;
 
@@ -538,6 +797,100 @@ function buildInterviewSystem() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// JSON REPAIR — naprawia najczęstsze błędy w odpowiedziach modelu
+// ════════════════════════════════════════════════════════════════
+function stripJsonComments(s) {
+  // Usuwa komentarze // i /* */ nie będące wewnątrz stringów
+  let result = '';
+  let inStr = false, escape = false;
+  let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (escape) { result += c; escape = false; i++; continue; }
+    if (c === '\\' && inStr) { result += c; escape = true; i++; continue; }
+    if (c === '"') { inStr = !inStr; result += c; i++; continue; }
+    if (!inStr) {
+      // Komentarz liniowy //
+      if (c === '/' && s[i+1] === '/') {
+        while (i < s.length && s[i] !== '\n') i++;
+        continue;
+      }
+      // Komentarz blokowy /* */
+      if (c === '/' && s[i+1] === '*') {
+        i += 2;
+        while (i < s.length && !(s[i] === '*' && s[i+1] === '/')) i++;
+        i += 2;
+        continue;
+      }
+    }
+    result += c; i++;
+  }
+  return result;
+}
+
+function repairJson(raw) {
+  // 1. Wyodrębnij zawartość między pierwszym { a ostatnim }
+  const start = raw.indexOf('{');
+  const end   = raw.lastIndexOf('}');
+  if (start === -1) return raw;
+  let s = (end !== -1 && end > start) ? raw.slice(start, end + 1) : raw.slice(start);
+
+  // 2. Usuń komentarze JS (// i /* */)
+  s = stripJsonComments(s);
+
+  // 3. Usuń trailing commas przed } i ]
+  s = s.replace(/,(\s*[}\]])/g, '$1');
+
+  // 4. Napraw brakujące cudzysłowy wokół kluczy (np. key: "val" → "key": "val")
+  s = s.replace(/([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)(\s*:)/g, '$1"$2"$3');
+
+  // 5. Jeśli JSON jest urwany — domknij otwarte struktury
+  try { JSON.parse(s); return s; } catch(_) {}
+  const stack = [];
+  let inStr = false, escape = false;
+  for (const c of s) {
+    if (escape) { escape = false; continue; }
+    if (c === '\\') { escape = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (!inStr) {
+      if (c === '{') stack.push('}');
+      else if (c === '[') stack.push(']');
+      else if (c === '}' || c === ']') stack.pop();
+    }
+  }
+  // Jeśli urwane wewnątrz stringa — zamknij string
+  if (inStr) s += '"';
+  // Zamknij otwarte struktury
+  s += stack.reverse().join('');
+
+  // 6. Jeszcze jedna próba usunięcia trailing commas po domknięciu
+  s = s.replace(/,(\s*[}\]])/g, '$1');
+  return s;
+}
+
+function safeParseJson(raw) {
+  // Próba 1: wyodrębnij { … } i usuń komentarze
+  const m = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').match(/\{[\s\S]*\}/);
+  const candidate = stripJsonComments(m?.[0] || raw);
+  try { return JSON.parse(candidate); } catch(_) {}
+  // Próba 2: pełna naprawa
+  const repaired = repairJson(candidate);
+  return JSON.parse(repaired); // rzuca jeśli nadal zepsute
+}
+
+function safeParseJsonArray(raw) {
+  const m = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').match(/\[[\s\S]*\]/);
+  const candidate = stripJsonComments(m?.[0] || raw);
+  try { return JSON.parse(candidate); } catch(_) {}
+  // repair: zamień na obiekt, napraw, wyodrębnij tablicę
+  const wrapped = repairJson('{"a":' + candidate + '}');
+  try { return JSON.parse(wrapped).a; } catch(_) {}
+  // ostatnia szansa — urwana tablica
+  const fixed = candidate.replace(/,(\s*\])/g,'$1') + (candidate.trim().endsWith(']') ? '' : ']');
+  return JSON.parse(fixed);
+}
+
+// ════════════════════════════════════════════════════════════════
 // OPENAI API
 // ════════════════════════════════════════════════════════════════
 async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
@@ -633,6 +986,8 @@ async function onAnalyzeTranscript() {
 
   showScreen('processing');
   try {
+    setProc('Planuję strukturę procesu…', 'Identyfikuję aktywności i punkty decyzyjne');
+    await generateProcessPlan();
     setProc('Analizuję transkrypcję…', 'Może to potrwać 30–60 sekund');
     await generateProcessCard();
     setProc('Buduję strukturę BPMN…', '');
@@ -641,7 +996,22 @@ async function onAnalyzeTranscript() {
     A.bpmnSvg = buildBpmnSvg(A.bpmnData);
     setProc('Generuję dokument Word…', '');
     await generateDocx();
+    setProc('Audytuję spójność procesu…', '');
+    await generateAudit();
+    setProc('Analizuję architekturę BPMN 2.0…', '');
+    await generateBpmnReview();
+    setProc('Mapuję powiązania procesu…', '');
+    await generateProcessMap();
+    setProc('Naprawiam niespójności dokumentu…', '');
+    await generateConsistencyFix();
+    setProc('Audytuję rozdzielenie STEP/DECISION i uzupełniam kompletność…', '');
+    await generateStepDecisionAudit();
     showResults();
+    showAuditResults();
+    showBpmnReview();
+    showProcessMap();
+    showConsistencyFix();
+    showStepDecisionAudit();
   } catch(err) {
     showToast('Błąd: ' + err.message);
     console.error(err);
@@ -683,25 +1053,39 @@ async function askNextQuestion(userSaid) {
       ? [...A.msgs, { role: 'user', content: userSaid }]
       : A.msgs;
 
-    const raw = await callClaude(msgsForAI, buildInterviewSystem(), 700);
+    const raw = await callClaude(msgsForAI, buildInterviewSystem(), 1200);
     removeTyping(tid);
 
     let parsed;
     try {
-      // Strip markdown code fences if present
-      const cleaned = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-      const m = cleaned.match(/\{[\s\S]*\}/);
-      parsed = JSON.parse(m?.[0] || cleaned);
+      parsed = safeParseJson(raw);
     } catch {
       // JSON parsing failed — show raw text, but still check if we should auto-complete
       parsed = { action: 'next_question', qCovered: A.qCovered, message: raw };
     }
 
+    // Detect newly asked question to inject hint programmatically
+    const prevCovered = [...A.qCovered];
     if (parsed.qCovered?.length) A.qCovered = parsed.qCovered;
     updateProgress();
     updateFinishBtn();
-    addMsg('agent', parsed.message);
-    A.msgs.push({ role: 'assistant', content: parsed.message });
+
+    let displayMsg = parsed.message;
+    if (parsed.action === 'next_question' || parsed.action === 'followup') {
+      // qCovered = already answered questions (updated above); the question
+      // currently being asked is the first number NOT in A.qCovered
+      const ALL20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+      const qNum = ALL20.find(n => !A.qCovered.includes(n)) || null;
+      if (qNum && Q20_HINTS[qNum]) {
+        const h = Q20_HINTS[qNum];
+        displayMsg += `\n\n<div class="hint-block"><div class="hint-row hint-tip"><span class="hint-icon">💡</span><div><strong>Podpowiedź:</strong> ${h.opis}</div></div><div class="hint-row hint-ex"><span class="hint-icon">📌</span><div><strong>Przykład:</strong> <em>${h.przyklad}</em></div></div></div>`;
+      }
+    }
+
+    addMsg('agent', displayMsg);
+    // Store full JSON in AI history so it remembers qCovered state across turns
+    const aiHistoryMsg = JSON.stringify({ action: parsed.action, qCovered: A.qCovered, message: parsed.message });
+    A.msgs.push({ role: 'assistant', content: aiHistoryMsg });
 
     // Complete if action says so, OR if all 20 questions are covered
     if (parsed.action === 'complete' || A.qCovered.length >= 20) {
@@ -743,6 +1127,79 @@ function getTranscript() {
     .join('\n\n');
 }
 
+// ════════════════════════════════════════════════════════════════
+// CALL 0: PLAN — lista aktywności i decyzji przed generowaniem karty
+// ════════════════════════════════════════════════════════════════
+async function generateProcessPlan() {
+  updatePStep('ps0','active');
+  const transcript = getTranscript();
+
+  const planPrompt = `Jesteś Senior Business Process Analyst. Na podstawie transkryptu wywiadu zidentyfikuj WSZYSTKIE elementy procesu i ułóż je w porządku chronologicznym.
+
+Stanowisko rozmówcy: ${A.employee.role} | Dział: ${A.employee.dept}
+
+TRANSKRYPT WYWIADU:
+${transcript}
+
+═══════════════════════════════════════
+ZASADY KLASYFIKACJI ELEMENTÓW:
+═══════════════════════════════════════
+
+STEP = wyłącznie konkretna czynność/aktywność wykonywana przez człowieka lub system IT.
+• Przykłady STEP: "Zbieranie danych sprzedażowych", "Wysyłka zamówienia do dostawcy", "Kontrola jakości próbek", "Przyjęcie towaru na magazyn"
+• NIE może być decyzją. NIE może być: "Ocena i akceptacja", "Zatwierdzenie lub odrzucenie", "Wybór opcji".
+
+DECISION = wyłącznie punkt decyzyjny (bramka BPMN — romb ◇).
+• Przykłady DECISION: "Akceptacja wniosku", "Zatwierdzenie budżetu", "Wybór opcji/wariantu", "Decyzja o reklamacji"
+• Każdy DECISION jest OSADZONY MIĘDZY krokami: step-przed → DECISION → step-po-akceptacji
+• pole positionAfterStep = ID kroku STEP który BEZPOŚREDNIO poprzedza tę decyzję
+
+WYMAGANIA PROCESU — DOMENOWO AGNOSTYCZNE:
+• Zidentyfikuj typ procesu i domenę biznesową WYŁĄCZNIE z transkryptu wywiadu.
+• Pełny cykl: od zdarzenia startowego (trigger) do zdarzenia końcowego opisanych w transkrypcie.
+• Minimum 8 STEPów, minimum 3 DECISIONy — dostosuj do złożoności procesu z wywiadu.
+• Uwzględnij WSZYSTKIE aktywności i punkty decyzyjne wymienione w transkrypcie — nic nie pomijaj.
+• NIE narzucaj elementów procesu spoza transkryptu — opieraj się wyłącznie na tym, co powiedział rozmówca.
+
+DODATKOWE ZASADY KLASYFIKACJI STEP vs DECISION:
+• "Analiza X", "Weryfikacja X", "Ocena X", "Przygotowanie X", "Rejestracja X" → ZAWSZE STEP.
+• "Akceptacja X", "Zatwierdzenie X", "Wybór X spośród opcji", "Decyzja o X" → ZAWSZE DECISION.
+• Każda czynność oceny/analizy poprzedza swoją decyzję jako STEP.
+• Jeżeli rozmówca opisał pytanie "tak/nie" lub wybór między opcjami — to jest DECISION.
+
+OBOWIĄZKOWE DECYZJE (zidentyfikuj Z TRANSKRYPTU):
+Każdy punkt decyzyjny wprost wymieniony przez rozmówcę musi znaleźć się jako DECISION.
+Nie dodawaj decyzji specyficznych dla innej domeny niż opisana w transkrypcie.
+
+Odpowiedz TYLKO poprawnym JSON (zero dodatkowego tekstu):
+{
+  "processName": "pełna nazwa procesu po polsku",
+  "processScope": "od: [pierwszy STEP] do: [ostatni STEP]",
+  "masterList": [
+    {"seq":1,"id":"STEP-001","elementType":"STEP","name":"nazwa czynności","performer":"rola biznesowa","purpose":"co ta czynność osiąga"},
+    {"seq":2,"id":"STEP-002","elementType":"STEP","name":"nazwa czynności","performer":"rola biznesowa","purpose":"co ta czynność osiąga"},
+    {"seq":3,"id":"DECISION-001","elementType":"DECISION","name":"nazwa decyzji","positionAfterStep":"STEP-002","decisionMaker":"rola","mainOutcomes":["Akceptacja","Powrót do korekty","Odrzucenie"]},
+    {"seq":4,"id":"STEP-003","elementType":"STEP","name":"czynność na głównej ścieżce po akceptacji","performer":"rola biznesowa","purpose":"co ta czynność osiąga"}
+  ]
+}`;
+
+  const rawPlan = await callClaude(
+    [{role:'user', content: planPrompt}],
+    'Jesteś Senior Business Process Analyst. Odpowiadasz TYLKO poprawnym JSON — zero dodatkowego tekstu, zero markdown.',
+    3000
+  );
+
+  if (!rawPlan.includes('{')) throw new Error('Plan procesu: brak JSON — ' + rawPlan.slice(0,120));
+
+  try {
+    A.processPlan = safeParseJson(rawPlan);
+  } catch(e) {
+    throw new Error('Plan procesu: błąd parsowania — ' + e.message);
+  }
+
+  updatePStep('ps0','done');
+}
+
 async function generateProcessCard() {
   updatePStep('ps1','active');
   const transcript = getTranscript();
@@ -754,44 +1211,86 @@ async function generateProcessCard() {
     .replace('{DEPT}', A.employee.dept)
     .replace('{DATE}', today);
 
-  // ── Wywołanie 1: metadane (bez steps — żeby nie wycinać ich przez limit tokenów) ──
-  const metaPrompt = `Transkrypt wywiadu:
----
-${transcript}
----
-Stanowisko: ${A.employee.role} | Dział: ${A.employee.dept} | Data: ${today}
+  // ── Inject plan from Call 0 ──
+  const plan = A.processPlan || {};
+  const masterList = plan.masterList || [];
+  const planSteps     = masterList.filter(e => e.elementType === 'STEP');
+  const planDecisions = masterList.filter(e => e.elementType === 'DECISION');
 
-Wygeneruj KOMPLETNY JSON karty procesu BEZ pola "steps" (kroki wygeneruję osobno).
+  const planStepsList = planSteps.map(s =>
+    `  ${s.id}: "${s.name}" (wykonawca: ${s.performer})`).join('\n');
+  const planDecisionsList = planDecisions.map(d =>
+    `  ${d.id}: "${d.name}" — po kroku ${d.positionAfterStep} — wyniki: ${(d.mainOutcomes||[]).join(', ')}`).join('\n');
 
-WYMAGANIA DOTYCZĄCE KOMPLETNOŚCI — każda sekcja musi być w pełni wypełniona:
+  // ── Wywołanie 1: metadane (bez steps — osobny call = pełny budżet tokenów) ──
+  const metaPrompt = `Stanowisko: ${A.employee.role} | Dział: ${A.employee.dept} | Data: ${today}
 
-► SIPOC — wymienić WSZYSTKICH dostawców, wejścia, wyjścia i odbiorców zaangażowanych w proces (minimum 3–5 pozycji w każdej tablicy).
+═══════════════════════════════════════
+ZAPLANOWANA LISTA ELEMENTÓW PROCESU (WIĄŻĄCA):
+═══════════════════════════════════════
+AKTYWNOŚCI (STEP) — TYLKO te mogą pojawić się jako kroki:
+${planStepsList || '  (brak — wygeneruj na podstawie transkryptu)'}
 
-► RACI — osobny wiersz dla KAŻDEJ kluczowej aktywności/decyzji w procesie (minimum 6–10 wierszy). Musi pokrywać wszystkie etapy: planowanie, ocenę jakości, negocjacje, zatwierdzenie, realizację, kontrolę. Dla każdej aktywności wypisać konkretne role (np. Kupiec, Dyrektor Zakupów, Dział Jakości), nie wpisywać „string".
+PUNKTY DECYZYJNE (DECISION) — TYLKO te mogą pojawić się w decisionPoints:
+${planDecisionsList || '  (brak — wygeneruj na podstawie transkryptu)'}
 
-► systems — WSZYSTKIE systemy IT wymienione lub sugerowane przez wywiad (minimum 3–5 systemów z rolą każdego).
+Zakres procesu: ${plan.processScope || 'od planowania do przyjęcia magazynowego'}
+═══════════════════════════════════════
 
-► humanResources — WSZYSTKIE role zaangażowane w proces (minimum 4–6 ról: nie tylko rola rozmówcy, ale też pozostałe wymienione w wywiadzie).
+Wygeneruj KOMPLETNY JSON karty procesu BEZ pola "steps" (kroki wygeneruję w osobnym wywołaniu).
 
-► kpis — minimum 4–6 różnych wskaźników KPI (terminowość, jakość, marża, koszt, etc.).
+ZASADY KATEGORYCZNE:
+• decisionPoints[] MUSI zawierać WYŁĄCZNIE elementy z listy DECISION powyżej — żadnych innych.
+• Nie wolno tworzyć nowych decisionPoints spoza listy planDecisions.
+• Każdy DECISION musi mieć pole "positionAfterStep" = ID kroku STEP po którym następuje (z listy powyżej).
+• transitions[].nextStepId MUSI być ID kroku STEP z listy (np. "STEP-003"), NIE nazwa.
+• transitions[].nextStep = czytelna nazwa (dla display).
 
-► operationalMetrics — wypełnić na podstawie danych z wywiadu (cycle time procesu, throughput itp.), nie zostawiać „—".
+WYMAGANIA KOMPLETNOŚCI:
 
-► risks — minimum 5–8 konkretnych ryzyk zidentyfikowanych z wywiadu, każde z osobnym ID (RISK-001, RISK-002...).
+► SIPOC — minimum 3–5 pozycji w każdej tablicy. Pole activities[] musi zawierać kluczowe nazwy STEPów z listy planSteps (od pierwszego STEPu do ostatniego — zgodnie z domeną procesu). WYMAGANA SPÓJNOŚĆ z listą planSteps.
 
-► exceptions — minimum 3–5 wyjątków/błędów opisanych w wywiadzie.
+► RACI — wiersz dla KAŻDEJ aktywności z listy STEP i KAŻDEJ z DECISION (minimum 8–12 wierszy). Konkretne role. WYMAGANA SPÓJNOŚĆ: nazwy aktywności w RACI muszą odpowiadać dokładnym nazwom STEPów i DECISIONów z listy planSteps / planDecisions powyżej.
 
-► escalationPaths — minimum L1 i L2, z konkretnymi warunkami.
+► systems — minimum 3–5 systemów IT z funkcją każdego.
 
-► decisionPoints — wszystkie kluczowe bramki decyzyjne z kryteriami (minimum 2–3).
+► humanResources — minimum 4–6 ról (nie tylko rozmówca).
 
-► alternativePaths — wszystkie ścieżki alternatywne opisane w wywiadzie.
+► kpis — minimum 4–6 KPI z mierzalnymi progami.
 
-► compliance — wszystkie regulacje, normy i przepisy wspomniane lub wynikające z kontekstu procesu.
+► risks — minimum 5 ryzyk (RISK-001…). Każde z probability, impact, priority, mitigation, owner.
 
-► additionalGoals — minimum 3–5 celów dodatkowych.
+► exceptions — minimum 5 wyjątków. Każdy z polem "triggersDecision" = ID z listy DECISION.
 
-► tags — minimum 5 tagów klasyfikacyjnych.
+► escalationPaths — minimum L1, L2. Każda z "triggersDecision" = ID z listy DECISION.
+
+► decisionPoints — KAŻDY DECISION z listy. Dla każdego OBOWIĄZKOWO:
+  - positionAfterStep: ID kroku STEP bezpośrednio poprzedzającego (z listy planSteps)
+  - requiredInputs: minimum 2 konkretne dokumenty/dane
+  - criteria: minimum 4 (FINANSOWE/JAKOŚCIOWE/CZASOWE/ZGODNOŚCI/RYZYKA/OPERACYJNE — z progami)
+  - possibleOutcomes: minimum 3 wyniki
+  - outcomeConsequences: dla każdego wyniku — kto, co, kiedy
+  - bpmnGatewayType: "Exclusive" / "Inclusive" / "Parallel"
+  - transitions: jedno przejście PER wynik z possibleOutcomes:
+      { outcome, nextStepId:"STEP-XXX", nextStep:"nazwa", bpmnPathType:"Kontynuacja|Powrót|Eskalacja|Ścieżka alternatywna|Zakończenie", condition:"JEŚLI …", businessJustification:"…" }
+  - sla, decisionMaker, recommendingRole, decisionType, docLocation
+
+ZAKAZ OGÓLNIKÓW w criteria — używaj RZECZYWISTYCH parametrów z TRANSKRYPTU:
+
+❌ ZAKAZANE (ogólniki):                  ✅ WYMAGANE (konkretne progi z transkryptu):
+"jeśli wymagania spełnione"       →  "JAKOŚCIOWE: JEŚLI [wskaźnik z transkryptu] > [próg z transkryptu] → [konkretna akcja]"
+"jeśli termin OK"                 →  "CZASOWE: JEŚLI [czas] przekracza [SLA z transkryptu] → eskalacja do [rola z transkryptu]"
+"jeśli koszt akceptowalny"        →  "FINANSOWE: JEŚLI [kwota/próg z transkryptu] > [limit] → wymaga akceptacji [rola]"
+"jeśli ryzyko jest niskie"        →  "RYZYKA: JEŚLI [scenariusz z transkryptu] → [konkretne działanie z transkryptu]"
+
+Używaj terminologii właściwej dla domeny biznesowej opisanej w transkrypcie:
+• Dla procesu reklamacyjnego: terminy ustawowe, rękojmia, UOKiK, CSAT, SLA obsługi, wartość roszczenia, eskalacja do Kierownika
+• Dla zakupów: MOQ, FOB, CIF, lead time, marża, Incoterms, AQL
+• Dla IT/DevOps: RTO, RPO, SLA, incydent, MTTR, priorytet
+• Dla HR: termin, stanowisko, kompetencje, budżet etatowy
+• Ogólnie: używaj terminologii i progów wprost z transkryptu wywiadu
+
+Dla każdego decisionPoint używaj minimum 4 RÓŻNYCH kategorii kryteriów z konkretnymi progami z transkryptu.
 
 Odpowiedz TYLKO poprawnym JSON (bez markdown):
 
@@ -833,21 +1332,20 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
     {"activity":"Aktywność 6","responsible":"Rola A","accountable":"Rola B","consulted":"Rola C","informed":"Rola D"}
   ],
   "decisionPoints":[
-    {"id":"DECISION-001","name":"string","decisionMaker":"string","sla":"string","docLocation":"string","criteria":["JEŚLI … → Tak","JEŚLI … → Nie"]},
-    {"id":"DECISION-002","name":"string","decisionMaker":"string","sla":"string","docLocation":"string","criteria":["JEŚLI … → Tak","JEŚLI … → Nie"]}
+    {"id":"DECISION-001","name":"str","positionAfterStep":"STEP-002","decisionType":"Akceptacja finansowa|Akceptacja jakościowa|Wybór opcji|Zarządzanie ryzykiem|Zatwierdzenie zgodności|Wybór operacyjny","recommendingRole":"str","decisionMaker":"str + próg eskalacji","sla":"str","docLocation":"str","requiredInputs":["dok1","raport2"],"criteria":["FINANSOWE: JEŚLI x→y","JAKOŚCIOWE: JEŚLI x→y","CZASOWE: JEŚLI x→y","ZGODNOŚCI: JEŚLI x→y"],"possibleOutcomes":["Akceptacja","Powrót","Odrzucenie","Eskalacja L2"],"outcomeConsequences":["Akceptacja: rola→akcja","Powrót: rola koryguje w Xd","Odrzucenie: rola archiwizuje","Eskalacja: rola→L2 w Xh"],"bpmnGatewayType":"Exclusive","transitions":[{"outcome":"Akceptacja","nextStepId":"STEP-003","nextStep":"[nazwa kroku]","bpmnPathType":"Kontynuacja","condition":"JEŚLI kryteria OK","businessJustification":"str"},{"outcome":"Powrót","nextStepId":"STEP-001","nextStep":"[nazwa kroku powrotu]","bpmnPathType":"Powrót","condition":"JEŚLI niezgodność+korekta możliwa","businessJustification":"str"},{"outcome":"Eskalacja L2","nextStepId":"STEP-003","nextStep":"[krok eskalacji]","bpmnPathType":"Eskalacja","condition":"JEŚLI próg przekroczony","businessJustification":"str"},{"outcome":"Odrzucenie","nextStepId":"STEP-003","nextStep":"[krok/KONIEC]","bpmnPathType":"Zakończenie","condition":"JEŚLI niemożliwe","businessJustification":"str"}]}
   ],
   "alternativePaths":[
-    {"name":"string","condition":"string","steps":["krok1","krok2"]},
-    {"name":"string","condition":"string","steps":["krok1","krok2"]}
+    {"name":"string","condition":"string","triggersDecision":"DECISION-001","steps":["krok1","krok2"]},
+    {"name":"string","condition":"string","triggersDecision":"DECISION-002","steps":["krok1","krok2"]}
   ],
   "exceptions":[
-    {"name":"string","probability":"Wysokie","handling":"string","responsible":"string","escalation":"string"},
-    {"name":"string","probability":"Średnie","handling":"string","responsible":"string","escalation":"string"},
-    {"name":"string","probability":"Niskie","handling":"string","responsible":"string","escalation":"string"}
+    {"name":"string","probability":"Wysokie","handling":"string","responsible":"string","escalation":"string","triggersDecision":"DECISION-XXX"},
+    {"name":"string","probability":"Średnie","handling":"string","responsible":"string","escalation":"string","triggersDecision":"DECISION-XXX"},
+    {"name":"string","probability":"Niskie","handling":"string","responsible":"string","escalation":"string","triggersDecision":"DECISION-XXX"}
   ],
   "escalationPaths":[
-    {"level":"L1","condition":"string","to":"string","sla":"string","backup":"string"},
-    {"level":"L2","condition":"string","to":"string","sla":"string","backup":"string"}
+    {"level":"L1","condition":"string","to":"string","sla":"string","backup":"string","triggersDecision":"DECISION-XXX"},
+    {"level":"L2","condition":"string","to":"string","sla":"string","backup":"string","triggersDecision":"DECISION-XXX"}
   ],
   "systems":[
     {"name":"System1","function":"string","users":"string","criticality":"Krytyczny","availabilitySLA":"string"},
@@ -887,29 +1385,56 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
 }`;
 
   const raw1 = await callClaude([{role:'user', content: metaPrompt}], cardSystem, 8000);
-  const m1 = raw1.replace(/```json\s*/gi,'').replace(/```\s*/g,'').match(/\{[\s\S]*\}/);
-  A.processData = JSON.parse(m1?.[0] || raw1);
+  if (!raw1.includes('{')) {
+    throw new Error('Model nie zwrócił JSON — odpowiedź: ' + raw1.slice(0, 120));
+  }
+  try {
+    A.processData = safeParseJson(raw1);
+  } catch(e) {
+    throw new Error('Błąd parsowania metadanych karty procesu: ' + e.message + ' | Fragment: ' + raw1.slice(0,200));
+  }
 
   // ── Wywołanie 2: szczegółowe kroki procesu (osobny call = pełny budżet tokenów) ──
   updatePStep('ps1','done'); updatePStep('ps2','active');
   setProc('Generuję szczegółowe kroki procesu…','');
 
-  const stepsPrompt = `Transkrypt wywiadu:
----
-${transcript}
----
-Proces: "${A.processData.processNamePL}"
+  // ── Inject plan steps list for Call 2 ──
+  const planStepsForCall2 = planSteps.map(s =>
+    `  ${s.id}: "${s.name}" | wykonawca: ${s.performer} | cel: ${s.purpose}`).join('\n');
+
+  const stepsPrompt = `Proces: "${A.processData.processNamePL}"
 Stanowisko: ${A.employee.role} | Dział: ${A.employee.dept}
 
-Wygeneruj KOMPLETNĄ listę kroków procesu — uwzględnij KAŻDY krok opisany w wywiadzie (zazwyczaj 8–20 kroków).
-Każdy krok powinien być oddzielną czynnością. Bramki decyzyjne jako isGateway:true.
-Odpowiedz TYLKO jako tablica JSON (bez obiektu opakowującego):
+═══════════════════════════════════════
+WIĄŻĄCA LISTA AKTYWNOŚCI DO WYGENEROWANIA:
+═══════════════════════════════════════
+${planStepsForCall2 || '(brak planu — wygeneruj na podstawie transkryptu, minimum 12 kroków)'}
+
+ZASADY KATEGORYCZNE — BEZWZGLĘDNE:
+1. STEP = WYŁĄCZNIE konkretna czynność/aktywność. NIE może być decyzją.
+2. Typ "Zadanie decyzyjne" jest ZAKAZANY — nie używaj go.
+3. NIE dodawaj pól isGateway, decisionPointRef ani gatewayConditions — te pola nie istnieją w nowym modelu.
+4. Każdemu STEP z listy musi odpowiadać DOKŁADNIE jeden obiekt w tablicy wynikowej — zachowaj ID z listy.
+5. Nie dodawaj kroków spoza listy chyba że są kluczowe a brakuje ich w planie.
+
+Dla każdego STEP wypełnij WSZYSTKIE pola na podstawie transkryptu i wiedzy o procesie opisanym w wywiadzie:
+- type: "Zadanie użytkownika" (człowiek) / "Zadanie serwisowe" (system) / "Zadanie wysyłania" (send) / "Zadanie odbioru" (receive)
+- performer: konkretna rola biznesowa
+- duration: szacowany czas (np. "2-3 dni robocze")
+- description: opis czynności 1-2 zdania
+- inputs: minimum 1-2 konkretne dokumenty/dane wejściowe
+- outputs: minimum 1-2 konkretne wyniki/dokumenty
+- systems: minimum 1 system IT
+- businessRules: minimum 1 reguła biznesowa
+- exceptions: minimum 1 możliwy wyjątek
+
+Odpowiedz TYLKO jako tablica JSON (bez obiektu opakowującego, bez markdown):
 
 [
   {
     "id":"STEP-001",
     "name":"string",
-    "type":"Zadanie użytkownika",
+    "type":"Zadanie użytkownika|Zadanie serwisowe|Zadanie wysyłania|Zadanie odbioru",
     "performer":"string",
     "duration":"string",
     "description":"string",
@@ -917,100 +1442,288 @@ Odpowiedz TYLKO jako tablica JSON (bez obiektu opakowującego):
     "outputs":["string"],
     "systems":["string"],
     "businessRules":["string"],
-    "exceptions":["string"],
-    "isGateway":false,
-    "gatewayConditions":[]
+    "exceptions":["string"]
   }
 ]`;
 
-  const raw2 = await callClaude([{role:'user', content: stepsPrompt}], 'Jesteś analitykiem BPMN. Odpowiedz TYLKO poprawną tablicą JSON — zero dodatkowego tekstu ani markdown.', 4096);
-  const cleaned2 = raw2.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-  const m2 = cleaned2.match(/\[[\s\S]*\]/);
+  const raw2 = await callClaude([{role:'user', content: stepsPrompt}], 'Jesteś analitykiem BPMN. Odpowiedz TYLKO poprawną tablicą JSON — zero dodatkowego tekstu ani markdown.', 6000);
+  if (!raw2.includes('[')) {
+    throw new Error('Model nie zwrócił JSON kroków — odpowiedź: ' + raw2.slice(0, 120));
+  }
   try {
-    A.processData.steps = JSON.parse(m2?.[0] || cleaned2);
+    A.processData.steps = safeParseJsonArray(raw2);
   } catch {
-    // Fallback: jeśli parsowanie tablicy się nie uda, spróbuj wyciągnąć z obiektu
-    const mObj = cleaned2.match(/"steps"\s*:\s*(\[[\s\S]*?\])/);
-    A.processData.steps = mObj ? JSON.parse(mObj[1]) : [];
+    // Fallback: spróbuj wyciągnąć z obiektu {"steps":[…]}
+    try {
+      const wrapped = safeParseJson('{"steps":' + raw2.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim() + '}');
+      A.processData.steps = wrapped.steps || [];
+    } catch {
+      A.processData.steps = [];
+      console.warn('Steps: nie udało się sparsować — pusta tablica');
+    }
   }
 
   updatePStep('ps2','done'); updatePStep('ps3','active');
 }
 
-function buildBpmnFromProcessData() {
-  // Buduje strukturę BPMN bezpośrednio z processData — niezawodnie, wszystkie kroki
-  const d = A.processData;
-  const elements = [];
-  const flows = [];
-  let c = 1;
+// ── Dynamic lane derivation from performers ──────────────────
+function deriveLanes(elements) {
+  const PATTERNS = [
+    {label:'Klient',                keywords:['klient','customer','użytkownik końcow']},
+    {label:'Obsługa Klienta / BOK', keywords:['bok','obsług klient','konsultant','reklamacj','customer serv','specjalista ds. reklamacj','helpdesk','starszy specjalista']},
+    {label:'Kierownictwo',          keywords:['kierownik','manager','dyrektor','zarząd','właściciel']},
+    {label:'Jakość',                keywords:['jakość','jakosc','quality','qc','qa','inspektor']},
+    {label:'Finanse / Księgowość',  keywords:['finans','finance','księgow','accountant','controlling','główny księgow']},
+    {label:'Magazyn',               keywords:['magazyn','warehouse']},
+    {label:'Logistyka',             keywords:['logistyk','transport','kurier','spedytor','celny','freight']},
+    {label:'Zakupy / Sourcing',     keywords:['zakup','kupiec','buyer','sourcing','nabywca']},
+    {label:'Dostawca / Zewnętrzni', keywords:['dostawca','supplier','vendor','producent','serwis zewn','firma kurierska','przewoźnik']},
+    {label:'IT / Systemy',          keywords:['it ','devops','developer','system ','crm','erp']},
+    {label:'Prawny / Compliance',   keywords:['prawny','legal','compliance','regulac']},
+    {label:'Inne',                  keywords:[]},
+  ];
 
-  elements.push({id:'se1', type:'startEvent', name: d.scopeStart || 'Start', performer:'', description:''});
+  const perfSet = new Set();
+  elements.forEach(el => {
+    if (!el.performer) return;
+    el.performer.split(/[/,]/).forEach(p => { const t = p.trim(); if (t) perfSet.add(t); });
+  });
 
-  let mainChain = ['se1']; // lista id tworzących główny łańcuch
-  const joinNodes = {}; // gateway_id → id węzła dołączenia (po rozgałęzieniu)
+  const labelToIdx = {};
+  const perfToLane = {};
+  let nextIdx = 0;
 
-  (d.steps || []).forEach(step => {
-    const id = `n${c++}`;
-    const type = step.isGateway ? 'gateway' : 'task';
-    elements.push({id, type, name: step.name, performer: step.performer || '', description: step.description || ''});
-    const prevId = mainChain[mainChain.length - 1];
-    flows.push({from: prevId, to: id, label: ''});
-    mainChain.push(id);
-
-    // Jeśli brama decyzyjna z warunkami — dodaj gałęzie alternatywne
-    if (step.isGateway && step.gatewayConditions?.length >= 2) {
-      const altBranches = step.gatewayConditions.slice(1); // pierwsza gałąź to main chain
-      const joinId = `join${c++}`;
-      elements.push({id: joinId, type:'gateway', name:'', performer:'', description:''});
-      joinNodes[id] = joinId;
-
-      altBranches.forEach((cond, bi) => {
-        const altId = `alt${c++}`;
-        elements.push({id: altId, type:'task', name: String(cond).slice(0,40), performer: step.performer || '', description:''});
-        flows.push({from: id, to: altId, label: bi === 0 ? 'Nie' : String(bi+1)});
-        flows.push({from: altId, to: joinId, label:''});
-      });
-      // Pierwsza gałąź (Tak) przechodzi przez główny łańcuch i dołącza do joinId
-      flows.push({from: id, to: joinId, label: 'Tak'});
-      // Usuń ostatni flow (from prevId to id) bo jest już prawidłowy
-      // Zaktualizuj mainChain żeby ostatnim był joinId
-      mainChain.push(joinId);
+  [...perfSet].forEach(perf => {
+    const pl = perf.toLowerCase();
+    for (const pat of PATTERNS) {
+      if (pat.keywords.length === 0 || pat.keywords.some(k => pl.includes(k))) {
+        if (!(pat.label in labelToIdx)) labelToIdx[pat.label] = nextIdx++;
+        perfToLane[perf] = labelToIdx[pat.label];
+        return;
+      }
     }
   });
 
-  // Dodaj bramę dla każdego jawnego decisionPoint nieobecnego w steps
+  const list = Object.entries(labelToIdx).sort((a,b)=>a[1]-b[1]).slice(0,6).map(([l])=>l);
+
+  // Remap to 0-based index in list
+  const finalMap = {};
+  [...perfSet].forEach(perf => {
+    const origIdx = perfToLane[perf] ?? 0;
+    const label = Object.entries(labelToIdx).find(([,i])=>i===origIdx)?.[0] || list[0];
+    finalMap[perf] = list.indexOf(label) < 0 ? 0 : list.indexOf(label);
+  });
+
+  return {list, perfToLane: finalMap};
+}
+
+function buildBpmnFromProcessData() {
+  const d = A.processData;
+  const elements = [], flows = [];
+  let c = 1;
+  const newId = p => `${p}${c++}`;
+  // Strip internal technical prefixes so only business names reach the UI
+  const cleanName = s => (s||'').replace(/^(STEP|DECISION|Gateway|Bramka|Brama)[-\s]?\d*[:\s–\-]*/i,'').trim() || (s||'');
+
+  // ── Index decisions by positionAfterStep ──
+  const decByStep = {};
   (d.decisionPoints || []).forEach(dp => {
-    const alreadyIn = elements.some(e => e.name === dp.name);
-    if (!alreadyIn && dp.criteria?.length >= 2) {
-      const gwId = `dp${c++}`;
-      elements.push({id: gwId, type:'gateway', name: dp.name, performer: dp.decisionMaker || '', description:''});
-      const prevId = mainChain[mainChain.length - 1];
-      flows.push({from: prevId, to: gwId, label:''});
-      mainChain.push(gwId);
+    if (!dp.positionAfterStep) return;
+    (decByStep[dp.positionAfterStep] = decByStep[dp.positionAfterStep] || []).push(dp);
+  });
 
-      const joinId = `dpj${c++}`;
-      elements.push({id: joinId, type:'gateway', name:'', performer:'', description:''});
+  // stepId → BPMN task node id
+  const stepNodeMap = {};
+  // Ordered list of main task node IDs (n*) — used for rejoin lookups
+  const orderedTaskNodes = [];
 
-      dp.criteria.slice(0, 3).forEach((crit, i) => {
-        const label = String(crit).split('→')[0].replace('JEŚLI','').trim().slice(0,20);
-        if (i === 0) {
-          // Pierwsza opcja wraca do main chain i dołącza do join
-          flows.push({from: gwId, to: joinId, label: label || 'Tak'});
+  // ── Start event ──
+  elements.push({id:'se1', type:'startEvent', name: d.scopeStart || 'Zdarzenie startowe', performer:(d.steps||[])[0]?.performer||''});
+  let prevId = 'se1';
+
+  // ════════════════════════════════════════════════════════
+  // MAIN FLOW: steps + decision gateways
+  // ════════════════════════════════════════════════════════
+  (d.steps || []).forEach(step => {
+    const nodeId = newId('n');
+    elements.push({id:nodeId, type:'task', name:cleanName(step.name), performer:step.performer||'', description:step.description||''});
+    flows.push({from:prevId, to:nodeId});
+    stepNodeMap[step.id] = nodeId;
+    orderedTaskNodes.push(nodeId);
+    prevId = nodeId;
+
+    (decByStep[step.id] || []).forEach(dp => {
+      const gwId = newId('gw');
+      elements.push({id:gwId, type:'gateway', name:cleanName(dp.name), performer:dp.decisionMaker||''});
+      flows.push({from:prevId, to:gwId});
+
+      const trs = dp.transitions || [];
+      if (trs.length <= 1) { prevId = gwId; return; }
+
+      const mainTr = trs.find(t => t.bpmnPathType === 'Kontynuacja') || trs[0];
+      const endTrs = trs.filter(t => t !== mainTr && t.bpmnPathType === 'Zakończenie');
+      const retTrs = trs.filter(t => t !== mainTr && t.bpmnPathType === 'Powrót');
+      const mergeTrs = trs.filter(t => t !== mainTr && !['Zakończenie','Powrót'].includes(t.bpmnPathType));
+
+      // Join gateway needed when paths merge back into main flow
+      const needJoin = mergeTrs.length > 0;
+      const joinId = needJoin ? newId('join') : null;
+      if (joinId) elements.push({id:joinId, type:'gateway', name:'', performer:''});
+
+      // ① Main path → join (or directly continues)
+      const mainLbl = (mainTr.outcome||'Tak').slice(0,40);
+      if (joinId) {
+        flows.push({from:gwId, to:joinId, label:mainLbl});
+      } else {
+        prevId = gwId; // next task connects from gateway directly
+      }
+
+      // ② Merge paths (Eskalacja / Ścieżka alternatywna / inne) → task → join
+      mergeTrs.forEach(tr => {
+        const mId  = newId('alt');
+        const mLbl = (tr.condition||tr.outcome||'').slice(0,40);
+        const mNm  = (tr.nextStep||tr.outcome||tr.bpmnPathType||'').slice(0,35);
+        elements.push({id:mId, type:'task', name:mNm, performer:dp.decisionMaker||''});
+        flows.push({from:gwId, to:mId,  label:mLbl});
+        flows.push({from:mId,  to:joinId||'ee1'});
+      });
+
+      // ③ Return paths → backward arc to named step (loop)
+      retTrs.forEach(tr => {
+        const lbl      = (tr.condition||tr.outcome||'Powrót').slice(0,40);
+        const backNode = stepNodeMap[tr.nextStepId] || null;
+        if (backNode) {
+          flows.push({from:gwId, to:backNode, label:lbl});
         } else {
-          const brId = `br${c++}`;
-          elements.push({id: brId, type:'task', name: String(crit).split('→')[1]?.trim().slice(0,35) || ('Opcja '+(i+1)), performer: dp.decisionMaker || '', description:''});
-          flows.push({from: gwId, to: brId, label: label || 'Nie'});
-          flows.push({from: brId, to: joinId, label:''});
+          const rId = newId('ret');
+          elements.push({id:rId, type:'task', name:(tr.nextStep||'Korekta i ponowna próba').slice(0,35), performer:dp.decisionMaker||''});
+          flows.push({from:gwId, to:rId,   label:lbl});
+          flows.push({from:rId,  to:joinId || gwId}); // loop back
         }
       });
-      mainChain.push(joinId);
-    }
+
+      // ④ Termination paths → explicit end events (process terminates here by design)
+      endTrs.forEach(tr => {
+        const eId  = newId('endX');
+        const eLbl = (tr.condition||tr.outcome||'').slice(0,40);
+        elements.push({id:eId, type:'endEvent', name:(tr.outcome||'Zakończenie').slice(0,25), performer:''});
+        flows.push({from:gwId, to:eId, label:eLbl});
+      });
+
+      if (joinId) prevId = joinId;
+    });
   });
 
-  elements.push({id:'ee1', type:'endEvent', name: d.scopeEnd || 'Koniec', performer:'', description:''});
-  flows.push({from: mainChain[mainChain.length-1], to:'ee1', label:''});
+  // Orphan decisions (no positionAfterStep) — append at end of main flow
+  (d.decisionPoints || []).forEach(dp => {
+    if (dp.positionAfterStep) return;
+    const gwId = newId('gw');
+    elements.push({id:gwId, type:'gateway', name:cleanName(dp.name), performer:dp.decisionMaker||''});
+    flows.push({from:prevId, to:gwId});
+    prevId = gwId;
+  });
 
-  return { processName: d.processNamePL || 'Proces', elements, flows };
+  // Main end event
+  elements.push({id:'ee1', type:'endEvent', name: d.scopeEnd||'Zamknięcie procesu', performer:(d.steps||[]).slice(-1)[0]?.performer||''});
+  flows.push({from:prevId, to:'ee1'});
+
+  // ────────────────────────────────────────────────────────
+  // REJOIN helper — given a main task nodeId, return the
+  // next main task node (or 'ee1' if it's the last step).
+  // All exception/alt/escalation paths rejoin HERE instead
+  // of creating dead-end events.
+  // ────────────────────────────────────────────────────────
+  function rejoinAfter(anchorNodeId) {
+    const idx = orderedTaskNodes.indexOf(anchorNodeId);
+    if (idx < 0 || idx >= orderedTaskNodes.length - 1) return 'ee1';
+    return orderedTaskNodes[idx + 1];
+  }
+
+  function anchorNode(triggersDecision, fallbackRatio) {
+    if (triggersDecision) {
+      const dp = (d.decisionPoints||[]).find(x => x.id === triggersDecision);
+      if (dp?.positionAfterStep && stepNodeMap[dp.positionAfterStep]) return stepNodeMap[dp.positionAfterStep];
+    }
+    const idx = Math.min(Math.floor(orderedTaskNodes.length * fallbackRatio), orderedTaskNodes.length - 1);
+    return orderedTaskNodes[idx] || null;
+  }
+
+  // ════════════════════════════════════════════════════════
+  // EXCEPTIONS — obsługa + powrót do głównego przepływu
+  // ════════════════════════════════════════════════════════
+  const excSeen = new Set();
+  (d.exceptions || []).forEach((exc, i) => {
+    const key = (exc.name||'').slice(0,30).toLowerCase();
+    if (excSeen.has(key)) return; excSeen.add(key);
+
+    const anchor = anchorNode(exc.triggersDecision, 0.2 + (i / Math.max(1,(d.exceptions||[]).length)) * 0.55);
+    if (!anchor) return;
+
+    const evId = newId('excEvt');
+    const hId  = newId('excH');
+    // Rejoin: return to the step AFTER the anchor, not to a dead-end event
+    const rejoin = rejoinAfter(anchor);
+
+    elements.push({id:evId, type:'errorEvent', name:cleanName(exc.name||'Wyjątek').slice(0,30),     performer:exc.responsible||''});
+    elements.push({id:hId,  type:'task',       name:cleanName(exc.handling||'Obsługa wyjątku').slice(0,35), performer:exc.responsible||''});
+
+    flows.push({from:anchor, to:evId, label:(exc.name||'').slice(0,35), isException:true});
+    flows.push({from:evId,   to:hId});
+    flows.push({from:hId,    to:rejoin, label:'Powrót do procesu'}); // ← rejoin main flow
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ALTERNATIVE PATHS — ścieżka + rejoin do głównego flow
+  // ════════════════════════════════════════════════════════
+  (d.alternativePaths || []).forEach((ap, i) => {
+    if (!(ap.steps||[]).length) return;
+    const anchor = anchorNode(ap.triggersDecision, 0.15 + (i / Math.max(1,(d.alternativePaths||[]).length)) * 0.5);
+    if (!anchor) return;
+
+    const apGw = newId('apGw');
+    elements.push({id:apGw, type:'gateway', name:cleanName(ap.name||'Ścieżka alternatywna').slice(0,30), performer:''});
+    flows.push({from:anchor, to:apGw, label:(ap.condition||ap.name||'').slice(0,40)});
+
+    let apPrev = apGw;
+    ap.steps.forEach(s => {
+      const apT = newId('apT');
+      elements.push({id:apT, type:'task', name:s.slice(0,35), performer:''});
+      flows.push({from:apPrev, to:apT});
+      apPrev = apT;
+    });
+
+    // After alt path steps: rejoin main flow at next task after anchor
+    const rejoin = rejoinAfter(anchor);
+    flows.push({from:apPrev, to:rejoin, label:'Powrót do procesu'}); // ← rejoin
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ESCALATION PATHS — eskalacja + powrót do procesu
+  // ════════════════════════════════════════════════════════
+  (d.escalationPaths || []).forEach((esc, i) => {
+    const anchor = anchorNode(esc.triggersDecision, 0.45 + i * 0.15);
+    if (!anchor) return;
+
+    const escGw = newId('escGw');
+    const escT  = newId('escT');
+    // Escalation: after approval/decision, loop back to anchor to retry, or continue to next step
+    const rejoin = rejoinAfter(anchor);
+
+    elements.push({id:escGw, type:'gateway', name:`Przekroczenie SLA — ${esc.level||'L'+(i+1)}`.slice(0,35), performer:''});
+    elements.push({id:escT,  type:'task',    name:cleanName(`Eskalacja ${esc.level||''}: ${(esc.to||'').slice(0,22)}`).slice(0,40), performer:esc.to||''});
+
+    flows.push({from:anchor, to:escGw, label:(esc.condition||esc.level||'Przekroczenie SLA').slice(0,40), isException:true});
+    flows.push({from:escGw,  to:escT});
+    flows.push({from:escT,   to:anchor, label:'Ponowna próba'}); // ← loop back to anchor (retry)
+    // Also connect main path of gateway back to rejoin (process continues if SLA met)
+    flows.push({from:escGw,  to:rejoin, label:'SLA dotrzymane'});
+  });
+
+  // Fix any orphaned '_NEXT_' placeholders
+  flows.forEach(f => { if (f.to === '_NEXT_') f.to = 'ee1'; });
+
+  const lanes = deriveLanes(elements);
+  return {processName: d.processNamePL || 'Proces', elements, flows, lanes};
 }
 
 async function generateBpmnStructure() {
@@ -1026,139 +1739,294 @@ function buildBpmnSvg(bdata) {
   const els = bdata.elements || [], flows = bdata.flows || [];
   if (!els.length) return '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100"><text x="20" y="50" font-size="14" fill="#6b7280">Brak elementów BPMN</text></svg>';
 
-  // ── layout constants ──
-  const COLS = 5;          // elementy na wiersz
-  const HGAP = 170;        // odstęp poziomy między środkami
-  const VGAP = 150;        // odstęp pionowy między rzędami
-  const PAD_X = 80, PAD_Y = 60;
-  const TW=130, TH=56, GS=42, SR=20;
+  // ── Swimlane definitions — derived dynamically from process data ──
+  const laneData = bdata.lanes || {list:['Proces'], perfToLane:{}};
+  const LANES = (laneData.list.length ? laneData.list : ['Proces']).map(label => ({label}));
 
-  // ── topological sort → kolejność ──
-  const inDeg={}, adj={};
-  els.forEach(e=>{ inDeg[e.id]=0; adj[e.id]=[]; });
-  flows.forEach(f=>{ inDeg[f.to]=(inDeg[f.to]||0)+1; (adj[f.from]=adj[f.from]||[]).push(f.to); });
-  const q=[...els.filter(e=>inDeg[e.id]===0).map(e=>e.id)], ord=[];
-  while(q.length){ const id=q.shift(); ord.push(id); (adj[id]||[]).forEach(n=>{ if(--inDeg[n]===0) q.push(n); }); }
-  els.forEach(e=>{ if(!ord.includes(e.id)) ord.push(e.id); });
+  function assignLane(performer) {
+    if (!performer) return 0;
+    const parts = performer.split(/[/,]/).map(p => p.trim());
+    for (const part of parts) {
+      if (laneData.perfToLane[part] !== undefined) return laneData.perfToLane[part];
+    }
+    // Fuzzy fallback: partial match
+    const pl = performer.toLowerCase();
+    for (const [perf, lane] of Object.entries(laneData.perfToLane)) {
+      const kl = perf.toLowerCase();
+      if (pl.includes(kl) || kl.includes(pl)) return lane;
+    }
+    return 0;
+  }
 
-  // ── snake positions ──
-  // row 0: L→R, row 1: R→L, row 2: L→R ...
-  const pos={};
-  ord.forEach((id, i) => {
-    const row = Math.floor(i / COLS);
-    const col = i % COLS;
-    const ltr = row % 2 === 0;
-    pos[id] = {
-      x: PAD_X + (ltr ? col : (COLS - 1 - col)) * HGAP,
-      y: PAD_Y + row * VGAP
+  const elLane = {};
+  els.forEach(el => { elLane[el.id] = assignLane(el.performer); });
+
+  // ── BFS: column levels (skip exception flows for topo sort) ──
+  const adj = {}, indeg = {};
+  els.forEach(e => { adj[e.id] = []; indeg[e.id] = 0; });
+  flows.forEach(f => {
+    if (!f.isException) {
+      (adj[f.from] = adj[f.from] || []).push(f.to);
+      indeg[f.to] = (indeg[f.to] || 0) + 1;
+    }
+  });
+
+  const level = {};
+  const startNodes = els.filter(e => (indeg[e.id] || 0) === 0).map(e => e.id);
+  startNodes.forEach(id => { level[id] = 0; });
+  const bfsQ = [...startNodes];
+  let qi = 0;
+  while (qi < bfsQ.length) {
+    const id = bfsQ[qi++];
+    (adj[id] || []).forEach(nid => {
+      const nl = (level[id] || 0) + 1;
+      if (level[nid] === undefined) { level[nid] = nl; bfsQ.push(nid); }
+      else if (nl > level[nid]) { level[nid] = nl; }
+    });
+  }
+  const maxLevel = Math.max(0, ...Object.values(level).filter(v => v !== undefined));
+  els.forEach(e => { if (level[e.id] === undefined) level[e.id] = maxLevel + 1; });
+
+  // ── Layout constants ──
+  const POOL_W   = 28;   // pool label (vertical) column
+  const LANE_W   = 88;   // lane label column
+  const COL_W    = 158;  // column width
+  const LANE_H   = 108;  // lane height
+  const PAD_L    = 6;
+
+  const TW = 118, TH = 48;   // task box
+  const GS = 25;              // gateway half-size (diamond)
+  const SR = 14;              // start/end radius
+  const ER = 11;              // error event radius
+
+  const numCols  = maxLevel + 1;
+  const numLanes = LANES.length;
+  const svgW     = POOL_W + LANE_W + numCols * COL_W + PAD_L * 2 + 24;
+  const svgH     = numLanes * LANE_H + 28;
+
+  // ── Position calculator (handle collisions within same lane+col) ──
+  const laneColBuckets = {};
+  LANES.forEach((_, i) => { laneColBuckets[i] = {}; });
+  els.forEach(el => {
+    const lane = elLane[el.id], col = level[el.id] || 0;
+    if (!laneColBuckets[lane][col]) laneColBuckets[lane][col] = [];
+    laneColBuckets[lane][col].push(el.id);
+  });
+
+  const pos = {};
+  els.forEach(el => {
+    const lane = elLane[el.id], col = level[el.id] || 0;
+    const siblings = laneColBuckets[lane][col];
+    const idx = siblings.indexOf(el.id), count = siblings.length;
+    const laneCenter = lane * LANE_H + LANE_H / 2;
+    const yOffset = count > 1 ? ((idx - (count - 1) / 2) * (LANE_H / (count + 1))) : 0;
+    pos[el.id] = {
+      x: POOL_W + LANE_W + col * COL_W + COL_W / 2 + PAD_L,
+      y: laneCenter + yOffset
     };
   });
 
-  const rows = Math.ceil(ord.length / COLS);
-  const svgW = PAD_X * 2 + (Math.min(els.length, COLS) - 1) * HGAP + TW;
-  const svgH = PAD_Y * 2 + (rows - 1) * VGAP + TH + 30;
-
-  const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const short = (s, n=18) => s && s.length > n ? s.slice(0, n-1)+'…' : (s||'');
-  const wrap = (s, n=15) => {
-    const ws = (s||'').split(' '); const ls = []; let cur = '';
-    ws.forEach(w => { if ((cur+' '+w).trim().length <= n) cur=(cur+' '+w).trim(); else { if(cur) ls.push(cur); cur=w; } });
-    if (cur) ls.push(cur); return ls.slice(0, 3);
+  // ── SVG utilities ──
+  const esc = s => (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const short = (s, n = 16) => s && s.length > n ? s.slice(0, n - 1) + '…' : (s || '');
+  const wrapText = (s, n = 13) => {
+    const words = (s || '').split(' ');
+    const lines = []; let cur = '';
+    words.forEach(w => {
+      const cand = cur ? cur + ' ' + w : w;
+      if (cand.length <= n) { cur = cand; }
+      else { if (cur) lines.push(cur); cur = w; }
+    });
+    if (cur) lines.push(cur);
+    return lines.slice(0, 3);
   };
 
-  // ── edge exit/entry points ──
-  function edgePoint(id, isFrom, targetId) {
-    const p = pos[id]; const el = els.find(e=>e.id===id); if (!p||!el) return p||{x:0,y:0};
-    const tp = pos[targetId];
-    const dx = tp ? tp.x - p.x : 0;
-    const dy = tp ? tp.y - p.y : 0;
-    const hw = el.type==='task' ? TW/2 : el.type==='gateway' ? GS/2 : SR;
-    const hh = el.type==='task' ? TH/2 : el.type==='gateway' ? GS/2 : SR;
-    // pick exit side based on target direction
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      return { x: p.x + (dx>=0?1:-1)*hw, y: p.y };
+  // ── Edge endpoint helper ──
+  function ep(elId, towardId) {
+    const p = pos[elId], tp = pos[towardId];
+    if (!p || !tp) return p || { x: 0, y: 0 };
+    const el = els.find(e => e.id === elId);
+    if (!el) return p;
+    const dx = tp.x - p.x, dy = tp.y - p.y;
+    if (el.type === 'task') {
+      return Math.abs(dx) >= Math.abs(dy)
+        ? { x: p.x + (dx >= 0 ? TW/2 : -TW/2), y: p.y }
+        : { x: p.x, y: p.y + (dy >= 0 ? TH/2 : -TH/2) };
+    } else if (el.type === 'gateway') {
+      return Math.abs(dx) >= Math.abs(dy)
+        ? { x: p.x + (dx >= 0 ? GS : -GS), y: p.y }
+        : { x: p.x, y: p.y + (dy >= 0 ? GS : -GS) };
     } else {
-      return { x: p.x, y: p.y + (dy>=0?1:-1)*hh };
+      const r = el.type === 'errorEvent' ? ER : SR;
+      return Math.abs(dx) >= Math.abs(dy)
+        ? { x: p.x + (dx >= 0 ? r : -r), y: p.y }
+        : { x: p.x, y: p.y + (dy >= 0 ? r : -r) };
     }
   }
 
-  let out = [
+  // ── Begin SVG output ──
+  const out = [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="font-family:system-ui,sans-serif;display:block;max-width:100%">`,
-    `<defs><marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker></defs>`,
-    `<rect width="${svgW}" height="${svgH}" fill="#f8fafc" rx="12"/>`
+    `<defs>`,
+    `  <marker id="arr"     markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>`,
+    `  <marker id="arr-exc" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>`,
+    `  <marker id="arr-rej" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ea580c"/></marker>`,
+    `  <marker id="arr-ret" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6366f1"/></marker>`,
+    `</defs>`,
+    `<rect width="${svgW}" height="${svgH}" fill="#f8fafc"/>`,
   ];
 
-  // ── draw flows ──
-  flows.forEach(f => {
-    const fp = pos[f.from], tp = pos[f.to]; if (!fp||!tp) return;
-    const p1 = edgePoint(f.from, true, f.to);
-    const p2 = edgePoint(f.to, false, f.from);
-    const dx = p2.x - p1.x, dy = p2.y - p1.y;
-    let pathD;
-    if (Math.abs(dy) < 10) {
-      // Same row — straight line
-      pathD = `M${p1.x},${p1.y} L${p2.x},${p2.y}`;
-    } else if (Math.abs(dx) < 10) {
-      // Same column — straight vertical
-      pathD = `M${p1.x},${p1.y} L${p2.x},${p2.y}`;
-    } else {
-      // Cross-row: route around row-end turn with bezier
-      const midY = (p1.y + p2.y) / 2;
-      pathD = `M${p1.x},${p1.y} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y}`;
-    }
-    out.push(`<path d="${pathD}" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>`);
-    if (f.label) {
-      const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2 - 9;
-      const lw = f.label.length * 6 + 10;
-      out.push(`<rect x="${mx-lw/2}" y="${my-9}" width="${lw}" height="14" rx="3" fill="#fff" opacity=".85"/>
-        <text x="${mx}" y="${my}" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic">${esc(f.label)}</text>`);
-    }
+  // ── Pool: outer border + vertical label ──
+  const poolH = numLanes * LANE_H;
+  out.push(`<rect x="${POOL_W}" y="0" width="${svgW - POOL_W}" height="${poolH}" fill="none" stroke="#475569" stroke-width="2"/>`);
+  out.push(`<rect x="0" y="0" width="${POOL_W}" height="${poolH}" fill="#1e293b"/>`);
+  out.push(`<text transform="rotate(-90)" x="${-poolH/2}" y="${POOL_W - 9}" text-anchor="middle" font-size="10" fill="white" font-weight="700">${esc(bdata.processName || 'Proces Biznesowy')}</text>`);
+
+  // ── Lanes ──
+  // Dynamic lane colors — cycle through palette for any number of lanes
+  const _BG_PALETTE  = ['#eff6ff','#f0fdf4','#fffbeb','#fdf4ff','#f0f9ff','#fefce8','#fff7ed','#f0fdfa'];
+  const _HDR_PALETTE = ['#dbeafe','#bbf7d0','#fde68a','#e9d5ff','#bae6fd','#fef08a','#fed7aa','#ccfbf1'];
+  const LANE_BG  = LANES.map((_, i) => _BG_PALETTE[i % _BG_PALETTE.length]);
+  const LANE_HDR = LANES.map((_, i) => _HDR_PALETTE[i % _HDR_PALETTE.length]);
+
+  LANES.forEach((lane, i) => {
+    const ly = i * LANE_H;
+    out.push(`<rect x="${POOL_W + LANE_W}" y="${ly}" width="${svgW - POOL_W - LANE_W}" height="${LANE_H}" fill="${LANE_BG[i]}" stroke="#cbd5e1" stroke-width="0.5"/>`);
+    out.push(`<rect x="${POOL_W}" y="${ly}" width="${LANE_W}" height="${LANE_H}" fill="${LANE_HDR[i]}" stroke="#94a3b8" stroke-width="0.5"/>`);
+    out.push(`<text x="${POOL_W + LANE_W/2}" y="${ly + LANE_H/2 + 4}" text-anchor="middle" font-size="10" fill="#334155" font-weight="600">${esc(lane.label)}</text>`);
   });
 
-  // ── draw elements ──
-  els.forEach(el => {
-    const p = pos[el.id]; if (!p) return;
-    const {x, y} = p;
-    if (el.type === 'startEvent') {
-      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>
-        <text x="${x}" y="${y+SR+14}" text-anchor="middle" font-size="10" fill="#374151" font-weight="600">${esc(short(el.name||'Start',16))}</text>`);
-    } else if (el.type === 'endEvent') {
-      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/>
-        <circle cx="${x}" cy="${y}" r="${SR-5}" fill="#ef4444"/>
-        <text x="${x}" y="${y+SR+14}" text-anchor="middle" font-size="10" fill="#374151" font-weight="600">${esc(short(el.name||'Koniec',16))}</text>`);
-    } else if (el.type === 'gateway') {
-      const h = GS/2;
-      // Strip generic prefix if present
-      const gwLabel = (el.name||'').replace(/^Bramka decyzyjna[:\s]*/i,'').trim();
-      const isJoin = !gwLabel; // unnamed = join/merge gateway
-      const fillColor = isJoin ? '#f1f5f9' : '#fef3c7';
-      const strokeColor = isJoin ? '#94a3b8' : '#d97706';
-      const gSize = isJoin ? h * 0.7 : h; // join gateways are smaller
-      out.push(`<polygon points="${x},${y-gSize} ${x+gSize},${y} ${x},${y+gSize} ${x-gSize},${y}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${isJoin?1.5:2}"/>`);
-      if (gwLabel) {
-        out.push(`<text x="${x}" y="${y+gSize+14}" text-anchor="middle" font-size="9" fill="#92400e">${esc(short(gwLabel, 20))}</text>`);
+  // ── Column dividers (subtle guide lines) ──
+  for (let c = 1; c < numCols; c++) {
+    const cx = POOL_W + LANE_W + c * COL_W + PAD_L;
+    out.push(`<line x1="${cx}" y1="0" x2="${cx}" y2="${poolH}" stroke="#e2e8f0" stroke-width="0.5"/>`);
+  }
+
+  // ── Draw flows ──
+  flows.forEach(f => {
+    const fp = pos[f.from], tp = pos[f.to];
+    if (!fp || !tp) return;
+
+    const fromLane = elLane[f.from], toLane = elLane[f.to];
+    const fromLvl = level[f.from] || 0, toLvl = level[f.to] || 0;
+    const isExc      = !!f.isException;
+    const isBackward = !isExc && toLvl < fromLvl;
+    const isRejection = !isExc && f.label && /odrzuc|reject/i.test(f.label);
+    const isReturn    = !isExc && f.label && /powrót|return|wróć/i.test(f.label);
+
+    let stroke = '#64748b', sw = '1.5', dash = '', marker = 'url(#arr)';
+    if (isExc)       { stroke = '#dc2626'; dash = '5,3'; marker = 'url(#arr-exc)'; }
+    else if (isRejection) { stroke = '#ea580c'; marker = 'url(#arr-rej)'; }
+    else if (isReturn || isBackward) { stroke = '#6366f1'; dash = '4,2'; marker = 'url(#arr-ret)'; }
+
+    const p1 = ep(f.from, f.to);
+    const p2 = ep(f.to, f.from);
+    let pathD;
+
+    if (isBackward) {
+      // Return arc routed above current lane band
+      const peakY = Math.min(fp.y, tp.y) - 28;
+      pathD = `M${p1.x},${p1.y} Q${p1.x},${peakY} ${(p1.x+p2.x)/2},${peakY} Q${p2.x},${peakY} ${p2.x},${p2.y}`;
+    } else if (fromLane === toLane) {
+      // Same lane — straight or gentle curve
+      if (Math.abs(p1.y - p2.y) < 4) {
+        pathD = `M${p1.x},${p1.y} L${p2.x},${p2.y}`;
+      } else {
+        const mx = (p1.x + p2.x) / 2;
+        pathD = `M${p1.x},${p1.y} C${mx},${p1.y} ${mx},${p2.y} ${p2.x},${p2.y}`;
       }
     } else {
-      // task
-      const tx = x - TW/2, ty = y - TH/2;
-      out.push(`<rect x="${tx}" y="${ty}" width="${TW}" height="${TH}" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>`);
-      const ls = wrap(el.name||'');
-      const baseY = y - ((ls.length-1)*12)/2;
-      ls.forEach((l,i) => out.push(`<text x="${x}" y="${baseY+i*12}" text-anchor="middle" dominant-baseline="middle" font-size="10.5" fill="#1e40af" font-weight="600">${esc(l)}</text>`));
-      if (el.performer) out.push(`<text x="${x}" y="${ty+TH+13}" text-anchor="middle" font-size="9.5" fill="#64748b">${esc(short(el.performer, 24))}</text>`);
+      // Cross-lane: S-curve
+      const mx = (p1.x + p2.x) / 2;
+      pathD = `M${p1.x},${p1.y} C${mx},${p1.y} ${mx},${p2.y} ${p2.x},${p2.y}`;
+    }
+
+    const dashAttr = dash ? ` stroke-dasharray="${dash}"` : '';
+    out.push(`<path d="${pathD}" fill="none" stroke="${stroke}" stroke-width="${sw}"${dashAttr} marker-end="${marker}"/>`);
+
+    if (f.label) {
+      const mx = (p1.x + p2.x) / 2;
+      const my = isBackward ? Math.min(fp.y, tp.y) - 36 : (p1.y + p2.y) / 2 - 8;
+      const lt = short(f.label, 18);
+      const lw = lt.length * 5 + 10;
+      out.push(`<rect x="${mx - lw/2}" y="${my - 8}" width="${lw}" height="12" rx="3" fill="white" opacity=".9"/>`);
+      out.push(`<text x="${mx}" y="${my}" text-anchor="middle" font-size="8.5" fill="${stroke}">${esc(lt)}</text>`);
     }
   });
 
-  // ── legend ──
-  const ly = svgH - 22;
-  out.push(`<circle cx="14" cy="${ly}" r="7" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
-    <text x="25" y="${ly+4}" font-size="9" fill="#6b7280">Start</text>
-    <circle cx="70" cy="${ly}" r="7" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
-    <text x="81" y="${ly+4}" font-size="9" fill="#6b7280">Koniec</text>
-    <rect x="125" y="${ly-7}" width="14" height="14" rx="2" fill="#dbeafe" stroke="#3b82f6"/>
-    <text x="143" y="${ly+4}" font-size="9" fill="#6b7280">Zadanie</text>
-    <polygon points="198,${ly-7} 207,${ly} 198,${ly+7} 189,${ly}" fill="#fef3c7" stroke="#d97706"/>
-    <text x="212" y="${ly+4}" font-size="9" fill="#6b7280">Brama decyzyjna</text>`);
+  // ── Draw elements (on top of flows) ──
+  els.forEach(el => {
+    const p = pos[el.id];
+    if (!p) return;
+    const { x, y } = p;
+
+    if (el.type === 'startEvent') {
+      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>`);
+      out.push(`<text x="${x}" y="${y + SR + 11}" text-anchor="middle" font-size="9" fill="#374151" font-weight="600">${esc(short(el.name || 'Start', 14))}</text>`);
+
+    } else if (el.type === 'endEvent') {
+      out.push(`<circle cx="${x}" cy="${y}" r="${SR}" fill="white" stroke="#b91c1c" stroke-width="4"/>`);
+      out.push(`<circle cx="${x}" cy="${y}" r="${SR - 5}" fill="#ef4444"/>`);
+      out.push(`<text x="${x}" y="${y + SR + 11}" text-anchor="middle" font-size="9" fill="#374151" font-weight="600">${esc(short(el.name || 'Koniec', 14))}</text>`);
+
+    } else if (el.type === 'errorEvent') {
+      // BPMN 2.0 Intermediate Catching Event (error): double-ring with lightning
+      out.push(`<circle cx="${x}" cy="${y}" r="${ER}" fill="#fff7ed" stroke="#dc2626" stroke-width="1.5"/>`);
+      out.push(`<circle cx="${x}" cy="${y}" r="${ER - 3}" fill="none" stroke="#dc2626" stroke-width="1"/>`);
+      out.push(`<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="9" fill="#dc2626">⚡</text>`);
+      out.push(`<text x="${x}" y="${y + ER + 11}" text-anchor="middle" font-size="8" fill="#dc2626">${esc(short(el.name || '', 14))}</text>`);
+
+    } else if (el.type === 'gateway') {
+      const gwLabel = (el.name || '').replace(/^(Brama|Bramka)\s+(decyzyjna|BPMN)[:\s]*/i, '').trim();
+      const isJoin = !gwLabel;
+
+      if (isJoin) {
+        // Converging/merge gateway: smaller diamond, no X
+        const gs = Math.round(GS * 0.72);
+        out.push(`<polygon points="${x},${y-gs} ${x+gs},${y} ${x},${y+gs} ${x-gs},${y}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>`);
+      } else {
+        // Exclusive (XOR) gateway: diamond + X marker
+        out.push(`<polygon points="${x},${y-GS} ${x+GS},${y} ${x},${y+GS} ${x-GS},${y}" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>`);
+        const xs = Math.round(GS * 0.35);
+        out.push(`<line x1="${x-xs}" y1="${y-xs}" x2="${x+xs}" y2="${y+xs}" stroke="#d97706" stroke-width="2.2"/>`);
+        out.push(`<line x1="${x+xs}" y1="${y-xs}" x2="${x-xs}" y2="${y+xs}" stroke="#d97706" stroke-width="2.2"/>`);
+        const gwLines = wrapText(gwLabel, 16);
+        const lblY = y + GS + 12;
+        gwLines.forEach((l, i) => {
+          out.push(`<text x="${x}" y="${lblY + i * 10}" text-anchor="middle" font-size="8.5" fill="#92400e" font-weight="600">${esc(l)}</text>`);
+        });
+      }
+
+    } else {
+      // Task (User/Service/Send/Receive)
+      const tx = x - TW / 2, ty = y - TH / 2;
+      out.push(`<rect x="${tx}" y="${ty}" width="${TW}" height="${TH}" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>`);
+      const lines = wrapText(el.name || '', 13);
+      const baseY = y - ((lines.length - 1) * 11) / 2;
+      lines.forEach((l, i) => {
+        out.push(`<text x="${x}" y="${baseY + i * 11}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1e40af" font-weight="600">${esc(l)}</text>`);
+      });
+      if (el.performer) {
+        out.push(`<text x="${x}" y="${ty + TH - 4}" text-anchor="middle" font-size="8" fill="#3b82f6">${esc(short(el.performer, 22))}</text>`);
+      }
+    }
+  });
+
+  // ── Legend ──
+  const ly = svgH - 17;
+  const lx = POOL_W + LANE_W + 8;
+  out.push(`<circle cx="${lx+7}"   cy="${ly}" r="7" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>`);
+  out.push(`<text x="${lx+18}"  y="${ly+4}" font-size="8" fill="#6b7280">Start</text>`);
+  out.push(`<circle cx="${lx+65}"  cy="${ly}" r="7" fill="white" stroke="#b91c1c" stroke-width="3"/><circle cx="${lx+65}" cy="${ly}" r="3" fill="#ef4444"/>`);
+  out.push(`<text x="${lx+76}"  y="${ly+4}" font-size="8" fill="#6b7280">Koniec</text>`);
+  out.push(`<rect x="${lx+126}" y="${ly-7}" width="14" height="12" rx="2" fill="#dbeafe" stroke="#3b82f6"/>`);
+  out.push(`<text x="${lx+143}" y="${ly+4}" font-size="8" fill="#6b7280">Zadanie</text>`);
+  out.push(`<polygon points="${lx+198},${ly-7} ${lx+206},${ly} ${lx+198},${ly+7} ${lx+190},${ly}" fill="#fef3c7" stroke="#d97706"/>`);
+  out.push(`<text x="${lx+211}" y="${ly+4}" font-size="8" fill="#6b7280">Bramka XOR</text>`);
+  out.push(`<line x1="${lx+272}" y1="${ly}" x2="${lx+290}" y2="${ly}" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr-exc)"/>`);
+  out.push(`<text x="${lx+295}" y="${ly+4}" font-size="8" fill="#6b7280">Wyjątek</text>`);
+  out.push(`<line x1="${lx+348}" y1="${ly}" x2="${lx+366}" y2="${ly}" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-ret)"/>`);
+  out.push(`<text x="${lx+371}" y="${ly+4}" font-size="8" fill="#6b7280">Powrót</text>`);
 
   out.push('</svg>');
   return out.join('\n');
@@ -1196,8 +2064,8 @@ function buildBpmnXml(bdata) {
 // DOCX GENERATOR — zero-dependency HTML-as-DOC
 // Word otwiera pliki HTML z Office XML namespace bez żadnych bibliotek
 // ════════════════════════════════════════════════════════════════
-async function generateDocx() {
-  updatePStep('ps3','done'); updatePStep('ps4','active');
+async function generateDocx(skipPStepUpdate = false) {
+  if (!skipPStepUpdate) { updatePStep('ps3','done'); updatePStep('ps4','active'); }
   const d = A.processData;
   const today = new Date().toLocaleDateString('pl-PL');
   const x = s => String(s??'—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1220,7 +2088,7 @@ async function generateDocx() {
   // ── STEPS ──
   const stepsHtml = arr(d.steps, step => `
     ${h3('Krok: ' + step.name)}
-    ${t2([['ID Kroku',step.id||''],['Typ',step.type||''],['Wykonawca',step.performer||''],['Czas trwania',step.duration||'']])}
+    ${t2([['Typ',step.type||''],['Wykonawca',step.performer||''],['Czas trwania',step.duration||'']])}
     ${b('Opis:')}${p(step.description)}
     ${step.inputs?.length  ? b('Wejścia:')  + ul(step.inputs)  : ''}
     ${step.outputs?.length ? b('Wyjścia:')  + ul(step.outputs) : ''}
@@ -1231,17 +2099,32 @@ async function generateDocx() {
 
   // ── DECISION POINTS ──
   const decisionsHtml = d.decisionPoints?.length ? `
-    ${h2('Punkty decyzyjne')}
+    ${h2('4.2b Punkty decyzyjne')}
     ${arr(d.decisionPoints, dp => `
-      ${h3('Punkt decyzyjny: ' + dp.name)}
-      ${t2([['ID',dp.id],['Osoba decyzyjna',dp.decisionMaker],['Czas na decyzję',dp.sla],['Dokumentacja',dp.docLocation]])}
-      ${b('Kryteria decyzji:')}${ul(dp.criteria)}`)}` : '';
+      ${h3(dp.name)}
+      ${t2([
+        ['Typ decyzji', dp.decisionType||''],
+        ['Rola rekomendująca', dp.recommendingRole||''],
+        ['Decydent', dp.decisionMaker||''],
+        ['Czas na decyzję (SLA)', dp.sla||''],
+        ['Typ bramki BPMN', dp.bpmnGatewayType||''],
+        ['Dokumentacja', dp.docLocation||'']
+      ])}
+      ${dp.requiredInputs?.length ? b('Wymagane dane wejściowe:') + ul(dp.requiredInputs) : ''}
+      ${dp.criteria?.length ? b('Kryteria decyzji:') + ul(dp.criteria) : ''}
+      ${dp.possibleOutcomes?.length ? b('Możliwe wyniki:') + ul(dp.possibleOutcomes) : ''}
+      ${dp.outcomeConsequences?.length ? b('Konsekwencje wyników:') + ul(dp.outcomeConsequences) : ''}
+      ${dp.transitions?.length ? b('Ścieżki BPMN — przejścia:') + tbl(
+          ['Wynik decyzji','Następny krok','Typ ścieżki BPMN','Warunek przejścia','Uzasadnienie biznesowe'],
+          dp.transitions.map(t => [t.outcome||'', t.nextStep||'', t.bpmnPathType||'', t.condition||'', t.businessJustification||''])
+        ) : ''}
+    `)}` : '';
 
   // ── ESCALATION ──
   const escalationHtml = d.escalationPaths?.length ? `
     ${h2('Ścieżki eskalacji')}
-    ${tbl(['Poziom','Warunek','Do kogo','SLA','Zastępstwo'],
-      d.escalationPaths.map(e=>[e.level,e.condition,e.to,e.sla,e.backup]))}` : '';
+    ${tbl(['Poziom','Warunek','Do kogo','SLA','Zastępstwo','Uruchamia decyzję'],
+      d.escalationPaths.map(e=>[e.level,e.condition,e.to,e.sla,e.backup,e.triggersDecision||'']))}` : '';
 
   // ── SLA ──
   const slaHtml = d.sla?.length ? `
@@ -1322,11 +2205,11 @@ async function generateDocx() {
     ${decisionsHtml}
     ${h2('4.3 Ścieżki alternatywne')}
     ${d.alternativePaths?.length
-      ? arr(d.alternativePaths, ap => `${h3('Ścieżka: '+ap.name)}${p('Warunek wejścia: '+ap.condition)}${ol(ap.steps)}`)
+      ? arr(d.alternativePaths, ap => `${h3('Ścieżka: '+ap.name)}${p('Warunek wejścia: '+ap.condition)}${ap.triggersDecision ? p('Uruchamia punkt decyzyjny: ' + ap.triggersDecision) : ''}${ol(ap.steps)}`)
       : p('Brak zidentyfikowanych ścieżek alternatywnych.')}
     ${h2('4.4 Obsługa wyjątków')}
-    ${tbl(['Wyjątek','Prawdopodobieństwo','Procedura obsługi','Odpowiedzialny','Eskalacja'],
-      (d.exceptions||[]).map(e=>[e.name,e.probability,e.handling,e.responsible,e.escalation]))}
+    ${tbl(['Wyjątek','Prawdopodobieństwo','Procedura obsługi','Odpowiedzialny','Eskalacja','Uruchamia decyzję'],
+      (d.exceptions||[]).map(e=>[e.name,e.probability,e.handling,e.responsible,e.escalation,e.triggersDecision||'']))}
     ${escalationHtml}
 
     ${h1('5. ZASOBY I NARZĘDZIA')}
@@ -1369,7 +2252,6 @@ async function generateDocx() {
   </html>`;
 
   A.docxBlob = new Blob(['﻿' + html], { type: 'application/msword;charset=utf-8' });
-  updatePStep('ps4','done');
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1381,6 +2263,8 @@ async function beginAnalysis() {
   await sleep(1500);
   showScreen('processing');
   try {
+    setProc('Planuję strukturę procesu…','Identyfikuję aktywności i punkty decyzyjne');
+    await generateProcessPlan();
     setProc('Analizuję wywiad i generuję kartę procesu…','Może to potrwać 30–60 sekund');
     await generateProcessCard();
     setProc('Buduję strukturę BPMN…','');
@@ -1389,7 +2273,22 @@ async function beginAnalysis() {
     A.bpmnSvg = buildBpmnSvg(A.bpmnData);
     setProc('Generuję dokument Word…','');
     await generateDocx();
+    setProc('Audytuję spójność procesu…', '');
+    await generateAudit();
+    setProc('Analizuję architekturę BPMN 2.0…', '');
+    await generateBpmnReview();
+    setProc('Mapuję powiązania procesu…', '');
+    await generateProcessMap();
+    setProc('Naprawiam niespójności dokumentu…', '');
+    await generateConsistencyFix();
+    setProc('Audytuję rozdzielenie STEP/DECISION i uzupełniam kompletność…', '');
+    await generateStepDecisionAudit();
     showResults();
+    showAuditResults();
+    showBpmnReview();
+    showProcessMap();
+    showConsistencyFix();
+    showStepDecisionAudit();
   } catch(err) {
     showToast('Błąd: ' + err.message);
     console.error(err);
@@ -1411,10 +2310,1271 @@ function showResults() {
   ].map(([l,v])=>`<div class="sum-item"><label>${l}</label><p>${v||'—'}</p></div>`).join('');
   document.getElementById('stepsList').innerHTML=(d.steps||[]).map((s,i)=>`
     <div class="step-row">
-      <div class="step-num ${s.isGateway?'gw':''}">${s.isGateway?`<span>${i+1}</span>`:i+1}</div>
+      <div class="step-num">${i+1}</div>
       <div class="step-info"><strong>${s.name}</strong><small>${s.performer||''} ${s.duration?'· '+s.duration:''}</small></div>
     </div>`).join('');
   showScreen('results');
+}
+
+// ════════════════════════════════════════════════════════════════
+// AUDIT
+// ════════════════════════════════════════════════════════════════
+async function generateAudit() {
+  updatePStep('ps4','done'); updatePStep('ps5','active');
+  setProc('Przeprowadzam audyt spójności procesu…','');
+
+  const d = A.processData;
+  // Kompaktowy snapshot procesu — tylko dane potrzebne do audytu
+  const snapshot = {
+    processName: d.processNamePL,
+    scopeStart: d.scopeStart,
+    scopeEnd: d.scopeEnd,
+    steps: (d.steps||[]).map(s=>({
+      id: s.id, name: s.name, type: s.type,
+      isGateway: s.isGateway, decisionPointRef: s.decisionPointRef||null,
+      inputs: s.inputs||[], outputs: s.outputs||[],
+      gatewayConditions: (s.gatewayConditions||[]).map(g=>typeof g==='object'?g.label:g)
+    })),
+    decisionPoints: (d.decisionPoints||[]).map(dp=>({
+      id: dp.id, name: dp.name, bpmnGatewayType: dp.bpmnGatewayType,
+      transitions: (dp.transitions||[]).map(t=>({
+        outcome: t.outcome, nextStep: t.nextStep, bpmnPathType: t.bpmnPathType, condition: t.condition
+      }))
+    })),
+    alternativePaths: (d.alternativePaths||[]).map(p=>({
+      name: p.name, condition: p.condition,
+      triggersDecision: p.triggersDecision, steps: p.steps||[]
+    })),
+    exceptions: (d.exceptions||[]).map(e=>({
+      name: e.name, probability: e.probability,
+      handling: e.handling, responsible: e.responsible,
+      escalation: e.escalation, triggersDecision: e.triggersDecision||null
+    })),
+    escalationPaths: (d.escalationPaths||[]).map(e=>({
+      level: e.level, role: e.role, condition: e.condition, sla: e.sla
+    }))
+  };
+
+  const auditPrompt = `Przeprowadź pełny audyt spójności procesu biznesowego.
+
+DANE PROCESU (JSON):
+${JSON.stringify(snapshot, null, 0)}
+
+ZAKRES AUDYTU:
+
+1. KROKI PROCESU — dla każdego kroku sprawdź:
+   - Czy posiada logicznego poprzednika (poza pierwszym)
+   - Czy posiada logicznego następnika (poza ostatnim)
+   - Czy wejścia są generowane przez wcześniejsze kroki
+   - Czy wyjścia są wykorzystywane przez kolejne kroki
+   - Czy krok jest we właściwym miejscu chronologicznym
+   - Czy nie jest osierocony (orphan) ani nieosiągalny (unreachable)
+   - Czy nie tworzy ślepego zakończenia (dead end)
+
+2. PUNKTY DECYZYJNE — dla każdego sprawdź:
+   - Czy decyzja występuje we właściwym miejscu procesu
+   - Czy bazuje na danych dostępnych w tym momencie
+   - Czy wszystkie wyniki (transitions.nextStep) wskazują na istniejące kroki
+   - Czy nie tworzy pętli bez warunku wyjścia
+   - Czy to rzeczywiście decyzja, a nie zwykła aktywność
+
+3. ŚCIEŻKI ALTERNATYWNE — dla każdej sprawdź:
+   - Czy jest powiązana z konkretnym decisionPoint (triggersDecision)
+   - Czy posiada warunek wejścia
+   - Czy prowadzi do poprawnego miejsca procesu
+   - Czy posiada ścieżkę powrotu do głównego procesu
+
+4. WYJĄTKI — dla każdego sprawdź:
+   - Czy może wystąpić w opisanym kontekście
+   - Czy ma właściciela (responsible)
+   - Czy ma procedurę obsługi (handling)
+   - Czy prowadzi do decyzji lub eskalacji (triggersDecision)
+
+5. ZGODNOŚĆ BPMN 2.0:
+   - Poprawność bramek (gateway): każda brama musi mieć ≥2 wychodzące ścieżki
+   - Brak martwych ścieżek (transitions.nextStep nieistniejący)
+   - Brak nieskończonych pętli (Powrót bez warunku wyjścia)
+   - Poprawność Start Event i End Event
+   - Możliwość wygenerowania poprawnego diagramu BPMN 2.0
+
+Odpowiedz TYLKO poprawnym JSON (bez markdown):
+{
+  "issues": [
+    {
+      "issueId": "AUDIT-001",
+      "area": "Krok procesu | Punkt decyzyjny | Ścieżka alternatywna | Wyjątek | BPMN",
+      "description": "Opis niespójności — co konkretnie jest błędne lub niejasne",
+      "impact": "Wpływ na proces — co się może zdarzyć jeśli błąd nie zostanie poprawiony",
+      "recommendation": "Konkretna rekomendowana poprawka",
+      "priority": "Critical | High | Medium | Low"
+    }
+  ],
+  "prePublicationChanges": [
+    "Zmiana 1 — konkretna akcja do wykonania przed publikacją",
+    "Zmiana 2 — konkretna akcja do wykonania przed publikacją"
+  ],
+  "bpmnReadiness": 75,
+  "bpmnReadinessJustification": "Uzasadnienie oceny — co jest gotowe, co wymaga poprawy"
+}`;
+
+  const rawAudit = await callClaude([{role:'user', content: auditPrompt}],
+    'Jesteś ekspertem audytu procesów BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    3000);
+
+  if (!rawAudit.includes('{')) {
+    console.warn('Audyt: brak JSON w odpowiedzi:', rawAudit.slice(0,120));
+    updatePStep('ps5','done');
+    return;
+  }
+  try {
+    A.auditData = safeParseJson(rawAudit);
+  } catch(e) {
+    console.warn('Audyt: błąd parsowania JSON:', e.message);
+  }
+  updatePStep('ps5','done');
+}
+
+function showAuditResults() {
+  const audit = A.auditData;
+  if (!audit) return;
+  const card = document.getElementById('auditCard');
+  const content = document.getElementById('auditContent');
+  card.style.display = '';
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const priorityLabel = p => `<span class="priority-${p}">${esc(p)}</span>`;
+
+  // Score ring
+  const score = Math.max(0, Math.min(100, parseInt(audit.bpmnReadiness)||0));
+  const r = 38, circ = 2*Math.PI*r;
+  const dash = circ * score / 100;
+  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#f59e0b' : score >= 40 ? '#f97316' : '#ef4444';
+
+  // Issues table
+  const issues = audit.issues || [];
+  const critCount = issues.filter(i=>i.priority==='Critical').length;
+  const highCount = issues.filter(i=>i.priority==='High').length;
+
+  const issuesHtml = issues.length === 0
+    ? `<div class="audit-no-issues">✅ Nie wykryto niespójności — proces gotowy do modelowania BPMN.</div>`
+    : `<table class="audit-table">
+        <thead><tr>
+          <th>ID</th><th>Obszar</th><th>Opis niespójności</th><th>Wpływ</th><th>Rekomendowana poprawka</th><th>Priorytet</th>
+        </tr></thead>
+        <tbody>${issues.map(i=>`<tr>
+          <td style="white-space:nowrap;font-weight:600">${esc(i.issueId)}</td>
+          <td style="white-space:nowrap">${esc(i.area)}</td>
+          <td>${esc(i.description)}</td>
+          <td>${esc(i.impact)}</td>
+          <td>${esc(i.recommendation)}</td>
+          <td>${priorityLabel(i.priority)}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+
+  // Pre-publication changes
+  const changes = audit.prePublicationChanges || [];
+  const changesHtml = changes.length
+    ? `<ul class="audit-checklist">${changes.map(c=>`<li><span>☐</span><span>${esc(c)}</span></li>`).join('')}</ul>`
+    : `<div class="audit-no-issues">✅ Brak wymaganych zmian przed publikacją.</div>`;
+
+  content.innerHTML = `
+    <div class="audit-readiness">
+      <div class="audit-score-ring">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="${r}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/>
+          <circle cx="45" cy="45" r="${r}" fill="none" stroke="${scoreColor}" stroke-width="8"
+            stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
+        </svg>
+        <div class="audit-score-num">${score}%</div>
+      </div>
+      <div class="audit-score-info">
+        <h4>Gotowość do modelowania BPMN 2.0</h4>
+        <p>${esc(audit.bpmnReadinessJustification)}</p>
+        ${issues.length ? `<p style="margin-top:6px;font-size:12px;color:rgba(255,255,255,.5)">
+          Wykryte problemy: ${critCount>0?`<span class="priority-Critical">${critCount} Critical</span> `:''}${highCount>0?`<span class="priority-High">${highCount} High</span> `:''}<span style="color:rgba(255,255,255,.5)">${issues.length} łącznie</span>
+        </p>` : ''}
+      </div>
+    </div>
+
+    <div class="audit-section">
+      <h4>📋 Wykryte niespójności</h4>
+      ${issuesHtml}
+    </div>
+
+    <div class="audit-section">
+      <h4>✅ Lista zmian wymaganych przed publikacją procesu</h4>
+      ${changesHtml}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// BPMN ARCHITECTURE REVIEW
+// ════════════════════════════════════════════════════════════════
+async function generateBpmnReview() {
+  updatePStep('ps5','done'); updatePStep('ps6','active');
+  setProc('Analizuję architekturę BPMN 2.0…','');
+
+  const d = A.processData;
+  const snapshot = {
+    processName: d.processNamePL,
+    scopeStart: d.scopeStart,
+    scopeEnd: d.scopeEnd,
+    steps: (d.steps||[]).map(s=>({
+      id: s.id, name: s.name, type: s.type, isGateway: s.isGateway,
+      decisionPointRef: s.decisionPointRef||null,
+      inputs: s.inputs||[], outputs: s.outputs||[],
+      systems: s.systems||[], exceptions: s.exceptions||[],
+      gatewayConditions: (s.gatewayConditions||[]).map(g=>typeof g==='object'?g.label:g)
+    })),
+    decisionPoints: (d.decisionPoints||[]).map(dp=>({
+      id: dp.id, name: dp.name, bpmnGatewayType: dp.bpmnGatewayType,
+      transitions: (dp.transitions||[]).map(t=>({
+        outcome: t.outcome, nextStep: t.nextStep,
+        bpmnPathType: t.bpmnPathType, condition: t.condition
+      }))
+    })),
+    alternativePaths: (d.alternativePaths||[]).map(p=>({
+      name: p.name, condition: p.condition,
+      triggersDecision: p.triggersDecision, steps: p.steps||[]
+    })),
+    exceptions: (d.exceptions||[]).map(e=>({
+      name: e.name, probability: e.probability,
+      handling: e.handling, responsible: e.responsible,
+      escalation: e.escalation, triggersDecision: e.triggersDecision||null
+    })),
+    escalationPaths: (d.escalationPaths||[]).map(e=>({
+      level: e.level, role: e.role, condition: e.condition, sla: e.sla,
+      triggersDecision: e.triggersDecision||null
+    })),
+    systems: (d.systems||[]).map(s=>s.name||s),
+    compliance: d.compliance||[]
+  };
+
+  const reviewPrompt = `Jesteś Senior BPM Architect z 15-letnim doświadczeniem w modelowaniu BPMN 2.0.
+Przeanalizuj poniższy proces pod kątem wdrożenia w: SAP Signavio, ARIS, Camunda, Bizagi.
+
+DANE PROCESU (JSON):
+${JSON.stringify(snapshot, null, 0)}
+
+WYKONAJ ANALIZĘ W 7 OBSZARACH:
+
+1. GATEWAY — sprawdź każdą bramkę decyzyjną:
+   - Czy typ (Exclusive/Inclusive/Parallel) jest prawidłowy dla logiki biznesowej
+   - Czy bramka ma ≥2 wychodzące ścieżki
+   - Czy bramka ma DOKŁADNIE 1 wejście (XOR) lub odpowiednią liczbę (AND/OR)
+   - Czy brakuje bramek konwergujących (joining gateway) po rozgałęzieniu
+   - Czy używanie XOR jest uzasadnione tam gdzie może być potrzebny Inclusive
+
+2. EVENTS — sprawdź eventy:
+   - Czy Start Event ma właściwy typ (None/Message/Timer/Signal)
+   - Czy End Event ma właściwy typ (None/Terminate/Error/Message/Escalation)
+   - Czy brakuje Intermediate Events (Timer, Message, Signal) między krokami
+   - Czy procesy oczekujące na zewnętrzne zdarzenie mają Message Catch Events
+   - Czy SLA/deadline nie wymaga Timer Intermediate Events
+
+3. LOOPS — sprawdź pętle:
+   - Czy pętle mają warunek wyjścia (BPMN loop marker lub explicit gateway)
+   - Czy pętle "powrót do korekty" mają ograniczoną liczbę iteracji (max attempts)
+   - Czy nie ma pętli nieskończonych
+
+4. SUBPROCESSES — oceń, czy wymagane są subprocessy:
+   - Czy grupy kroków powinny być zamknięte w Collapsed Subprocess dla czytelności
+   - Czy powtarzające się czynności powinny być Call Activity (reużywalny subprocess)
+   - Czy obsługa wyjątków o złożonym flow powinna być Event Subprocess
+   - Czy eskalacje powinny być modeled jako Event Subprocess z Escalation Start Event
+
+5. MESSAGE FLOW — sprawdź przepływy komunikatów:
+   - Czy kroki komunikujące się z zewnętrznymi uczestnikami (systemy, inne działy) mają Message Flow
+   - Czy brakuje Pools/Lanes dla zewnętrznych uczestników procesu
+   - Czy integracje z systemami IT (z listy systems) mają odpowiedni Service Task z Message Flow
+
+6. ESCALATION FLOW — sprawdź ścieżki eskalacji:
+   - Czy ścieżki eskalacji są modelowane jako Escalation Events, a nie zwykłe Sequence Flows
+   - Czy Boundary Escalation Events są przypisane do właściwych Tasks
+   - Czy brakuje Escalation End Events kończących ścieżkę eskalacji
+   - Czy eskalacje mają odpowiednie Escalation Codes (dla Camunda/Signavio)
+
+7. BOUNDARY EVENTS — sprawdź boundary events:
+   - Czy zadania z SLA mają Timer Boundary Events (non-interrupting lub interrupting)
+   - Czy zadania mogące generować błędy systemowe mają Error Boundary Events
+   - Czy zadania oczekujące na odpowiedź zewnętrzną mają Message Boundary Events
+   - Czy zadania z możliwością anulowania mają Cancel Boundary Events (dla transakcji)
+
+Dla KAŻDEJ uwagi wskaż kompatybilność z narzędziami:
+- SAP Signavio: obsługuje BPMN 2.0 z ograniczeniami (brak Complex Gateway, ograniczone Compensation)
+- ARIS: własna notacja rozszerzona; Event-driven Process Chain (EPC) + BPMN; pełna obsługa BPMN 2.0
+- Camunda 8: pełna obsługa BPMN 2.0 + rozszerzenia Zeebe; wymaga explicit Job Workers dla Service Tasks
+- Bizagi: pełna obsługa BPMN 2.0; automatyczna obsługa warunków przez Business Rules
+
+Odpowiedz TYLKO poprawnym JSON (bez markdown):
+{
+  "findings": [
+    {
+      "findingId": "BPM-001",
+      "category": "Gateway | Event | Loop | Subprocess | MessageFlow | EscalationFlow | BoundaryEvent",
+      "severity": "Critical | High | Medium | Low",
+      "currentState": "Co aktualnie istnieje w modelu (lub czego brakuje)",
+      "problem": "Konkretny problem BPMN 2.0 i jego wpływ na modelowanie",
+      "recommendedBpmn": "Rekomendowany element BPMN 2.0 z nazwą i typem (np. 'Exclusive Gateway z 3 ścieżkami: Akceptacja / Odrzucenie / Eskalacja')",
+      "justification": "Uzasadnienie z perspektywy Senior BPM Architect",
+      "toolCompatibility": {
+        "Signavio": "OK | Warn | Error",
+        "ARIS": "OK | Warn | Error",
+        "Camunda": "OK | Warn | Error",
+        "Bizagi": "OK | Warn | Error"
+      },
+      "toolNotes": "Uwagi specyficzne dla narzędzi (np. 'W Camunda wymagany Job Worker; w Bizagi automatyczna obsługa przez BR')"
+    }
+  ],
+  "toolReadiness": {
+    "Signavio": {"score": 0, "blockers": ["string"], "warnings": ["string"]},
+    "ARIS": {"score": 0, "blockers": ["string"], "warnings": ["string"]},
+    "Camunda": {"score": 0, "blockers": ["string"], "warnings": ["string"]},
+    "Bizagi": {"score": 0, "blockers": ["string"], "warnings": ["string"]}
+  },
+  "overallBpmnReadiness": 0,
+  "readinessJustification": "string",
+  "architectRecommendation": "Priorytetowe działania przed wdrożeniem — konkretny plan architekta (3-5 zdań)"
+}`;
+
+  const rawReview = await callClaude([{role:'user', content: reviewPrompt}],
+    'Jesteś Senior BPM Architect. Analizujesz proces wyłącznie pod kątem BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    4000);
+
+  if (!rawReview.includes('{')) {
+    console.warn('BPMN Review: brak JSON:', rawReview.slice(0,120));
+    updatePStep('ps6','done');
+    return;
+  }
+  try {
+    A.bpmnReviewData = safeParseJson(rawReview);
+  } catch(e) {
+    console.warn('BPMN Review: błąd parsowania:', e.message);
+  }
+  updatePStep('ps6','done');
+}
+
+function showBpmnReview() {
+  const rev = A.bpmnReviewData;
+  if (!rev) return;
+  const card = document.getElementById('bpmnReviewCard');
+  const content = document.getElementById('bpmnReviewContent');
+  card.style.display = '';
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const CATEGORY_BADGE = {
+    'Gateway':        'badge-gateway',
+    'Event':          'badge-event',
+    'Loop':           'badge-loop',
+    'Subprocess':     'badge-subprocess',
+    'MessageFlow':    'badge-message',
+    'EscalationFlow': 'badge-escalation',
+    'BoundaryEvent':  'badge-boundary'
+  };
+  const CATEGORY_LABEL = {
+    'Gateway':'Gateway','Event':'Event','Loop':'Pętla',
+    'Subprocess':'Subprocess','MessageFlow':'Message Flow',
+    'EscalationFlow':'Escalation Flow','BoundaryEvent':'Boundary Event'
+  };
+
+  // Findings accordion
+  const findings = rev.findings || [];
+  const findingsHtml = findings.length === 0
+    ? `<div class="audit-no-issues">✅ Brak uwag architektonicznych — model gotowy do importu BPMN 2.0.</div>`
+    : findings.map((f,idx)=>{
+        const badge = CATEGORY_BADGE[f.category] || 'badge-gateway';
+        const label = CATEGORY_LABEL[f.category] || f.category;
+        const tc = f.toolCompatibility || {};
+        const toolChips = ['Signavio','ARIS','Camunda','Bizagi'].map(t=>{
+          const s = tc[t]||'OK';
+          return `<span class="tool-chip ${s.toLowerCase()==='ok'?'ok':s.toLowerCase()==='warn'?'warn':'err'}">${t}: ${s}</span>`;
+        }).join('');
+        return `
+        <div class="review-finding">
+          <div class="review-finding-head" onclick="this.nextElementSibling.classList.toggle('open')">
+            <span class="review-finding-badge ${badge}">${esc(label)}</span>
+            <span class="review-finding-title">${esc(f.findingId)} — ${esc(f.currentState||'').slice(0,60)}</span>
+            <span class="review-finding-sev sev-${f.severity}">${esc(f.severity)}</span>
+          </div>
+          <div class="review-finding-body">
+            <div class="review-grid">
+              <div class="review-cell">
+                <h5>Aktualny stan</h5>
+                <p>${esc(f.currentState)}</p>
+              </div>
+              <div class="review-cell">
+                <h5>Problem BPMN 2.0</h5>
+                <p>${esc(f.problem)}</p>
+              </div>
+              <div class="review-cell rec">
+                <h5>Rekomendowany model BPMN</h5>
+                <p>${esc(f.recommendedBpmn)}</p>
+              </div>
+              <div class="review-cell just">
+                <h5>Uzasadnienie — Senior BPM Architect</h5>
+                <p>${esc(f.justification)}</p>
+                ${f.toolNotes ? `<p style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.5)">${esc(f.toolNotes)}</p>` : ''}
+                <div class="tool-compat">${toolChips}</div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+  // Tool readiness
+  const tr = rev.toolReadiness || {};
+  const tools = ['Signavio','ARIS','Camunda','Bizagi'];
+  const toolColors = { Signavio:'#0ea5e9', ARIS:'#8b5cf6', Camunda:'#f59e0b', Bizagi:'#22c55e' };
+  const toolReadinessHtml = tools.map(t=>{
+    const td = tr[t] || {score:0, blockers:[], warnings:[]};
+    const sc = Math.max(0,Math.min(100,parseInt(td.score)||0));
+    const col = sc>=80?'#22c55e':sc>=60?'#f59e0b':sc>=40?'#f97316':'#ef4444';
+    const blockers = (td.blockers||[]).map(b=>`<li style="color:#fca5a5">🚫 ${esc(b)}</li>`).join('');
+    const warnings = (td.warnings||[]).map(w=>`<li style="color:#fcd34d">⚠️ ${esc(w)}</li>`).join('');
+    return `
+      <div class="review-cell">
+        <h5 style="color:${toolColors[t]}">${t}</h5>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:22px;font-weight:700;color:#fff">${sc}%</span>
+        </div>
+        <div class="review-score-bar"><div class="review-score-fill" style="width:${sc}%;background:${col}"></div></div>
+        ${blockers||warnings ? `<ul style="margin:6px 0 0;padding:0 0 0 4px;list-style:none;font-size:11px;line-height:1.7">${blockers}${warnings}</ul>` : `<p style="font-size:11px;color:#86efac;margin:4px 0 0">✅ Brak blokerów</p>`}
+      </div>`;
+  }).join('');
+
+  // Overall score ring
+  const overall = Math.max(0,Math.min(100,parseInt(rev.overallBpmnReadiness)||0));
+  const r=38, circ=2*Math.PI*r, dash=circ*overall/100;
+  const oCol = overall>=80?'#22c55e':overall>=60?'#f59e0b':overall>=40?'#f97316':'#ef4444';
+
+  content.innerHTML = `
+    <div class="audit-readiness" style="margin-bottom:20px">
+      <div class="audit-score-ring">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="${r}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/>
+          <circle cx="45" cy="45" r="${r}" fill="none" stroke="${oCol}" stroke-width="8"
+            stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
+        </svg>
+        <div class="audit-score-num">${overall}%</div>
+      </div>
+      <div class="audit-score-info">
+        <h4>BPMN Readiness Score</h4>
+        <p>${esc(rev.readinessJustification)}</p>
+      </div>
+    </div>
+
+    <div class="audit-section">
+      <h4>🛠 Gotowość narzędzi</h4>
+      <div class="review-grid" style="margin-bottom:20px">${toolReadinessHtml}</div>
+    </div>
+
+    ${rev.architectRecommendation ? `
+    <div class="audit-section">
+      <h4>📐 Rekomendacja architekta — działania priorytetowe</h4>
+      <div class="review-cell rec" style="margin-bottom:16px">
+        <h5>Plan działania przed wdrożeniem</h5>
+        <p>${esc(rev.architectRecommendation)}</p>
+      </div>
+    </div>` : ''}
+
+    <div class="audit-section">
+      <h4>🔎 Uwagi architektoniczne BPMN 2.0
+        <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4);margin-left:8px">(kliknij aby rozwinąć)</span>
+      </h4>
+      ${findingsHtml}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// PROCESS MAP
+// ════════════════════════════════════════════════════════════════
+async function generateProcessMap() {
+  updatePStep('ps6','done'); updatePStep('ps7','active');
+  setProc('Mapuję powiązania procesu…','');
+
+  const d = A.processData;
+  const snapshot = {
+    processName: d.processNamePL,
+    scopeStart: d.scopeStart,
+    scopeEnd: d.scopeEnd,
+    steps: (d.steps||[]).map(s=>({
+      id: s.id, name: s.name, type: s.type,
+      isGateway: s.isGateway||false,
+      decisionPointRef: s.decisionPointRef||null,
+      inputs: s.inputs||[], outputs: s.outputs||[],
+      gatewayConditions: (s.gatewayConditions||[]).map(g=>typeof g==='object'?{label:g.label,nextStep:g.nextStep,pathType:g.pathType}:g)
+    })),
+    decisionPoints: (d.decisionPoints||[]).map(dp=>({
+      id: dp.id, name: dp.name, bpmnGatewayType: dp.bpmnGatewayType,
+      transitions: (dp.transitions||[]).map(t=>({
+        outcome: t.outcome, nextStep: t.nextStep, bpmnPathType: t.bpmnPathType, condition: t.condition
+      }))
+    })),
+    alternativePaths: (d.alternativePaths||[]).map(p=>({
+      name: p.name, condition: p.condition,
+      triggersDecision: p.triggersDecision, steps: p.steps||[]
+    })),
+    exceptions: (d.exceptions||[]).map(e=>({
+      name: e.name, responsible: e.responsible,
+      handling: e.handling, escalation: e.escalation,
+      triggersDecision: e.triggersDecision||null
+    })),
+    escalationPaths: (d.escalationPaths||[]).map(e=>({
+      level: e.level, role: e.role, condition: e.condition,
+      sla: e.sla, triggersDecision: e.triggersDecision||null
+    }))
+  };
+
+  const mapPrompt = `Przeprowadź pełne mapowanie powiązań procesu biznesowego.
+
+DANE PROCESU (JSON):
+${JSON.stringify(snapshot, null, 0)}
+
+ZADANIA:
+
+1. MAPOWANIE KROKÓW: Dla każdego kroku (steps[]) wygeneruj:
+   - predecessorDecision: ID punktu decyzyjnego (decisionPoints[].id) który go POPRZEDZA, lub "START" dla pierwszego kroku, lub null jeśli nie dotyczy
+   - successorDecision: ID punktu decyzyjnego który po nim NASTĘPUJE, lub "END" dla ostatniego kroku, lub null
+   - bpmnTransitions: jakie są możliwe przejścia BPMN z tego kroku (lista warunków z gatewayConditions lub "Sequence Flow" jeśli brak bramki)
+   - triggeredExceptions: nazwy wyjątków (exceptions[]) które mogą wystąpić w tym kroku
+   - triggeredAltPaths: nazwy ścieżek alternatywnych (alternativePaths[]) uruchamianych z tego kroku
+   - triggeredEscalations: poziomy eskalacji (escalationPaths[]) uruchamiane z tego kroku
+
+2. TABELA PRZEPŁYWU: Wygeneruj sekwencję od START do END — każdy wiersz to: poprzednik, bieżący krok, następnik. Poprzednikiem i następnikiem może być: nazwa kroku, nazwa decyzji, "Start Event" lub "End Event". Zachowaj chronologię procesu.
+
+3. WERYFIKACJA OSADZENIA DECYZJI: Dla każdego punktu decyzyjnego sprawdź:
+   - Czy istnieje krok który go poprzedza w stepMappings
+   - Czy istnieje krok który go następuje w stepMappings lub transitions prowadzą do istniejących kroków
+   - Status: "OK" | "Brak poprzednika" | "Brak następnika" | "Nie osadzony w głównym przepływie"
+
+4. WERYFIKACJA ŚCIEŻEK ALTERNATYWNYCH: Dla każdej ścieżki sprawdź:
+   - Czy ma triggersDecision wskazujące na istniejący decisionPoint
+   - Czy jej steps[] zawierają istniejące nazwy kroków
+   - Czy posiada punkt powrotu do głównego procesu (ostatni krok ścieżki prowadzi do istniejącego kroku głównego)
+   - Status: "OK" | "Brak powiązania z decyzją" | "Brak punktu powrotu" | "Kroki nieistniejące"
+
+5. NIESPÓJNOŚCI: Wykryj wszelkie:
+   - Kroki osierocone (żadna decyzja ani krok nie prowadzi do nich)
+   - Ślepe zakończenia (krok bez następnika, który nie jest End Event)
+   - Brakujące linki decision↔step (decisionPointRef w kroku wskazuje na nieistniejący decisionPoint)
+   - Wyjątki bez właściciela lub bez triggersDecision
+   - Eskalacje bez triggersDecision
+
+Odpowiedz TYLKO poprawnym JSON (bez markdown):
+{
+  "stepMappings": [
+    {
+      "stepId": "STEP-001",
+      "stepName": "string",
+      "isGateway": false,
+      "predecessorDecision": "DECISION-001 | START | null",
+      "successorDecision": "DECISION-002 | END | null",
+      "bpmnTransitions": ["Sequence Flow do STEP-002", "JEŚLI warunek → STEP-003"],
+      "triggeredExceptions": ["Nazwa wyjątku 1"],
+      "triggeredAltPaths": ["Nazwa ścieżki alternatywnej 1"],
+      "triggeredEscalations": ["L1 — warunek eskalacji"]
+    }
+  ],
+  "flowTable": [
+    {
+      "predecessor": "Start Event | nazwa kroku | nazwa decyzji",
+      "current": "nazwa kroku lub decyzji",
+      "successor": "nazwa kroku | nazwa decyzji | End Event",
+      "nodeType": "Start | Task | Gateway | End",
+      "flowType": "Sequence | Conditional | Escalation | Alternative | Exception"
+    }
+  ],
+  "decisionEmbeddingCheck": [
+    {
+      "decisionId": "DECISION-001",
+      "decisionName": "string",
+      "predecessorStep": "STEP-XXX | null",
+      "successorStep": "STEP-XXX | null",
+      "status": "OK | Brak poprzednika | Brak następnika | Nie osadzony w głównym przepływie",
+      "note": "string"
+    }
+  ],
+  "altPathCheck": [
+    {
+      "pathName": "string",
+      "triggersDecision": "DECISION-XXX | null",
+      "entryPoint": "nazwa kroku lub decyzji wejścia",
+      "returnPoint": "nazwa kroku powrotu do głównego procesu | null",
+      "status": "OK | Brak powiązania z decyzją | Brak punktu powrotu | Kroki nieistniejące",
+      "note": "string"
+    }
+  ],
+  "inconsistencies": [
+    {
+      "type": "Orphan | DeadEnd | BrokenRef | MissingOwner | MissingEscalationLink",
+      "element": "ID lub nazwa elementu",
+      "description": "Opis niespójności",
+      "recommendation": "Rekomendowana poprawka",
+      "severity": "Critical | High | Medium | Low"
+    }
+  ]
+}`;
+
+  const rawMap = await callClaude([{role:'user', content: mapPrompt}],
+    'Jesteś ekspertem mapowania procesów BPMN. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    4000);
+
+  if (!rawMap.includes('{')) {
+    console.warn('ProcessMap: brak JSON:', rawMap.slice(0,120));
+    updatePStep('ps7','done');
+    return;
+  }
+  try {
+    A.processMapData = safeParseJson(rawMap);
+  } catch(e) {
+    console.warn('ProcessMap: błąd parsowania:', e.message);
+  }
+  updatePStep('ps7','done');
+}
+
+function showProcessMap() {
+  const pm = A.processMapData;
+  if (!pm) return;
+  const card = document.getElementById('processMapCard');
+  const content = document.getElementById('processMapContent');
+  card.style.display = '';
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  // ── Flow Table ──
+  const flowRows = pm.flowTable || [];
+  const nodeClass = t => t==='Start'?'pmap-start':t==='End'?'pmap-end':t==='Gateway'?'pmap-gw':'pmap-task';
+  const nodeIcon  = t => t==='Start'?'●':t==='End'?'■':t==='Gateway'?'◆':'▶';
+  const flowTypeBadge = ft => {
+    const m = {Sequence:'',Conditional:'pmap-tag-alt',Escalation:'pmap-tag-esc',Alternative:'pmap-tag-alt',Exception:'pmap-tag-exc'};
+    return ft&&ft!=='Sequence' ? `<span class="pmap-tag ${m[ft]||'pmap-tag-alt'}">${esc(ft)}</span>` : '';
+  };
+
+  const flowTableHtml = flowRows.length ? `
+    <div class="pmap-flow">
+      <table>
+        <thead><tr>
+          <th>Poprzednik</th><th style="color:rgba(255,255,255,.35)"></th>
+          <th>Krok / Decyzja</th><th style="color:rgba(255,255,255,.35)"></th>
+          <th>Następnik</th><th>Typ przepływu</th>
+        </tr></thead>
+        <tbody>${flowRows.map(row=>`<tr>
+          <td><span class="pmap-node ${nodeClass(row.predecessorType||'Task')}">${nodeIcon(row.predecessorType||'Task')} ${esc(row.predecessor)}</span></td>
+          <td class="pmap-arrow">→</td>
+          <td><span class="pmap-node ${nodeClass(row.nodeType||'Task')}">${nodeIcon(row.nodeType||'Task')} ${esc(row.current)}</span></td>
+          <td class="pmap-arrow">→</td>
+          <td><span class="pmap-node ${nodeClass(row.successorType||'Task')}">${nodeIcon(row.successorType||'Task')} ${esc(row.successor)}</span></td>
+          <td>${flowTypeBadge(row.flowType)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>` : '<div class="pmap-empty">Brak danych przepływu.</div>';
+
+  // ── Step Detail Accordion ──
+  const stepMappings = pm.stepMappings || [];
+  const stepDetailsHtml = stepMappings.map((sm,idx)=>{
+    const gwBadge = sm.isGateway ? `<span class="pmap-tag pmap-tag-alt">Gateway</span>` : '';
+    const predHtml = sm.predecessorDecision==='START'
+      ? `<span class="pmap-node pmap-start">● Start Event</span>`
+      : sm.predecessorDecision
+        ? `<span class="pmap-node pmap-gw">◆ ${esc(sm.predecessorDecision)}</span>`
+        : `<span class="pmap-empty">—</span>`;
+    const succHtml = sm.successorDecision==='END'
+      ? `<span class="pmap-node pmap-end">■ End Event</span>`
+      : sm.successorDecision
+        ? `<span class="pmap-node pmap-gw">◆ ${esc(sm.successorDecision)}</span>`
+        : `<span class="pmap-empty">—</span>`;
+    const excs  = (sm.triggeredExceptions||[]);
+    const alts  = (sm.triggeredAltPaths||[]);
+    const escs  = (sm.triggeredEscalations||[]);
+    const trans = (sm.bpmnTransitions||[]);
+    return `
+      <div class="pmap-step-detail">
+        <div class="pmap-step-head" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span class="pmap-step-id">${esc(sm.stepId)}</span>
+          <span class="pmap-step-name">${esc(sm.stepName)} ${gwBadge}</span>
+          ${excs.length?`<span class="pmap-tag pmap-tag-exc">${excs.length} wyjątek</span>`:''}
+          ${alts.length?`<span class="pmap-tag pmap-tag-alt">${alts.length} alt.ścieżka</span>`:''}
+          ${escs.length?`<span class="pmap-tag pmap-tag-esc">${escs.length} eskalacja</span>`:''}
+        </div>
+        <div class="pmap-step-body">
+          <div class="pmap-step-grid">
+            <div class="pmap-step-cell">
+              <h5>Poprzedzający punkt decyzyjny</h5>
+              <p>${predHtml}</p>
+            </div>
+            <div class="pmap-step-cell">
+              <h5>Następny punkt decyzyjny</h5>
+              <p>${succHtml}</p>
+            </div>
+            <div class="pmap-step-cell">
+              <h5>Przejścia BPMN</h5>
+              ${trans.length ? `<ul>${trans.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>` : '<p class="pmap-empty">Sequence Flow</p>'}
+            </div>
+            <div class="pmap-step-cell">
+              <h5>Wyjątki</h5>
+              ${excs.length ? `<ul>${excs.map(e=>`<li><span class="pmap-tag pmap-tag-exc">${esc(e)}</span></li>`).join('')}</ul>` : '<p class="pmap-empty">Brak</p>'}
+            </div>
+            <div class="pmap-step-cell">
+              <h5>Ścieżki alternatywne</h5>
+              ${alts.length ? `<ul>${alts.map(a=>`<li><span class="pmap-tag pmap-tag-alt">${esc(a)}</span></li>`).join('')}</ul>` : '<p class="pmap-empty">Brak</p>'}
+            </div>
+            <div class="pmap-step-cell">
+              <h5>Eskalacje</h5>
+              ${escs.length ? `<ul>${escs.map(e=>`<li><span class="pmap-tag pmap-tag-esc">${esc(e)}</span></li>`).join('')}</ul>` : '<p class="pmap-empty">Brak</p>'}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // ── Decision Embedding Check ──
+  const dec = pm.decisionEmbeddingCheck || [];
+  const decHtml = dec.map(d=>{
+    const ok = d.status==='OK';
+    const icon = ok?'✅':'❌';
+    const cls = ok?'pmap-check-ok':'pmap-check-err';
+    return `<div class="pmap-check-row">
+      <span class="${cls}">${icon}</span>
+      <div>
+        <strong style="font-size:13px;color:#fff">${esc(d.decisionId)} — ${esc(d.decisionName)}</strong><br>
+        <span style="font-size:11px;color:rgba(255,255,255,.55)">
+          Poprzednik: <b>${esc(d.predecessorStep||'—')}</b> &nbsp;·&nbsp; Następnik: <b>${esc(d.successorStep||'—')}</b>
+        </span><br>
+        <span class="${cls}" style="font-size:12px">${esc(d.status)}</span>
+        ${d.note ? `<span style="font-size:11px;color:rgba(255,255,255,.4)"> — ${esc(d.note)}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Alt Path Check ──
+  const alt = pm.altPathCheck || [];
+  const altHtml = alt.map(a=>{
+    const ok = a.status==='OK';
+    const icon = ok?'✅':'⚠️';
+    const cls = ok?'pmap-check-ok':'pmap-check-warn';
+    return `<div class="pmap-check-row">
+      <span class="${cls}">${icon}</span>
+      <div>
+        <strong style="font-size:13px;color:#fff">${esc(a.pathName)}</strong><br>
+        <span style="font-size:11px;color:rgba(255,255,255,.55)">
+          Wejście: <b>${esc(a.entryPoint||'—')}</b> &nbsp;·&nbsp; Powrót: <b>${esc(a.returnPoint||'—')}</b>
+          &nbsp;·&nbsp; Decyzja: <b>${esc(a.triggersDecision||'—')}</b>
+        </span><br>
+        <span class="${cls}" style="font-size:12px">${esc(a.status)}</span>
+        ${a.note ? `<span style="font-size:11px;color:rgba(255,255,255,.4)"> — ${esc(a.note)}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Inconsistencies ──
+  const incs = pm.inconsistencies || [];
+  const incsHtml = incs.length === 0
+    ? `<div class="audit-no-issues">✅ Brak wykrytych niespójności — mapa procesu spójna.</div>`
+    : incs.map(i=>`
+      <div class="pmap-inconsistency pmap-inc-${i.severity||'Medium'}">
+        <span style="font-size:20px;flex-shrink:0">${i.severity==='Critical'?'🚫':i.severity==='High'?'⚠️':'ℹ️'}</span>
+        <div class="pmap-inc-body">
+          <h5>${esc(i.type)} — ${esc(i.element)}</h5>
+          <p>${esc(i.description)}</p>
+          ${i.recommendation ? `<p style="margin-top:4px;color:rgba(255,255,255,.55);font-size:11px">💡 ${esc(i.recommendation)}</p>` : ''}
+        </div>
+        <span class="priority-${i.severity}" style="flex-shrink:0;align-self:flex-start">${esc(i.severity)}</span>
+      </div>`).join('');
+
+  content.innerHTML = `
+    <p class="pmap-section-title">🔄 Tabela przepływu: Start Event → End Event</p>
+    ${flowTableHtml}
+
+    <p class="pmap-section-title">📦 Szczegóły mapowania kroków
+      <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4);margin-left:8px">(kliknij krok aby rozwinąć)</span>
+    </p>
+    ${stepDetailsHtml || '<div class="pmap-empty">Brak danych kroków.</div>'}
+
+    <p class="pmap-section-title">🎯 Weryfikacja osadzenia punktów decyzyjnych</p>
+    ${decHtml || '<div class="pmap-empty">Brak punktów decyzyjnych.</div>'}
+
+    <p class="pmap-section-title">🔀 Weryfikacja ścieżek alternatywnych</p>
+    ${altHtml || '<div class="pmap-empty">Brak ścieżek alternatywnych.</div>'}
+
+    <p class="pmap-section-title">⚠️ Wykryte niespójności</p>
+    ${incsHtml}`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// CONSISTENCY FIX
+// ════════════════════════════════════════════════════════════════
+async function generateConsistencyFix() {
+  updatePStep('ps7','done'); updatePStep('ps8','active');
+  setProc('Naprawiam niespójności dokumentu…','');
+
+  const d = A.processData;
+
+  // Kompaktowy snapshot — nowy model (STEP = tylko aktywności, DECISION z positionAfterStep)
+  const snapshot = {
+    steps: (d.steps||[]).map(s=>({
+      id: s.id, name: s.name, type: s.type||'', performer: s.performer||'',
+      inputs: s.inputs||[], outputs: s.outputs||[]
+    })),
+    decisionPoints: (d.decisionPoints||[]).map(dp=>({
+      id: dp.id, name: dp.name, positionAfterStep: dp.positionAfterStep||null,
+      bpmnGatewayType: dp.bpmnGatewayType,
+      transitions: (dp.transitions||[]).map(t=>({
+        outcome: t.outcome, nextStepId: t.nextStepId||null,
+        nextStep: t.nextStep, bpmnPathType: t.bpmnPathType, condition: t.condition
+      }))
+    })),
+    alternativePaths: (d.alternativePaths||[]).map(p=>({
+      name: p.name, condition: p.condition,
+      triggersDecision: p.triggersDecision, steps: p.steps||[]
+    })),
+    exceptions: (d.exceptions||[]).map(e=>({
+      name: e.name, responsible: e.responsible||null,
+      handling: e.handling, triggersDecision: e.triggersDecision||null
+    })),
+    escalationPaths: (d.escalationPaths||[]).map(e=>({
+      level: e.level, role: e.role, condition: e.condition||null,
+      triggersDecision: e.triggersDecision||null
+    }))
+  };
+
+  // Zbuduj indeksy do weryfikacji krzyżowej
+  const stepIds   = new Set((d.steps||[]).map(s=>s.id));
+  const stepNames = new Set((d.steps||[]).map(s=>s.name));
+  const decIds    = new Set((d.decisionPoints||[]).map(dp=>dp.id));
+
+  const knownStepIds   = (d.steps||[]).map(s=>s.id).join(', ') || 'brak';
+  const knownStepNames = (d.steps||[]).map(s=>s.name).join(' | ') || 'brak';
+  const knownDecIds    = (d.decisionPoints||[]).map(dp=>dp.id).join(', ') || 'brak';
+
+  const fixPrompt = `Przeprowadź pełny audyt spójności dokumentu procesu i NAPRAW wszystkie wykryte niespójności.
+
+NOWY MODEL DANYCH (obowiązuje):
+• STEP = wyłącznie aktywność (NIE decyzja). Pola: id, name, type, performer, duration, description, inputs, outputs, systems, businessRules, exceptions.
+• DECISION = bramka BPMN z polem "positionAfterStep" = ID kroku STEP po którym następuje.
+• transitions[].nextStepId = ID kroku STEP (np. "STEP-003"), transitions[].nextStep = nazwa (display).
+• ZAKAZ pól: isGateway, decisionPointRef, gatewayConditions w steps[].
+
+DANE PROCESU:
+${JSON.stringify(snapshot, null, 0)}
+
+ZNANE ID KROKÓW: ${knownStepIds}
+ZNANE NAZWY KROKÓW: ${knownStepNames}
+ZNANE ID DECYZJI: ${knownDecIds}
+
+KOREKTY DO WYKONANIA:
+
+1. UJEDNOLICENIE NUMERACJI:
+   - Przenumeruj steps[] chronologicznie: STEP-001, STEP-002, …
+   - Przenumeruj decisionPoints[]: DECISION-001, DECISION-002, …
+   - Zaktualizuj positionAfterStep, transitions.nextStepId, alternativePaths.triggersDecision, exceptions.triggersDecision, escalationPaths.triggersDecision
+
+2. NAPRAWA ODWOŁAŃ:
+   - transitions[].nextStepId wskazujące na nieistniejące ID → napraw do istniejącego
+   - positionAfterStep wskazujące na nieistniejące ID → przypisz do najbliższego kroku
+   - triggersDecision wskazujące na nieistniejące ID → napraw
+
+3. SPÓJNOŚĆ BPMN:
+   - Każdy DECISION musi mieć poprawny positionAfterStep (ID istniejącego STEP)
+   - Każde transition musi mieć nextStepId (ID istniejącego STEP) lub bpmnPathType="Zakończenie"
+
+4. WYJĄTKI I ESKALACJE:
+   - Każdy wyjątek bez responsible → przypisz do wykonawcy kroku gdzie wyjątek wystąpi
+   - Każda eskalacja bez triggersDecision → przypisz do właściwego DECISION
+
+5. KOLEJNOŚĆ BIZNESOWA:
+   - Sprawdź logikę: output kroku N = input kroku N+1
+   - Popraw kolejność jeśli krok używa danych nie wygenerowanych jeszcze
+
+ZWRÓĆ TYLKO POPRAWIONE DANE. Odpowiedz TYLKO poprawnym JSON (bez markdown):
+{
+  "stepsFixed": [
+    {"id":"STEP-001","name":"str","type":"Zadanie użytkownika","performer":"str","duration":"str","description":"str","inputs":["str"],"outputs":["str"],"systems":["str"],"businessRules":["str"],"exceptions":["str"]}
+  ],
+  "decisionPointsFixed": [
+    {"id":"DECISION-001","name":"str","positionAfterStep":"STEP-002","decisionType":"str","recommendingRole":"str","decisionMaker":"str","sla":"str","docLocation":"str","requiredInputs":["str"],"criteria":["str"],"possibleOutcomes":["str"],"outcomeConsequences":["str"],"bpmnGatewayType":"Exclusive","transitions":[{"outcome":"str","nextStepId":"STEP-003","nextStep":"str","bpmnPathType":"Kontynuacja","condition":"str","businessJustification":"str"}]}
+  ],
+  "alternativePathsFixed": [
+    {"name":"str","condition":"str","triggersDecision":"DECISION-001","returnPoint":"str","steps":["str"]}
+  ],
+  "exceptionsFixed": [
+    {"name":"str","probability":"str","handling":"str","responsible":"str","escalation":"str","triggersDecision":"DECISION-001"}
+  ],
+  "escalationPathsFixed": [
+    {"level":"L1","condition":"str","to":"str","sla":"str","backup":"str","triggersDecision":"DECISION-001"}
+  ],
+  "changeLog": [
+    {"changeType":"Renumber|Reorder|Link|Assign|Fix|Remove","element":"ID/nazwa","field":"pole","oldValue":"stara","newValue":"nowa","reason":"uzasadnienie"}
+  ]
+}`;
+
+  const rawFix = await callClaude(
+    [{role:'user', content: fixPrompt}],
+    'Jesteś ekspertem procesów biznesowych. Naprawiasz niespójności w danych procesu. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    5000
+  );
+
+  if (!rawFix.includes('{')) {
+    console.warn('ConsistencyFix: brak JSON:', rawFix.slice(0,120));
+    updatePStep('ps8','done');
+    return;
+  }
+  let fixData;
+  try {
+    fixData = safeParseJson(rawFix);
+  } catch(e) {
+    console.warn('ConsistencyFix: błąd parsowania:', e.message);
+    updatePStep('ps8','done');
+    return;
+  }
+
+  A.consistencyFixData = fixData;
+
+  // ── Zastosuj korekty do A.processData ──
+  if (fixData.stepsFixed?.length)          A.processData.steps           = fixData.stepsFixed;
+  if (fixData.decisionPointsFixed?.length) A.processData.decisionPoints  = fixData.decisionPointsFixed;
+  if (fixData.alternativePathsFixed?.length) A.processData.alternativePaths = fixData.alternativePathsFixed;
+  if (fixData.exceptionsFixed?.length)     A.processData.exceptions      = fixData.exceptionsFixed;
+  if (fixData.escalationPathsFixed?.length) A.processData.escalationPaths = fixData.escalationPathsFixed;
+
+  // ── Przebuduj BPMN z poprawionych danych ──
+  try {
+    A.bpmnData = buildBpmnFromProcessData();
+    A.bpmnXml  = buildBpmnXml(A.bpmnData);
+    A.bpmnSvg  = buildBpmnSvg(A.bpmnData);
+  } catch(e) {
+    console.warn('ConsistencyFix: błąd przebudowy BPMN:', e.message);
+  }
+
+  // ── Przebuduj DOCX z poprawionych danych ──
+  try {
+    await generateDocx(true); // skipPStepUpdate — jesteśmy już na ps8
+  } catch(e) {
+    console.warn('ConsistencyFix: błąd przebudowy DOCX:', e.message);
+  }
+
+  updatePStep('ps8','done');
+}
+
+function showConsistencyFix() {
+  const fix = A.consistencyFixData;
+  if (!fix || !fix.changeLog?.length) return;
+
+  const card = document.getElementById('consistencyFixCard');
+  const content = document.getElementById('consistencyFixContent');
+  card.style.display = '';
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const log = fix.changeLog || [];
+  const byType = t => log.filter(c=>c.changeType===t).length;
+  const TYPES = ['Renumber','Reorder','Link','Assign','Fix','Remove'];
+  const TYPE_LABELS = {
+    Renumber:'Renumeracja', Reorder:'Kolejność', Link:'Połączenie',
+    Assign:'Przypisanie', Fix:'Korekta', Remove:'Usunięcie'
+  };
+
+  // Statystyki
+  const statsHtml = `
+    <div class="cfix-summary">
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#93c5fd">${log.length}</div>
+        <div class="cfix-stat-label">Łącznie zmian</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#86efac">${(fix.stepsFixed||[]).length}</div>
+        <div class="cfix-stat-label">Kroków po korekcie</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#fcd34d">${(fix.decisionPointsFixed||[]).length}</div>
+        <div class="cfix-stat-label">Punktów decyzyjnych</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#c4b5fd">${TYPES.reduce((s,t)=>s+byType(t),0)}</div>
+        <div class="cfix-stat-label">Naprawionych relacji</div>
+      </div>
+    </div>`;
+
+  // Zgrupowane zmiany po typie
+  const groupsHtml = TYPES.filter(t=>byType(t)>0).map(t=>`
+    <p class="cfix-section-title">${TYPE_LABELS[t]} <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${byType(t)})</span></p>
+    ${log.filter(c=>c.changeType===t).map(c=>`
+      <div class="cfix-change">
+        <div class="cfix-change-head" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span class="cfix-type-badge cfix-${esc(c.changeType)}">${esc(TYPE_LABELS[c.changeType]||c.changeType)}</span>
+          <span class="cfix-change-title">${esc(c.element)} — <span style="font-weight:400;color:rgba(255,255,255,.6)">${esc(c.field||'')}</span></span>
+        </div>
+        <div class="cfix-change-body">
+          <div class="cfix-cell">
+            <h5>Wartość przed</h5>
+            <p class="cfix-diff-old">${esc(c.oldValue||'—')}</p>
+          </div>
+          <div class="cfix-cell">
+            <h5>Wartość po</h5>
+            <p class="cfix-diff-new">${esc(c.newValue||'—')}</p>
+          </div>
+          <div class="cfix-cell full">
+            <h5>Uzasadnienie</h5>
+            <p>${esc(c.reason||'—')}</p>
+          </div>
+        </div>
+      </div>`).join('')}`).join('');
+
+  // Podsumowanie zastosowanych poprawek
+  const appliedHtml = `
+    <div class="audit-no-issues" style="margin-top:16px">
+      ✅ Korekty zastosowane — diagram BPMN i dokument Word zostały automatycznie przebudowane z poprawionych danych.
+    </div>`;
+
+  content.innerHTML = statsHtml + groupsHtml + appliedHtml;
+
+  // Odśwież BPMN viewer z poprawionych danych
+  if (A.bpmnSvg) document.getElementById('bpmnView').innerHTML = A.bpmnSvg;
+  // Odśwież listę kroków
+  document.getElementById('stepsList').innerHTML = (A.processData.steps||[]).map((s,i)=>`
+    <div class="step-row">
+      <div class="step-num">${i+1}</div>
+      <div class="step-info"><strong>${s.name}</strong><small>${s.performer||''} ${s.duration?'· '+s.duration:''}</small></div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+// CALL 8: AUDYT ROZDZIELENIA STEP/DECISION + KOMPLETNOŚĆ KROKÓW
+// ════════════════════════════════════════════════════════════════
+async function generateStepDecisionAudit() {
+  updatePStep('ps8','done'); updatePStep('ps9','active');
+  setProc('Audytuję rozdzielenie STEP/DECISION i uzupełniam brakujące dane…','');
+
+  const d = A.processData;
+
+  // Snapshot w nowym modelu (bez isGateway/gatewayConditions)
+  const fullSteps = (d.steps||[]).map(s=>({
+    id: s.id, name: s.name, type: s.type||'', performer: s.performer||'',
+    duration: s.duration||'', description: s.description||'',
+    inputs: s.inputs||[], outputs: s.outputs||[], systems: s.systems||[],
+    businessRules: s.businessRules||[], exceptions: s.exceptions||[]
+  }));
+
+  const fullDecisions = (d.decisionPoints||[]).map(dp=>({
+    id: dp.id, name: dp.name, positionAfterStep: dp.positionAfterStep||null,
+    decisionType: dp.decisionType||'', recommendingRole: dp.recommendingRole||'',
+    decisionMaker: dp.decisionMaker||'', sla: dp.sla||'', docLocation: dp.docLocation||'',
+    requiredInputs: dp.requiredInputs||[], criteria: dp.criteria||[],
+    possibleOutcomes: dp.possibleOutcomes||[], outcomeConsequences: dp.outcomeConsequences||[],
+    bpmnGatewayType: dp.bpmnGatewayType||'Exclusive', transitions: dp.transitions||[]
+  }));
+
+  // Fragment transkryptu dla kontekstu
+  const transcriptContext = getTranscript().slice(0, 3000);
+
+  // Plan bazowy dla referencji
+  const planMaster = (A.processPlan?.masterList||[]).map(e=>`  ${e.id} [${e.elementType}]: ${e.name}`).join('\n');
+
+  const auditPrompt = `Jesteś Senior Business Process Analyst. Przeprowadź FINALNY AUDYT modelu procesu i NAPRAW wszystkie problemy.
+
+NOWY MODEL DANYCH (obowiązuje bezwzględnie):
+• STEP = wyłącznie aktywność/czynność. Pola: id, name, type, performer, duration, description, inputs, outputs, systems, businessRules, exceptions.
+• DECISION = bramka BPMN (romb). Pole "positionAfterStep" = ID kroku STEP po którym następuje ta decyzja.
+• transitions[].nextStepId = ID kroku STEP. transitions[].nextStep = nazwa (display).
+• ZAKAZ pól isGateway, decisionPointRef, gatewayConditions w steps[].
+• ZAKAZ type="Zadanie decyzyjne" w steps[].
+
+PLAN PROCESOWY (referencja):
+${planMaster || '  (brak planu)'}
+
+AKTUALNE KROKI:
+${JSON.stringify(fullSteps, null, 0)}
+
+AKTUALNE DECYZJE:
+${JSON.stringify(fullDecisions, null, 0)}
+
+TRANSKRYPT (fragment):
+${transcriptContext}
+
+═══════════════════════════════════════
+KOREKTY DO WYKONANIA:
+═══════════════════════════════════════
+
+1. ROZDZIELENIE STEP/DECISION:
+   • Każdy STEP = czynność. Jeśli name STEPu zawiera: "wybór/wybieranie", "akceptacja lub odrzucenie", "zatwierdzenie X", "decyzja o X" → to jest DECISION, nie STEP.
+   • Jeśli STEP ma charakter decyzji → przekształć go na parę:
+     a) STEP "[Analiza/Ocena/Weryfikacja X]" (czynność analityczna)
+     b) DECISION "[Akceptacja/Wybór X]" z positionAfterStep = ID tego STEPu
+
+2. OBOWIĄZKOWE DECYZJE — ZWERYFIKUJ ICH OBECNOŚĆ:
+   Sprawdź transkrypt wywiadu i weryfikuj, czy każdy punkt decyzyjny wymieniony przez rozmówcę ma odpowiednie DECISION w decisionPointsAudited. Jeśli brakuje — DODAJ.
+   Nie dodawaj decyzji z innej domeny niż opisana w transkrypcie.
+
+3. KOMPLETNOŚĆ KROKÓW: Dla każdego STEP uzupełnij puste pola:
+   • type: "Zadanie użytkownika"|"Zadanie serwisowe"|"Zadanie wysyłania"|"Zadanie odbioru"
+   • performer, duration, description, systems (min 1), businessRules (min 1), exceptions (min 1)
+
+4. PRZYWRÓĆ BRAKUJĄCE AKTYWNOŚCI:
+   Sprawdź transkrypt — jeśli rozmówca wymienił czynność, która nie ma odpowiadającego STEPu, dodaj ją we właściwym miejscu zgodnie z kolejnością opisaną w wywiadzie.
+
+5. KRYTERIA — ZASTĄP OGÓLNIKI RZECZYWISTYMI PARAMETRAMI Z TRANSKRYPTU:
+   Dla KAŻDEGO DECISION sprawdź criteria[]. Jeśli zawierają ogólniki, zastąp konkretnymi progami z transkryptu:
+   • Używaj terminologii i wartości liczbowych wprost z wypowiedzi rozmówcy (SLA, limity, terminy, kwoty)
+   • Kategorie: FINANSOWE / JAKOŚCIOWE / CZASOWE / ZGODNOŚCI / RYZYKA / OPERACYJNE
+   • Każde kryterium: "KATEGORIA: JEŚLI [warunek z transkryptu] → [akcja z transkryptu]"
+
+6. SPÓJNOŚĆ SIPOC / RACI / WYJĄTKI:
+   Po naprawie kroków i decyzji ZWERYFIKUJ:
+   • Każde RACI.activity musi odpowiadać nazwie istniejącego STEP lub DECISION
+   • Każdy wyjątek musi mieć triggersDecision wskazujące na istniejące DECISION
+   • SIPOC.activities[] musi zawierać kluczowe nazwy STEPów
+
+7. NIE UPRASZCZAJ: Nie usuwaj kroków, nie łącz ich.
+
+Odpowiedz TYLKO poprawnym JSON (zero markdown):
+{
+  "stepsAudited": [
+    {"id":"STEP-001","name":"str","type":"Zadanie użytkownika","performer":"str","duration":"str","description":"str","inputs":["str"],"outputs":["str"],"systems":["str"],"businessRules":["str"],"exceptions":["str"]}
+  ],
+  "decisionPointsAudited": [
+    {"id":"DECISION-001","name":"str","positionAfterStep":"STEP-002","decisionType":"str","recommendingRole":"str","decisionMaker":"str","sla":"str","docLocation":"str","requiredInputs":["str"],"criteria":["FINANSOWE: JEŚLI x→y","JAKOŚCIOWE: JEŚLI x→y","CZASOWE: JEŚLI x→y","ZGODNOŚCI: JEŚLI x→y"],"possibleOutcomes":["Akceptacja","Powrót","Odrzucenie"],"outcomeConsequences":["Akceptacja: rola→akcja","Powrót: rola koryguje w Xd","Odrzucenie: rola archiwizuje"],"bpmnGatewayType":"Exclusive","transitions":[{"outcome":"Akceptacja","nextStepId":"STEP-003","nextStep":"str","bpmnPathType":"Kontynuacja","condition":"JEŚLI kryteria OK","businessJustification":"str"}]}
+  ],
+  "auditFindings": [
+    {"findingType":"StepIsDecision|MissingStep|EmptyField|DecisionNotEmbedded|MissingTransition|MissingCriteria","elementId":"str","elementName":"str","field":"str","description":"str","action":"str","severity":"Krytyczny|Wysoki|Średni"}
+  ],
+  "stepsAdded": ["nazwy dodanych kroków"],
+  "stepsConverted": ["ID przekształconych elementów"]
+}`;
+
+  const rawAudit = await callClaude(
+    [{role:'user', content: auditPrompt}],
+    'Jesteś Senior Business Process Analyst. Audytujesz model procesu. Odpowiadasz TYLKO poprawnym JSON — zero dodatkowego tekstu, zero markdown, zero komentarzy.',
+    6000
+  );
+
+  if (!rawAudit.includes('{')) {
+    console.warn('StepDecisionAudit: brak JSON:', rawAudit.slice(0,120));
+    updatePStep('ps9','done');
+    return;
+  }
+  let auditData;
+  try {
+    auditData = safeParseJson(rawAudit);
+  } catch(e) {
+    console.warn('StepDecisionAudit: błąd parsowania:', e.message);
+    updatePStep('ps9','done');
+    return;
+  }
+
+  A.stepDecisionAuditData = auditData;
+
+  // ── Zastosuj korekty do A.processData ──
+  if (auditData.stepsAudited?.length)         A.processData.steps          = auditData.stepsAudited;
+  if (auditData.decisionPointsAudited?.length) A.processData.decisionPoints = auditData.decisionPointsAudited;
+
+  // ── Przebuduj BPMN z poprawionych danych ──
+  try {
+    A.bpmnData = buildBpmnFromProcessData();
+    A.bpmnXml  = buildBpmnXml(A.bpmnData);
+    A.bpmnSvg  = buildBpmnSvg(A.bpmnData);
+  } catch(e) {
+    console.warn('StepDecisionAudit: błąd przebudowy BPMN:', e.message);
+  }
+
+  // ── Przebuduj DOCX z poprawionych danych ──
+  try {
+    await generateDocx(true);
+  } catch(e) {
+    console.warn('StepDecisionAudit: błąd przebudowy DOCX:', e.message);
+  }
+
+  updatePStep('ps9','done');
+}
+
+function showStepDecisionAudit() {
+  const data = A.stepDecisionAuditData;
+  if (!data) return;
+
+  const card    = document.getElementById('stepDecisionAuditCard');
+  const content = document.getElementById('stepDecisionAuditContent');
+  card.style.display = '';
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const findings = data.auditFindings || [];
+  const bySeverity = sev => findings.filter(f=>f.severity===sev).length;
+  const SEVER_COL = {Krytyczny:'#f87171', Wysoki:'#fcd34d', Średni:'#93c5fd'};
+  const TYPE_LABELS = {
+    StepIsDecision:'STEP→DECISION', MissingStep:'Brakujący krok',
+    EmptyField:'Puste pole', DecisionNotEmbedded:'Decyzja nie osadzona',
+    MissingTransition:'Brak przejścia', MissingCriteria:'Brak kryteriów'
+  };
+
+  const statsHtml = `
+    <div class="cfix-summary">
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#93c5fd">${(data.stepsAudited||[]).length}</div>
+        <div class="cfix-stat-label">Kroków po audycie</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#fcd34d">${(data.decisionPointsAudited||[]).length}</div>
+        <div class="cfix-stat-label">Punktów decyzyjnych</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#f87171">${bySeverity('Krytyczny')}</div>
+        <div class="cfix-stat-label">Krytyczne</div>
+      </div>
+      <div class="cfix-stat">
+        <div class="cfix-stat-num" style="color:#86efac">${findings.length}</div>
+        <div class="cfix-stat-label">Łącznie problemów</div>
+      </div>
+    </div>`;
+
+  const addedHtml = (data.stepsAdded?.length) ? `
+    <p class="cfix-section-title">🔁 Przywrócone brakujące kroki <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${data.stepsAdded.length})</span></p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+      ${data.stepsAdded.map(n=>`<span style="background:#166534;color:#bbf7d0;border-radius:6px;padding:3px 10px;font-size:12px">${esc(n)}</span>`).join('')}
+    </div>` : '';
+
+  const convertedHtml = (data.stepsConverted?.length) ? `
+    <p class="cfix-section-title">⚙ Przekształcone elementy (STEP↔DECISION) <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${data.stepsConverted.length})</span></p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+      ${data.stepsConverted.map(n=>`<span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:3px 10px;font-size:12px">${esc(n)}</span>`).join('')}
+    </div>` : '';
+
+  const FIND_TYPES = ['StepIsDecision','MissingStep','DecisionNotEmbedded','MissingTransition','MissingCriteria','EmptyField'];
+  const findingsHtml = FIND_TYPES.filter(t=>findings.some(f=>f.findingType===t)).map(t=>{
+    const group = findings.filter(f=>f.findingType===t);
+    return `<p class="cfix-section-title">${TYPE_LABELS[t]||t} <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${group.length})</span></p>
+    ${group.map(f=>`
+      <div class="cfix-change">
+        <div class="cfix-change-head" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span class="cfix-type-badge" style="background:${SEVER_COL[f.severity]||'#6b7280'}20;color:${SEVER_COL[f.severity]||'#9ca3af'};border:1px solid ${SEVER_COL[f.severity]||'#6b7280'}40">${esc(f.severity)}</span>
+          <span class="cfix-change-title">${esc(f.elementId||'')} — ${esc(f.elementName||'')} <span style="font-weight:400;color:rgba(255,255,255,.5)">${f.field?'· '+esc(f.field):''}</span></span>
+        </div>
+        <div class="cfix-change-body">
+          <div class="cfix-cell">
+            <h5>Problem</h5>
+            <p class="cfix-diff-old">${esc(f.description)}</p>
+          </div>
+          <div class="cfix-cell">
+            <h5>Zastosowana korekta</h5>
+            <p class="cfix-diff-new">${esc(f.action)}</p>
+          </div>
+        </div>
+      </div>`).join('')}`;
+  }).join('');
+
+  const appliedHtml = `
+    <div class="audit-no-issues" style="margin-top:16px">
+      ✅ Korekty rozdzielenia STEP/DECISION zastosowane — diagram BPMN i dokument Word zostały automatycznie przebudowane.
+    </div>`;
+
+  content.innerHTML = statsHtml + addedHtml + convertedHtml + (findingsHtml || '<p style="color:rgba(255,255,255,.5);font-size:13px">Brak znalezionych problemów — model jest poprawny.</p>') + appliedHtml;
+
+  // Odśwież BPMN viewer
+  if (A.bpmnSvg) document.getElementById('bpmnView').innerHTML = A.bpmnSvg;
+  // Odśwież listę kroków
+  document.getElementById('stepsList').innerHTML = (A.processData.steps||[]).map((s,i)=>`
+    <div class="step-row">
+      <div class="step-num ${s.isGateway?'gw':''}">${i+1}</div>
+      <div class="step-info"><strong>${s.name}</strong><small>${s.performer||''} ${s.duration?'· '+s.duration:''}</small></div>
+    </div>`).join('');
 }
 
 // ════════════════════════════════════════════════════════════════
