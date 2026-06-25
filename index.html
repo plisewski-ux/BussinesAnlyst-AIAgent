@@ -165,136 +165,136 @@
 
     /* ── AUDIT ── */
     .audit-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:16px; }
-    .audit-table th { background:rgba(255,255,255,.12); color:#fff; padding:8px 10px; text-align:left; font-weight:600; border-bottom:2px solid rgba(255,255,255,.2); }
-    .audit-table td { padding:7px 10px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; color:rgba(255,255,255,.9); }
-    .audit-table tr:hover td { background:rgba(255,255,255,.05); }
+    .audit-table th { background:#f1f5f9; color:#1e293b; padding:8px 10px; text-align:left; font-weight:600; border-bottom:2px solid #e2e8f0; }
+    .audit-table td { padding:7px 10px; border-bottom:1px solid #e2e8f0; vertical-align:top; color:#374151; }
+    .audit-table tr:hover td { background:#f8fafc; }
     .priority-Critical { background:#7f1d1d; color:#fca5a5; font-weight:700; border-radius:4px; padding:2px 7px; display:inline-block; }
     .priority-High { background:#78350f; color:#fcd34d; font-weight:600; border-radius:4px; padding:2px 7px; display:inline-block; }
     .priority-Medium { background:#1e3a5f; color:#93c5fd; border-radius:4px; padding:2px 7px; display:inline-block; }
-    .priority-Low { background:rgba(255,255,255,.1); color:rgba(255,255,255,.7); border-radius:4px; padding:2px 7px; display:inline-block; }
+    .priority-Low { background:rgba(255,255,255,.1); color:#4b5563; border-radius:4px; padding:2px 7px; display:inline-block; }
     .audit-section { margin-bottom:20px; }
-    .audit-section h4 { color:#93c5fd; font-size:14px; margin:0 0 10px; font-weight:600; }
+    .audit-section h4 { color:#3b82f6; font-size:14px; margin:0 0 10px; font-weight:600; }
     .audit-checklist { list-style:none; padding:0; margin:0 0 16px; display:flex; flex-direction:column; gap:5px; }
-    .audit-checklist li { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:rgba(255,255,255,.85); padding:5px 8px; border-radius:6px; background:rgba(255,255,255,.05); }
+    .audit-checklist li { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:#374151; padding:5px 8px; border-radius:6px; background:#f8fafc; }
     .audit-checklist li span:first-child { flex-shrink:0; }
     .audit-readiness { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
     .audit-score-ring { position:relative; width:90px; height:90px; flex-shrink:0; }
     .audit-score-ring svg { transform:rotate(-90deg); }
-    .audit-score-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#fff; }
-    .audit-score-info h4 { margin:0 0 4px; font-size:15px; color:#fff; }
-    .audit-score-info p { margin:0; font-size:13px; color:rgba(255,255,255,.7); line-height:1.5; }
-    .audit-no-issues { padding:12px 16px; background:rgba(34,197,94,.15); border-left:3px solid #22c55e; border-radius:6px; color:#86efac; font-size:13px; }
+    .audit-score-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#1e293b; }
+    .audit-score-info h4 { margin:0 0 4px; font-size:15px; color:#1e293b; }
+    .audit-score-info p { margin:0; font-size:13px; color:#6b7280; line-height:1.5; }
+    .audit-no-issues { padding:12px 16px; background:#f0fdf4; border-left:3px solid #22c55e; border-radius:6px; color:#166534; font-size:13px; }
 
     /* ── BPMN REVIEW ── */
     .review-tool-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
-    .review-tool-tab { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid rgba(255,255,255,.25); color:rgba(255,255,255,.7); background:transparent; cursor:default; }
-    .review-tool-tab.ok { border-color:#22c55e; color:#86efac; background:rgba(34,197,94,.1); }
-    .review-tool-tab.warn { border-color:#f59e0b; color:#fcd34d; background:rgba(245,158,11,.1); }
-    .review-tool-tab.err { border-color:#ef4444; color:#fca5a5; background:rgba(239,68,68,.1); }
-    .review-finding { border-radius:8px; margin-bottom:12px; overflow:hidden; border:1px solid rgba(255,255,255,.1); }
-    .review-finding-head { display:flex; align-items:center; gap:10px; padding:9px 14px; background:rgba(255,255,255,.08); cursor:pointer; }
-    .review-finding-head:hover { background:rgba(255,255,255,.12); }
+    .review-tool-tab { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid #d1d5db; color:#6b7280; background:transparent; cursor:default; }
+    .review-tool-tab.ok { border-color:#22c55e; color:#166534; background:#f0fdf4; }
+    .review-tool-tab.warn { border-color:#f59e0b; color:#92400e; background:#fffbeb; }
+    .review-tool-tab.err { border-color:#ef4444; color:#991b1b; background:#fef2f2; }
+    .review-finding { border-radius:8px; margin-bottom:12px; overflow:hidden; border:1px solid #e2e8f0; }
+    .review-finding-head { display:flex; align-items:center; gap:10px; padding:9px 14px; background:#f8fafc; cursor:pointer; }
+    .review-finding-head:hover { background:#f1f5f9; }
     .review-finding-badge { font-size:11px; font-weight:700; border-radius:4px; padding:2px 8px; flex-shrink:0; }
-    .badge-gateway { background:#312e81; color:#a5b4fc; }
-    .badge-event { background:#064e3b; color:#6ee7b7; }
-    .badge-loop { background:#7c2d12; color:#fdba74; }
-    .badge-subprocess { background:#1e3a5f; color:#93c5fd; }
-    .badge-message { background:#4a1d96; color:#c4b5fd; }
-    .badge-escalation { background:#78350f; color:#fcd34d; }
-    .badge-boundary { background:#134e4a; color:#5eead4; }
-    .review-finding-title { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .badge-gateway { background:#ede9fe; color:#4c1d95; }
+    .badge-event { background:#d1fae5; color:#064e3b; }
+    .badge-loop { background:#ffedd5; color:#7c2d12; }
+    .badge-subprocess { background:#dbeafe; color:#1e3a5f; }
+    .badge-message { background:#ede9fe; color:#4a1d96; }
+    .badge-escalation { background:#fef3c7; color:#78350f; }
+    .badge-boundary { background:#ccfbf1; color:#134e4a; }
+    .review-finding-title { flex:1; font-size:13px; font-weight:600; color:#1e293b; }
     .review-finding-sev { font-size:11px; font-weight:700; border-radius:4px; padding:2px 8px; }
-    .sev-Critical { background:#7f1d1d; color:#fca5a5; }
-    .sev-High { background:#78350f; color:#fcd34d; }
-    .sev-Medium { background:#1e3a5f; color:#93c5fd; }
-    .sev-Low { background:rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
-    .review-finding-body { display:none; padding:14px; border-top:1px solid rgba(255,255,255,.08); }
+    .sev-Critical { background:#fee2e2; color:#991b1b; }
+    .sev-High { background:#fef3c7; color:#92400e; }
+    .sev-Medium { background:#dbeafe; color:#1e3a5f; }
+    .sev-Low { background:#f1f5f9; color:#6b7280; }
+    .review-finding-body { display:none; padding:14px; border-top:1px solid #e2e8f0; }
     .review-finding-body.open { display:block; }
     .review-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .review-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:10px 12px; }
-    .review-cell h5 { margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:rgba(255,255,255,.45); font-weight:600; }
-    .review-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.85); line-height:1.5; }
-    .review-cell.rec { grid-column:1/-1; background:rgba(99,102,241,.12); border-left:3px solid #6366f1; }
-    .review-cell.just { grid-column:1/-1; background:rgba(255,255,255,.03); }
+    .review-cell { background:#f8fafc; border-radius:6px; padding:10px 12px; }
+    .review-cell h5 { margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:#9ca3af; font-weight:600; }
+    .review-cell p { margin:0; font-size:12px; color:#374151; line-height:1.5; }
+    .review-cell.rec { grid-column:1/-1; background:#eef2ff; border-left:3px solid #6366f1; }
+    .review-cell.just { grid-column:1/-1; background:#fafafa; }
     .tool-compat { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-    .tool-chip { font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.65); }
-    .tool-chip.ok { background:rgba(34,197,94,.15); color:#86efac; }
-    .tool-chip.warn { background:rgba(245,158,11,.15); color:#fcd34d; }
-    .tool-chip.err { background:rgba(239,68,68,.15); color:#fca5a5; }
-    .review-score-bar { height:10px; border-radius:5px; background:rgba(255,255,255,.1); overflow:hidden; margin:8px 0; }
+    .tool-chip { font-size:11px; padding:2px 8px; border-radius:4px; background:#f1f5f9; color:#6b7280; }
+    .tool-chip.ok { background:#dcfce7; color:#166534; }
+    .tool-chip.warn { background:#fef3c7; color:#92400e; }
+    .tool-chip.err { background:#fee2e2; color:#991b1b; }
+    .review-score-bar { height:10px; border-radius:5px; background:#e2e8f0; overflow:hidden; margin:8px 0; }
     .review-score-fill { height:100%; border-radius:5px; transition:width .6s ease; }
-    .review-legend { display:flex; gap:16px; font-size:12px; color:rgba(255,255,255,.5); flex-wrap:wrap; margin-top:6px; }
+    .review-legend { display:flex; gap:16px; font-size:12px; color:#9ca3af; flex-wrap:wrap; margin-top:6px; }
     .review-legend span { display:flex; align-items:center; gap:5px; }
     .review-legend-dot { width:8px; height:8px; border-radius:50%; }
 
     /* ── PROCESS MAP ── */
     .pmap-flow { width:100%; overflow-x:auto; margin-bottom:20px; }
     .pmap-flow table { border-collapse:collapse; font-size:12px; min-width:700px; width:100%; }
-    .pmap-flow th { background:rgba(255,255,255,.12); color:#fff; padding:8px 12px; text-align:left; font-weight:600; border-bottom:2px solid rgba(255,255,255,.2); white-space:nowrap; }
-    .pmap-flow td { padding:7px 12px; border-bottom:1px solid rgba(255,255,255,.07); vertical-align:middle; color:rgba(255,255,255,.88); }
-    .pmap-flow tr:hover td { background:rgba(255,255,255,.04); }
+    .pmap-flow th { background:#f1f5f9; color:#1e293b; padding:8px 12px; text-align:left; font-weight:600; border-bottom:2px solid #e2e8f0; white-space:nowrap; }
+    .pmap-flow td { padding:7px 12px; border-bottom:1px solid #e2e8f0; vertical-align:middle; color:#374151; }
+    .pmap-flow tr:hover td { background:#f8fafc; }
     .pmap-node { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:500; white-space:nowrap; }
-    .pmap-start  { background:rgba(34,197,94,.2);  color:#86efac;  border:1px solid rgba(34,197,94,.4); }
-    .pmap-end    { background:rgba(239,68,68,.2);   color:#fca5a5;  border:1px solid rgba(239,68,68,.4); }
-    .pmap-task   { background:rgba(96,165,250,.15); color:#93c5fd;  border:1px solid rgba(96,165,250,.3); }
-    .pmap-gw     { background:rgba(251,191,36,.15); color:#fcd34d;  border:1px solid rgba(251,191,36,.3); }
-    .pmap-arrow  { color:rgba(255,255,255,.35); font-size:14px; padding:0 2px; }
+    .pmap-start  { background:#dcfce7; color:#166534; border:1px solid #86efac; }
+    .pmap-end    { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+    .pmap-task   { background:#dbeafe; color:#1e40af; border:1px solid #93c5fd; }
+    .pmap-gw     { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+    .pmap-arrow  { color:#d1d5db; font-size:14px; padding:0 2px; }
     .pmap-tag    { display:inline-block; font-size:10px; padding:1px 6px; border-radius:3px; margin:1px 2px; }
-    .pmap-tag-exc { background:rgba(239,68,68,.2); color:#fca5a5; }
-    .pmap-tag-alt { background:rgba(139,92,246,.2); color:#c4b5fd; }
-    .pmap-tag-esc { background:rgba(245,158,11,.2); color:#fcd34d; }
-    .pmap-tag-ok  { background:rgba(34,197,94,.15); color:#86efac; }
-    .pmap-empty  { color:rgba(255,255,255,.3); font-size:11px; }
-    .pmap-step-detail { border-radius:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,.09); overflow:hidden; }
-    .pmap-step-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:rgba(255,255,255,.06); cursor:pointer; }
-    .pmap-step-head:hover { background:rgba(255,255,255,.1); }
-    .pmap-step-id { font-size:11px; color:rgba(255,255,255,.4); font-family:monospace; flex-shrink:0; }
-    .pmap-step-name { flex:1; font-size:13px; font-weight:600; color:#fff; }
-    .pmap-step-body { display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,.07); }
+    .pmap-tag-exc { background:#fee2e2; color:#991b1b; }
+    .pmap-tag-alt { background:#ede9fe; color:#4c1d95; }
+    .pmap-tag-esc { background:#fef3c7; color:#92400e; }
+    .pmap-tag-ok  { background:#dcfce7; color:#166534; }
+    .pmap-empty  { color:#d1d5db; font-size:11px; }
+    .pmap-step-detail { border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0; overflow:hidden; }
+    .pmap-step-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:#f8fafc; cursor:pointer; }
+    .pmap-step-head:hover { background:#f1f5f9; }
+    .pmap-step-id { font-size:11px; color:#9ca3af; font-family:monospace; flex-shrink:0; }
+    .pmap-step-name { flex:1; font-size:13px; font-weight:600; color:#1e293b; }
+    .pmap-step-body { display:none; padding:12px 14px; border-top:1px solid #e2e8f0; }
     .pmap-step-body.open { display:block; }
     .pmap-step-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-    .pmap-step-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:9px 11px; }
-    .pmap-step-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.38); font-weight:600; }
-    .pmap-step-cell ul { margin:0; padding:0 0 0 14px; font-size:12px; color:rgba(255,255,255,.8); line-height:1.6; }
-    .pmap-step-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.8); line-height:1.5; }
+    .pmap-step-cell { background:#f8fafc; border-radius:6px; padding:9px 11px; }
+    .pmap-step-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#9ca3af; font-weight:600; }
+    .pmap-step-cell ul { margin:0; padding:0 0 0 14px; font-size:12px; color:#4b5563; line-height:1.6; }
+    .pmap-step-cell p { margin:0; font-size:12px; color:#4b5563; line-height:1.5; }
     .pmap-inconsistency { border-radius:7px; margin-bottom:8px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start; border-left:3px solid; }
-    .pmap-inc-Critical { background:rgba(127,29,29,.3); border-color:#ef4444; }
-    .pmap-inc-High     { background:rgba(120,53,15,.3); border-color:#f59e0b; }
-    .pmap-inc-Medium   { background:rgba(30,58,95,.3);  border-color:#60a5fa; }
-    .pmap-inc-Low      { background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.2); }
-    .pmap-inc-body h5  { margin:0 0 3px; font-size:13px; font-weight:600; color:#fff; }
-    .pmap-inc-body p   { margin:0; font-size:12px; color:rgba(255,255,255,.7); line-height:1.5; }
-    .pmap-section-title { color:#93c5fd; font-size:14px; font-weight:600; margin:20px 0 10px; }
-    .pmap-check-row { display:flex; align-items:flex-start; gap:8px; padding:7px 10px; border-radius:6px; margin-bottom:5px; background:rgba(255,255,255,.04); font-size:12px; }
-    .pmap-check-ok   { color:#86efac; }
-    .pmap-check-warn { color:#fcd34d; }
-    .pmap-check-err  { color:#fca5a5; }
+    .pmap-inc-Critical { background:#fee2e2; border-color:#ef4444; }
+    .pmap-inc-High     { background:#fef3c7; border-color:#f59e0b; }
+    .pmap-inc-Medium   { background:#eff6ff; border-color:#60a5fa; }
+    .pmap-inc-Low      { background:#f9fafb; border-color:#d1d5db; }
+    .pmap-inc-body h5  { margin:0 0 3px; font-size:13px; font-weight:600; color:#1e293b; }
+    .pmap-inc-body p   { margin:0; font-size:12px; color:#4b5563; line-height:1.5; }
+    .pmap-section-title { color:#3b82f6; font-size:14px; font-weight:600; margin:20px 0 10px; }
+    .pmap-check-row { display:flex; align-items:flex-start; gap:8px; padding:7px 10px; border-radius:6px; margin-bottom:5px; background:#f9fafb; font-size:12px; color:#374151; }
+    .pmap-check-ok   { color:#166534; }
+    .pmap-check-warn { color:#92400e; }
+    .pmap-check-err  { color:#991b1b; }
 
     /* ── CONSISTENCY FIX ── */
     .cfix-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
-    .cfix-stat { background:rgba(255,255,255,.06); border-radius:8px; padding:12px 14px; text-align:center; }
+    .cfix-stat { background:#f8fafc; border-radius:8px; padding:12px 14px; text-align:center; border:1px solid #e2e8f0; }
     .cfix-stat-num { font-size:28px; font-weight:700; }
-    .cfix-stat-label { font-size:11px; color:rgba(255,255,255,.5); margin-top:2px; }
-    .cfix-change { border-radius:7px; margin-bottom:8px; overflow:hidden; border:1px solid rgba(255,255,255,.09); }
-    .cfix-change-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:rgba(255,255,255,.06); cursor:pointer; }
-    .cfix-change-head:hover { background:rgba(255,255,255,.1); }
+    .cfix-stat-label { font-size:11px; color:#9ca3af; margin-top:2px; }
+    .cfix-change { border-radius:7px; margin-bottom:8px; overflow:hidden; border:1px solid #e2e8f0; }
+    .cfix-change-head { display:flex; align-items:center; gap:8px; padding:9px 14px; background:#f8fafc; cursor:pointer; }
+    .cfix-change-head:hover { background:#f1f5f9; }
     .cfix-type-badge { font-size:10px; font-weight:700; border-radius:3px; padding:2px 7px; flex-shrink:0; }
-    .cfix-Renumber   { background:#1e3a5f; color:#93c5fd; }
-    .cfix-Reorder    { background:#312e81; color:#a5b4fc; }
-    .cfix-Link       { background:#064e3b; color:#6ee7b7; }
-    .cfix-Assign     { background:#4a1d96; color:#c4b5fd; }
-    .cfix-Fix        { background:#78350f; color:#fcd34d; }
-    .cfix-Remove     { background:#7f1d1d; color:#fca5a5; }
-    .cfix-change-title { flex:1; font-size:13px; font-weight:600; color:#fff; }
-    .cfix-change-body { display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,.07); }
+    .cfix-Renumber   { background:#dbeafe; color:#1e40af; }
+    .cfix-Reorder    { background:#ede9fe; color:#4c1d95; }
+    .cfix-Link       { background:#d1fae5; color:#064e3b; }
+    .cfix-Assign     { background:#ede9fe; color:#4a1d96; }
+    .cfix-Fix        { background:#fef3c7; color:#78350f; }
+    .cfix-Remove     { background:#fee2e2; color:#7f1d1d; }
+    .cfix-change-title { flex:1; font-size:13px; font-weight:600; color:#1e293b; }
+    .cfix-change-body { display:none; padding:12px 14px; border-top:1px solid #e2e8f0; }
     .cfix-change-body.open { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .cfix-cell { background:rgba(255,255,255,.05); border-radius:6px; padding:9px 11px; }
-    .cfix-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.38); font-weight:600; }
-    .cfix-cell p { margin:0; font-size:12px; color:rgba(255,255,255,.85); line-height:1.5; }
+    .cfix-cell { background:#f8fafc; border-radius:6px; padding:9px 11px; }
+    .cfix-cell h5 { margin:0 0 5px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#9ca3af; font-weight:600; }
+    .cfix-cell p { margin:0; font-size:12px; color:#374151; line-height:1.5; }
     .cfix-cell.full { grid-column:1/-1; }
-    .cfix-diff-old { text-decoration:line-through; color:#fca5a5; }
-    .cfix-diff-new { color:#86efac; }
-    .cfix-section-title { color:#93c5fd; font-size:14px; font-weight:600; margin:18px 0 8px; }
+    .cfix-diff-old { text-decoration:line-through; color:#ef4444; }
+    .cfix-diff-new { color:#16a34a; }
+    .cfix-section-title { color:#3b82f6; font-size:14px; font-weight:600; margin:18px 0 8px; }
   </style>
 </head>
 <body>
@@ -894,11 +894,24 @@ function safeParseJsonArray(raw) {
 // OPENAI API
 // ════════════════════════════════════════════════════════════════
 async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
-  const messages = [{ role: 'system', content: system }, ...msgs];
+  // GPT-5, o-series: max_completion_tokens + rola 'developer' zamiast 'system'
+  const isNewModel = /^(o[1-9]\d*(-mini|-preview)?|gpt-5)/i.test(A.model);
+  const tokenKey   = isNewModel ? 'max_completion_tokens' : 'max_tokens';
+  const systemRole = isNewModel ? 'developer' : 'system';
+  // Modele reasoning (GPT-5, o-series) zużywają tokeny na wewnętrzne myślenie
+  // zanim wypiszą cokolwiek — potrzebują minimum ~32k completion tokens
+  const actualMax  = isNewModel ? Math.max(maxTokens, 32000) : maxTokens;
+
+  const messages = [{ role: systemRole, content: system }, ...msgs];
   const r = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + A.apiKey },
-    body: JSON.stringify({ model: A.model, max_tokens: maxTokens, messages })
+    body: JSON.stringify({
+      model: A.model,
+      [tokenKey]: actualMax,
+      ...(isNewModel && { reasoning_effort: 'low' }),  // skróć fazę myślenia
+      messages
+    })
   });
   if (!r.ok) {
     const e = await r.json().catch(() => ({}));
@@ -914,7 +927,18 @@ async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
       : (e.error?.message || `Błąd HTTP ${r.status}`);
     throw new Error(msg);
   }
-  return (await r.json()).choices[0].message.content;
+  const json = await r.json();
+  const msg  = json.choices?.[0]?.message;
+  const text = msg?.content
+    ?? json.output?.find?.(o => o.type === 'message')?.content?.[0]?.text
+    ?? json.output_text
+    ?? '';
+
+  if (!text) {
+    const reason = json.choices?.[0]?.finish_reason || '?';
+    throw new Error(`Pusta odpowiedź API (finish_reason: ${reason}). Struktura: ${JSON.stringify(json).slice(0,300)}`);
+  }
+  return text;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -2490,8 +2514,8 @@ function showAuditResults() {
       <div class="audit-score-info">
         <h4>Gotowość do modelowania BPMN 2.0</h4>
         <p>${esc(audit.bpmnReadinessJustification)}</p>
-        ${issues.length ? `<p style="margin-top:6px;font-size:12px;color:rgba(255,255,255,.5)">
-          Wykryte problemy: ${critCount>0?`<span class="priority-Critical">${critCount} Critical</span> `:''}${highCount>0?`<span class="priority-High">${highCount} High</span> `:''}<span style="color:rgba(255,255,255,.5)">${issues.length} łącznie</span>
+        ${issues.length ? `<p style="margin-top:6px;font-size:12px;color:#9ca3af">
+          Wykryte problemy: ${critCount>0?`<span class="priority-Critical">${critCount} Critical</span> `:''}${highCount>0?`<span class="priority-High">${highCount} High</span> `:''}<span style="color:#9ca3af">${issues.length} łącznie</span>
         </p>` : ''}
       </div>
     </div>
@@ -2611,19 +2635,19 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
   "findings": [
     {
       "findingId": "BPM-001",
-      "category": "Gateway | Event | Loop | Subprocess | MessageFlow | EscalationFlow | BoundaryEvent",
+      "category": "Bramka | Zdarzenie | Pętla | Podproces | Przepływ wiadomości | Eskalacja | Zdarzenie graniczne",
       "severity": "Critical | High | Medium | Low",
-      "currentState": "Co aktualnie istnieje w modelu (lub czego brakuje)",
-      "problem": "Konkretny problem BPMN 2.0 i jego wpływ na modelowanie",
-      "recommendedBpmn": "Rekomendowany element BPMN 2.0 z nazwą i typem (np. 'Exclusive Gateway z 3 ścieżkami: Akceptacja / Odrzucenie / Eskalacja')",
-      "justification": "Uzasadnienie z perspektywy Senior BPM Architect",
+      "currentState": "Co aktualnie istnieje w modelu (lub czego brakuje) — PO POLSKU",
+      "problem": "Konkretny problem BPMN 2.0 i jego wpływ na modelowanie — PO POLSKU",
+      "recommendedBpmn": "Rekomendowany element BPMN 2.0 z nazwą i typem — PO POLSKU (np. 'Bramka ekskluzywna z 3 ścieżkami: Akceptacja / Odrzucenie / Eskalacja')",
+      "justification": "Uzasadnienie z perspektywy Senior BPM Architect — PO POLSKU",
       "toolCompatibility": {
         "Signavio": "OK | Warn | Error",
         "ARIS": "OK | Warn | Error",
         "Camunda": "OK | Warn | Error",
         "Bizagi": "OK | Warn | Error"
       },
-      "toolNotes": "Uwagi specyficzne dla narzędzi (np. 'W Camunda wymagany Job Worker; w Bizagi automatyczna obsługa przez BR')"
+      "toolNotes": "Uwagi specyficzne dla narzędzi — PO POLSKU (np. 'W Camunda wymagany Job Worker; w Bizagi automatyczna obsługa przez reguły biznesowe')"
     }
   ],
   "toolReadiness": {
@@ -2633,12 +2657,12 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
     "Bizagi": {"score": 0, "blockers": ["string"], "warnings": ["string"]}
   },
   "overallBpmnReadiness": 0,
-  "readinessJustification": "string",
-  "architectRecommendation": "Priorytetowe działania przed wdrożeniem — konkretny plan architekta (3-5 zdań)"
+  "readinessJustification": "Uzasadnienie oceny gotowości BPMN — PO POLSKU",
+  "architectRecommendation": "Priorytetowe działania przed wdrożeniem — konkretny plan architekta 3-5 zdań — PO POLSKU"
 }`;
 
   const rawReview = await callClaude([{role:'user', content: reviewPrompt}],
-    'Jesteś Senior BPM Architect. Analizujesz proces wyłącznie pod kątem BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    'Jesteś Senior BPM Architect. Analizujesz proces wyłącznie pod kątem BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
     4000);
 
   if (!rawReview.includes('{')) {
@@ -2714,7 +2738,7 @@ function showBpmnReview() {
               <div class="review-cell just">
                 <h5>Uzasadnienie — Senior BPM Architect</h5>
                 <p>${esc(f.justification)}</p>
-                ${f.toolNotes ? `<p style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.5)">${esc(f.toolNotes)}</p>` : ''}
+                ${f.toolNotes ? `<p style="margin-top:6px;font-size:11px;color:#9ca3af">${esc(f.toolNotes)}</p>` : ''}
                 <div class="tool-compat">${toolChips}</div>
               </div>
             </div>
@@ -2736,7 +2760,7 @@ function showBpmnReview() {
       <div class="review-cell">
         <h5 style="color:${toolColors[t]}">${t}</h5>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-          <span style="font-size:22px;font-weight:700;color:#fff">${sc}%</span>
+          <span style="font-size:22px;font-weight:700;color:#1e293b">${sc}%</span>
         </div>
         <div class="review-score-bar"><div class="review-score-fill" style="width:${sc}%;background:${col}"></div></div>
         ${blockers||warnings ? `<ul style="margin:6px 0 0;padding:0 0 0 4px;list-style:none;font-size:11px;line-height:1.7">${blockers}${warnings}</ul>` : `<p style="font-size:11px;color:#86efac;margin:4px 0 0">✅ Brak blokerów</p>`}
@@ -2780,7 +2804,7 @@ function showBpmnReview() {
 
     <div class="audit-section">
       <h4>🔎 Uwagi architektoniczne BPMN 2.0
-        <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4);margin-left:8px">(kliknij aby rozwinąć)</span>
+        <span style="font-size:12px;font-weight:400;color:#9ca3af;margin-left:8px">(kliknij aby rozwinąć)</span>
       </h4>
       ${findingsHtml}
     </div>`;
@@ -2917,7 +2941,7 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
 }`;
 
   const rawMap = await callClaude([{role:'user', content: mapPrompt}],
-    'Jesteś ekspertem mapowania procesów BPMN. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    'Jesteś ekspertem mapowania procesów BPMN. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
     4000);
 
   if (!rawMap.includes('{')) {
@@ -2955,8 +2979,8 @@ function showProcessMap() {
     <div class="pmap-flow">
       <table>
         <thead><tr>
-          <th>Poprzednik</th><th style="color:rgba(255,255,255,.35)"></th>
-          <th>Krok / Decyzja</th><th style="color:rgba(255,255,255,.35)"></th>
+          <th>Poprzednik</th><th style="color:#d1d5db"></th>
+          <th>Krok / Decyzja</th><th style="color:#d1d5db"></th>
           <th>Następnik</th><th>Typ przepływu</th>
         </tr></thead>
         <tbody>${flowRows.map(row=>`<tr>
@@ -3037,12 +3061,12 @@ function showProcessMap() {
     return `<div class="pmap-check-row">
       <span class="${cls}">${icon}</span>
       <div>
-        <strong style="font-size:13px;color:#fff">${esc(d.decisionId)} — ${esc(d.decisionName)}</strong><br>
-        <span style="font-size:11px;color:rgba(255,255,255,.55)">
+        <strong style="font-size:13px;color:#1e293b">${esc(d.decisionId)} — ${esc(d.decisionName)}</strong><br>
+        <span style="font-size:11px;color:#6b7280">
           Poprzednik: <b>${esc(d.predecessorStep||'—')}</b> &nbsp;·&nbsp; Następnik: <b>${esc(d.successorStep||'—')}</b>
         </span><br>
         <span class="${cls}" style="font-size:12px">${esc(d.status)}</span>
-        ${d.note ? `<span style="font-size:11px;color:rgba(255,255,255,.4)"> — ${esc(d.note)}</span>` : ''}
+        ${d.note ? `<span style="font-size:11px;color:#9ca3af"> — ${esc(d.note)}</span>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -3056,13 +3080,13 @@ function showProcessMap() {
     return `<div class="pmap-check-row">
       <span class="${cls}">${icon}</span>
       <div>
-        <strong style="font-size:13px;color:#fff">${esc(a.pathName)}</strong><br>
-        <span style="font-size:11px;color:rgba(255,255,255,.55)">
+        <strong style="font-size:13px;color:#1e293b">${esc(a.pathName)}</strong><br>
+        <span style="font-size:11px;color:#6b7280">
           Wejście: <b>${esc(a.entryPoint||'—')}</b> &nbsp;·&nbsp; Powrót: <b>${esc(a.returnPoint||'—')}</b>
           &nbsp;·&nbsp; Decyzja: <b>${esc(a.triggersDecision||'—')}</b>
         </span><br>
         <span class="${cls}" style="font-size:12px">${esc(a.status)}</span>
-        ${a.note ? `<span style="font-size:11px;color:rgba(255,255,255,.4)"> — ${esc(a.note)}</span>` : ''}
+        ${a.note ? `<span style="font-size:11px;color:#9ca3af"> — ${esc(a.note)}</span>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -3077,7 +3101,7 @@ function showProcessMap() {
         <div class="pmap-inc-body">
           <h5>${esc(i.type)} — ${esc(i.element)}</h5>
           <p>${esc(i.description)}</p>
-          ${i.recommendation ? `<p style="margin-top:4px;color:rgba(255,255,255,.55);font-size:11px">💡 ${esc(i.recommendation)}</p>` : ''}
+          ${i.recommendation ? `<p style="margin-top:4px;color:#6b7280;font-size:11px">💡 ${esc(i.recommendation)}</p>` : ''}
         </div>
         <span class="priority-${i.severity}" style="flex-shrink:0;align-self:flex-start">${esc(i.severity)}</span>
       </div>`).join('');
@@ -3087,7 +3111,7 @@ function showProcessMap() {
     ${flowTableHtml}
 
     <p class="pmap-section-title">📦 Szczegóły mapowania kroków
-      <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4);margin-left:8px">(kliknij krok aby rozwinąć)</span>
+      <span style="font-size:12px;font-weight:400;color:#9ca3af;margin-left:8px">(kliknij krok aby rozwinąć)</span>
     </p>
     ${stepDetailsHtml || '<div class="pmap-empty">Brak danych kroków.</div>'}
 
@@ -3210,7 +3234,7 @@ ZWRÓĆ TYLKO POPRAWIONE DANE. Odpowiedz TYLKO poprawnym JSON (bez markdown):
 
   const rawFix = await callClaude(
     [{role:'user', content: fixPrompt}],
-    'Jesteś ekspertem procesów biznesowych. Naprawiasz niespójności w danych procesu. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
+    'Jesteś ekspertem procesów biznesowych. Naprawiasz niespójności w danych procesu. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
     5000
   );
 
@@ -3297,12 +3321,12 @@ function showConsistencyFix() {
 
   // Zgrupowane zmiany po typie
   const groupsHtml = TYPES.filter(t=>byType(t)>0).map(t=>`
-    <p class="cfix-section-title">${TYPE_LABELS[t]} <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${byType(t)})</span></p>
+    <p class="cfix-section-title">${TYPE_LABELS[t]} <span style="font-size:12px;font-weight:400;color:#9ca3af">(${byType(t)})</span></p>
     ${log.filter(c=>c.changeType===t).map(c=>`
       <div class="cfix-change">
         <div class="cfix-change-head" onclick="this.nextElementSibling.classList.toggle('open')">
           <span class="cfix-type-badge cfix-${esc(c.changeType)}">${esc(TYPE_LABELS[c.changeType]||c.changeType)}</span>
-          <span class="cfix-change-title">${esc(c.element)} — <span style="font-weight:400;color:rgba(255,255,255,.6)">${esc(c.field||'')}</span></span>
+          <span class="cfix-change-title">${esc(c.element)} — <span style="font-weight:400;color:#6b7280">${esc(c.field||'')}</span></span>
         </div>
         <div class="cfix-change-body">
           <div class="cfix-cell">
@@ -3526,13 +3550,13 @@ function showStepDecisionAudit() {
     </div>`;
 
   const addedHtml = (data.stepsAdded?.length) ? `
-    <p class="cfix-section-title">🔁 Przywrócone brakujące kroki <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${data.stepsAdded.length})</span></p>
+    <p class="cfix-section-title">🔁 Przywrócone brakujące kroki <span style="font-size:12px;font-weight:400;color:#9ca3af">(${data.stepsAdded.length})</span></p>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
       ${data.stepsAdded.map(n=>`<span style="background:#166534;color:#bbf7d0;border-radius:6px;padding:3px 10px;font-size:12px">${esc(n)}</span>`).join('')}
     </div>` : '';
 
   const convertedHtml = (data.stepsConverted?.length) ? `
-    <p class="cfix-section-title">⚙ Przekształcone elementy (STEP↔DECISION) <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${data.stepsConverted.length})</span></p>
+    <p class="cfix-section-title">⚙ Przekształcone elementy (STEP↔DECISION) <span style="font-size:12px;font-weight:400;color:#9ca3af">(${data.stepsConverted.length})</span></p>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
       ${data.stepsConverted.map(n=>`<span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:3px 10px;font-size:12px">${esc(n)}</span>`).join('')}
     </div>` : '';
@@ -3540,12 +3564,12 @@ function showStepDecisionAudit() {
   const FIND_TYPES = ['StepIsDecision','MissingStep','DecisionNotEmbedded','MissingTransition','MissingCriteria','EmptyField'];
   const findingsHtml = FIND_TYPES.filter(t=>findings.some(f=>f.findingType===t)).map(t=>{
     const group = findings.filter(f=>f.findingType===t);
-    return `<p class="cfix-section-title">${TYPE_LABELS[t]||t} <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,.4)">(${group.length})</span></p>
+    return `<p class="cfix-section-title">${TYPE_LABELS[t]||t} <span style="font-size:12px;font-weight:400;color:#9ca3af">(${group.length})</span></p>
     ${group.map(f=>`
       <div class="cfix-change">
         <div class="cfix-change-head" onclick="this.nextElementSibling.classList.toggle('open')">
           <span class="cfix-type-badge" style="background:${SEVER_COL[f.severity]||'#6b7280'}20;color:${SEVER_COL[f.severity]||'#9ca3af'};border:1px solid ${SEVER_COL[f.severity]||'#6b7280'}40">${esc(f.severity)}</span>
-          <span class="cfix-change-title">${esc(f.elementId||'')} — ${esc(f.elementName||'')} <span style="font-weight:400;color:rgba(255,255,255,.5)">${f.field?'· '+esc(f.field):''}</span></span>
+          <span class="cfix-change-title">${esc(f.elementId||'')} — ${esc(f.elementName||'')} <span style="font-weight:400;color:#9ca3af">${f.field?'· '+esc(f.field):''}</span></span>
         </div>
         <div class="cfix-change-body">
           <div class="cfix-cell">
@@ -3565,7 +3589,7 @@ function showStepDecisionAudit() {
       ✅ Korekty rozdzielenia STEP/DECISION zastosowane — diagram BPMN i dokument Word zostały automatycznie przebudowane.
     </div>`;
 
-  content.innerHTML = statsHtml + addedHtml + convertedHtml + (findingsHtml || '<p style="color:rgba(255,255,255,.5);font-size:13px">Brak znalezionych problemów — model jest poprawny.</p>') + appliedHtml;
+  content.innerHTML = statsHtml + addedHtml + convertedHtml + (findingsHtml || '<p style="color:#9ca3af;font-size:13px">Brak znalezionych problemów — model jest poprawny.</p>') + appliedHtml;
 
   // Odśwież BPMN viewer
   if (A.bpmnSvg) document.getElementById('bpmnView').innerHTML = A.bpmnSvg;

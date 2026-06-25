@@ -366,18 +366,23 @@
 
       <!-- API -->
       <div class="settings-section">
-        <h3>🔑 Połączenie z API OpenAI</h3>
-        <p class="s-desc">Klucz API jest przechowywany wyłącznie w pamięci przeglądarki (localStorage). Nie jest nigdzie przesyłany poza wywołaniami do OpenAI.</p>
+        <h3>🔑 Połączenie z API Claude (Anthropic)</h3>
+        <p class="s-desc">Klucz API jest przechowywany wyłącznie w pamięci przeglądarki (localStorage). Nie jest nigdzie przesyłany poza wywołaniami do Anthropic.</p>
         <div class="form-row">
           <div class="form-group">
-            <label>Klucz API OpenAI *</label>
-            <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off" />
-            <div class="form-note">Generuj na: platform.openai.com → API Keys</div>
+            <label>Klucz API Claude *</label>
+            <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off" />
+            <div class="form-note">Generuj na: console.anthropic.com → API Keys</div>
           </div>
           <div class="form-group">
-            <label>Model</label>
-            <input type="text" id="modelId" value="gpt-4o" placeholder="gpt-4o" />
-            <div class="form-note">Polecane: gpt-4o (jakość) lub gpt-4o-mini (szybkość/koszt)</div>
+            <label>Model czatu (wywiad) 💬</label>
+            <input type="text" id="modelId" value="claude-haiku-4-5-20251001" placeholder="claude-haiku-4-5-20251001" />
+            <div class="form-note">Szybki model do prowadzenia wywiadu. Polecane: <b>claude-haiku-4-5-20251001</b></div>
+          </div>
+          <div class="form-group">
+            <label>Model analizy (dokumenty) 📄</label>
+            <input type="text" id="analysisModelId" value="claude-sonnet-4-6" placeholder="claude-sonnet-4-6" />
+            <div class="form-note">Mocniejszy model do generowania karty procesu i BPMN. Polecane: <b>claude-sonnet-4-6</b> lub <b>claude-opus-4-8</b></div>
           </div>
         </div>
       </div>
@@ -727,10 +732,12 @@ const LS = 'agentAI_v1_';
 
 function loadSettings() {
   const get = k => localStorage.getItem(LS + k);
-  const apiKey = get('apiKey') || '';
-  const model  = get('model')  || 'gpt-4o';
-  document.getElementById('apiKey').value  = apiKey;
-  document.getElementById('modelId').value = model;
+  const apiKey        = get('apiKey')         || '';
+  const model         = get('model')          || 'claude-haiku-4-5-20251001';
+  const analysisModel = get('analysisModel')  || 'claude-sonnet-4-6';
+  document.getElementById('apiKey').value          = apiKey;
+  document.getElementById('modelId').value         = model;
+  document.getElementById('analysisModelId').value = analysisModel;
   document.getElementById('promptInterview').value = get('promptInterview') || DEFAULT_PROMPT_INTERVIEW;
   document.getElementById('promptCard').value      = get('promptCard')      || DEFAULT_PROMPT_CARD;
   document.getElementById('promptBpmn').value      = get('promptBpmn')      || DEFAULT_PROMPT_BPMN;
@@ -741,7 +748,8 @@ function loadSettings() {
 function saveSettings() {
   const set = (k, v) => localStorage.setItem(LS + k, v);
   set('apiKey',          document.getElementById('apiKey').value.trim());
-  set('model',           document.getElementById('modelId').value.trim() || 'gpt-4o');
+  set('model',           document.getElementById('modelId').value.trim()         || 'claude-haiku-4-5-20251001');
+  set('analysisModel',   document.getElementById('analysisModelId').value.trim() || 'claude-sonnet-4-6');
   set('promptInterview', document.getElementById('promptInterview').value);
   set('promptCard',      document.getElementById('promptCard').value);
   set('promptBpmn',      document.getElementById('promptBpmn').value);
@@ -771,7 +779,7 @@ function switchTab(name) {
 // APP STATE
 // ════════════════════════════════════════════════════════════════
 const A = {
-  apiKey: '', model: 'gpt-4o',
+  apiKey: '', model: 'claude-haiku-4-5-20251001', analysisModel: 'claude-sonnet-4-6',
   employee: { role:'', dept:'' },
   msgs: [],
   transcript: [],
@@ -893,24 +901,23 @@ function safeParseJsonArray(raw) {
 // ════════════════════════════════════════════════════════════════
 // OPENAI API
 // ════════════════════════════════════════════════════════════════
-async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
-  // GPT-5, o-series: max_completion_tokens + rola 'developer' zamiast 'system'
-  const isNewModel = /^(o[1-9]\d*(-mini|-preview)?|gpt-5)/i.test(A.model);
-  const tokenKey   = isNewModel ? 'max_completion_tokens' : 'max_tokens';
-  const systemRole = isNewModel ? 'developer' : 'system';
-  // Modele reasoning (GPT-5, o-series) zużywają tokeny na wewnętrzne myślenie
-  // zanim wypiszą cokolwiek — potrzebują minimum ~32k completion tokens
-  const actualMax  = isNewModel ? Math.max(maxTokens, 32000) : maxTokens;
-
-  const messages = [{ role: systemRole, content: system }, ...msgs];
-  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+async function callClaude(msgs, system, maxTokens = 600, _attempt = 1, useAnalysis = false) {
+  // useAnalysis=true → model analizy (sonnet/opus), false → model czatu (haiku)
+  const activeModel = useAnalysis ? (A.analysisModel || A.model) : A.model;
+  // Anthropic Messages API — system jako osobny parametr, nie rola w messages
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + A.apiKey },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': A.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
     body: JSON.stringify({
-      model: A.model,
-      [tokenKey]: actualMax,
-      ...(isNewModel && { reasoning_effort: 'low' }),  // skróć fazę myślenia
-      messages
+      model: activeModel,
+      max_tokens: maxTokens,
+      system: system,
+      messages: msgs   // [{role:'user', content:'...'}] — bez roli 'system'
     })
   });
   if (!r.ok) {
@@ -920,25 +927,15 @@ async function callClaude(msgs, system, maxTokens = 600, _attempt = 1) {
       const wait = _attempt * 15; // 15s, 30s, 45s
       showToast(`⏳ Limit API (429) — ponawianie za ${wait}s… (próba ${_attempt}/3)`);
       await sleep(wait * 1000);
-      return callClaude(msgs, system, maxTokens, _attempt + 1);
+      return callClaude(msgs, system, maxTokens, _attempt + 1, useAnalysis);
     }
     const msg = r.status === 429
-      ? 'Przekroczono limit API OpenAI (429). Poczekaj minutę i spróbuj ponownie.'
+      ? 'Przekroczono limit API Claude (429). Poczekaj minutę i spróbuj ponownie.'
       : (e.error?.message || `Błąd HTTP ${r.status}`);
     throw new Error(msg);
   }
-  const json = await r.json();
-  const msg  = json.choices?.[0]?.message;
-  const text = msg?.content
-    ?? json.output?.find?.(o => o.type === 'message')?.content?.[0]?.text
-    ?? json.output_text
-    ?? '';
-
-  if (!text) {
-    const reason = json.choices?.[0]?.finish_reason || '?';
-    throw new Error(`Pusta odpowiedź API (finish_reason: ${reason}). Struktura: ${JSON.stringify(json).slice(0,300)}`);
-  }
-  return text;
+  // Anthropic zwraca: { content: [{type:'text', text:'...'}], ... }
+  return (await r.json()).content[0].text;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -970,8 +967,9 @@ async function onAnalyzeTranscript() {
   if (!role)   { showToast('Wprowadź stanowisko (potrzebne do metadanych karty)'); return; }
   if (!text)   { showToast('Wklej lub wgraj transkrypcję'); return; }
 
-  A.apiKey = apiKey;
-  A.model  = localStorage.getItem(LS + 'model') || 'gpt-4o';
+  A.apiKey        = apiKey;
+  A.model         = localStorage.getItem(LS + 'model')         || 'claude-haiku-4-5-20251001'; // czat
+  A.analysisModel = localStorage.getItem(LS + 'analysisModel') || 'claude-sonnet-4-6';          // analiza
   A.employee = {
     role,
     dept: document.getElementById('empDept').value.trim() || 'Nieznany dział',
@@ -1049,8 +1047,9 @@ async function onStartInterview() {
   if (!apiKey) { showToast('Brak klucza API — uzupełnij w zakładce Ustawienia'); switchTab('ustawienia'); return; }
   if (!role)   { showToast('Wprowadź stanowisko'); return; }
 
-  A.apiKey = apiKey;
-  A.model  = localStorage.getItem(LS + 'model') || 'gpt-4o';
+  A.apiKey        = apiKey;
+  A.model         = localStorage.getItem(LS + 'model')         || 'claude-haiku-4-5-20251001'; // czat
+  A.analysisModel = localStorage.getItem(LS + 'analysisModel') || 'claude-sonnet-4-6';          // analiza
   A.employee = {
     role,
     dept: document.getElementById('empDept').value.trim() || 'Nieznany dział',
@@ -1210,8 +1209,7 @@ Odpowiedz TYLKO poprawnym JSON (zero dodatkowego tekstu):
   const rawPlan = await callClaude(
     [{role:'user', content: planPrompt}],
     'Jesteś Senior Business Process Analyst. Odpowiadasz TYLKO poprawnym JSON — zero dodatkowego tekstu, zero markdown.',
-    3000
-  );
+    3000, 1, true);
 
   if (!rawPlan.includes('{')) throw new Error('Plan procesu: brak JSON — ' + rawPlan.slice(0,120));
 
@@ -1408,7 +1406,7 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
   ]
 }`;
 
-  const raw1 = await callClaude([{role:'user', content: metaPrompt}], cardSystem, 8000);
+  const raw1 = await callClaude([{role:'user', content: metaPrompt}], cardSystem, 8000, 1, true);
   if (!raw1.includes('{')) {
     throw new Error('Model nie zwrócił JSON — odpowiedź: ' + raw1.slice(0, 120));
   }
@@ -1470,7 +1468,7 @@ Odpowiedz TYLKO jako tablica JSON (bez obiektu opakowującego, bez markdown):
   }
 ]`;
 
-  const raw2 = await callClaude([{role:'user', content: stepsPrompt}], 'Jesteś analitykiem BPMN. Odpowiedz TYLKO poprawną tablicą JSON — zero dodatkowego tekstu ani markdown.', 6000);
+  const raw2 = await callClaude([{role:'user', content: stepsPrompt}], 'Jesteś analitykiem BPMN. Odpowiedz TYLKO poprawną tablicą JSON — zero dodatkowego tekstu ani markdown.', 6000, 1, true);
   if (!raw2.includes('[')) {
     throw new Error('Model nie zwrócił JSON kroków — odpowiedź: ' + raw2.slice(0, 120));
   }
@@ -2443,7 +2441,7 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
 
   const rawAudit = await callClaude([{role:'user', content: auditPrompt}],
     'Jesteś ekspertem audytu procesów BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu.',
-    3000);
+    3000, 1, true);
 
   if (!rawAudit.includes('{')) {
     console.warn('Audyt: brak JSON w odpowiedzi:', rawAudit.slice(0,120));
@@ -2663,7 +2661,7 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
 
   const rawReview = await callClaude([{role:'user', content: reviewPrompt}],
     'Jesteś Senior BPM Architect. Analizujesz proces wyłącznie pod kątem BPMN 2.0. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
-    4000);
+    4000, 1, true);
 
   if (!rawReview.includes('{')) {
     console.warn('BPMN Review: brak JSON:', rawReview.slice(0,120));
@@ -2942,7 +2940,7 @@ Odpowiedz TYLKO poprawnym JSON (bez markdown):
 
   const rawMap = await callClaude([{role:'user', content: mapPrompt}],
     'Jesteś ekspertem mapowania procesów BPMN. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
-    4000);
+    4000, 1, true);
 
   if (!rawMap.includes('{')) {
     console.warn('ProcessMap: brak JSON:', rawMap.slice(0,120));
@@ -3235,8 +3233,7 @@ ZWRÓĆ TYLKO POPRAWIONE DANE. Odpowiedz TYLKO poprawnym JSON (bez markdown):
   const rawFix = await callClaude(
     [{role:'user', content: fixPrompt}],
     'Jesteś ekspertem procesów biznesowych. Naprawiasz niespójności w danych procesu. Odpowiadaj TYLKO poprawnym JSON — zero dodatkowego tekstu. WSZYSTKIE wartości tekstowe w JSON pisz WYŁĄCZNIE po polsku.',
-    5000
-  );
+    5000, 1, true);
 
   if (!rawFix.includes('{')) {
     console.warn('ConsistencyFix: brak JSON:', rawFix.slice(0,120));
@@ -3468,8 +3465,7 @@ Odpowiedz TYLKO poprawnym JSON (zero markdown):
   const rawAudit = await callClaude(
     [{role:'user', content: auditPrompt}],
     'Jesteś Senior Business Process Analyst. Audytujesz model procesu. Odpowiadasz TYLKO poprawnym JSON — zero dodatkowego tekstu, zero markdown, zero komentarzy.',
-    6000
-  );
+    6000, 1, true);
 
   if (!rawAudit.includes('{')) {
     console.warn('StepDecisionAudit: brak JSON:', rawAudit.slice(0,120));
